@@ -1,0 +1,17 @@
+<!-- 我的订单 -->
+<script type="text/template" id="tplb">
+	<h1><%=name%></h1>
+	<button type="button" class="mui-btn mui-btn-danger">
+					红色
+				</button>
+</script>
+<script type="text/template" id="tpld">
+	<h1><%=other%></h1>
+	<div type="list" swiper=".swiper-container" class="swiper-container swiper">
+		<ul class="swiper-wrapper myul">
+			<%for(var i=0, l=list.length; i<l; i++){%>
+				<li class="swiper-slide myli"><%=list[i].name%></li>
+			<%}%>
+		</ul>
+	</div>
+</script>

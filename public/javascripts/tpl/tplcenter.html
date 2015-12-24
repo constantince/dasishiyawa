@@ -1,0 +1,288 @@
+<!-- 个人中心 -->
+<script type="text/template" id="tplcenter">
+	<div class="mui-views" data-view="1">
+		<div class="mui-view">
+			<div class="mui-pages">
+			<div id="setting" class="mui-page mui-page-center">
+	
+	<!--页面标题栏结束-->
+	<!--页面主内容区开始-->
+	<div class="mui-page-content">
+		<div class="mui-scroll-wrapper" data-scroll="2">
+			<div class="mui-scroll">
+				<!--头像信息栏-->
+				<ul class="mui-table-view mui-table-view-chevron">
+					<li class="mui-table-view-cell mui-media">
+						<a class="mui-navigate-right" href="#MyInformation">
+							<img class="mui-media-object mui-pull-left head-img" id="head-img" src="">
+							<div class="mui-media-body">
+								伊娜股
+								<p class="mui-ellipsis">手机:15444565887</p>
+							</div>
+						</a>
+					</li>
+				</ul>
+				<!--订单-->
+				<ul class="mui-table-view mui-table-view-chevron J-checkOrder">
+					<li class="mui-table-view-cell">
+						<a href="#MyOrder" class="mui-navigate-right">我的订单<span class="mui-badge mui-badge-primary">4</span></a>
+					</li>
+				</ul>
+				<!--消息和建议入口-->
+				<ul class="mui-table-view mui-table-view-chevron">
+					<li class="mui-table-view-cell">
+						<a href="#News" class="mui-navigate-right J-news" >新消息通知<span class="mui-badge mui-badge-danger">1</span></a>
+					</li>
+					<li class="mui-table-view-cell">
+						<a href="#Suggestion" class="mui-navigate-right J-suggestion">建议和意见</a>
+					</li>
+				</ul>
+				<!--其他入口-->
+				<ul class="mui-table-view mui-table-view-chevron">
+					<li class="mui-table-view-cell">
+						<a href="#AboutUs" class="mui-navigate-right J-about">关于公众号 <i class="mui-pull-right update">V0.0.1</i></a>
+					</li>
+					<li class="mui-table-view-cell">
+						<a href="#MoreFunction" class="mui-navigate-right J-about">趣味多多</a>
+					</li>
+				</ul>
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell" style="text-align: center;">
+						<a class="logout">退出登录</a>
+					</li>
+				</ul>
+			</div>
+		<div class="mui-scrollbar mui-scrollbar-vertical"><div class="mui-scrollbar-indicator"></div></div></div>
+	</div>
+	<!--页面主内容区结束-->
+	</div></div>
+		</div>
+	</div>
+</script>
+<!-- 个人详细信息 -->
+<script type="text/template" id="tplmyInformation">
+	<div class="mui-pages">
+			<div id="account" class="mui-page mui-page-center" style="">
+			<div class="mui-page-content">
+				<div class="mui-scroll-wrapper" data-scroll="3">
+					<ul class="mui-table-view">
+						<li class="mui-table-view-cell">
+							<a id="head" class="mui-navigate-right">头像
+								<span class="mui-pull-right head">
+									<img class="head-img mui-action-preview" id="head-img1" src="">
+								</span>
+							</a>
+						</li>
+						<li class="mui-table-view-cell">
+							<a>姓名<span class="mui-pull-right">易来古</span></a>
+						</li>
+						<li class="mui-table-view-cell">
+							<a>微信账号<span class="mui-pull-right">hbuilder@dcloud.io</span></a>
+						</li>
+					</ul>
+					<ul class="mui-table-view">
+						<li class="mui-table-view-cell">
+							<a>QQ号<span class="mui-pull-right">88888888</span></a>
+						</li>
+						<li class="mui-table-view-cell">
+							<a>手机号<span class="mui-pull-right">18601234567</span></a>
+						</li>
+						<li class="mui-table-view-cell">
+							<a>联系地址<span class="mui-pull-right">hbuilder@dcloud.io</span></a>
+						</li>
+					</ul>
+				<div class="mui-scrollbar mui-scrollbar-vertical"><div class="mui-scrollbar-indicator"></div></div></div>
+			</div>
+		</div>
+	</div>
+</script>
+<!-- 个人订单 -->
+<script type="text/template" id="tplmyOrder">
+	<ul class="mui-table-view">
+		<%for(var i=0; i<list.length; i++){
+			var tempList = list[i];
+			var text = '';
+			switch(tempList.status){
+				case 0:
+					text = '未开始';
+					break;
+				case 1:
+					text = '进行中';
+					break;
+				case 2:
+					text = '已完成';
+					break;
+				case 3:
+					text = '已评价';
+					break;
+			}
+
+		%>
+			<li class="mui-table-view-cell  mui-collapse">
+				<a class="mui-navigate-right"><%=tempList.masterName%>（<%=tempList.dateTime%>）<em><%=text%></em></a>
+				<div class="mui-collapse-content">
+					<div class="infoBox">
+						<p><em>订单号：</em><em><%=tempList.orderNum%></em></p>
+						<p><em>下单时间：</em><em><%=tempList.dateTime%></em></p>
+						<%if(tempList.startTime){%><p><em>开始时间：</em><em><%=tempList.startTime%></em></p><%}%>
+						<%if(tempList.endTime){%><p><em>完成时间：</em><em><%=tempList.endTime%></em></p><%}%>
+						<%if(tempList.judementContent){%><p><em>评价：</em><em><%=tempList.judementContent%></em></p><%}%>
+					</div>
+					<%if(tempList.status == 2){%>
+						<form class="mui-input-group infoForm">
+							<div class="mui-input-row">
+								<label>打分</label>
+								<select>
+									<option>1</option>
+									<option>2</option>
+									<option>3</option>
+									<option>4</option>
+									<option>5</option>
+								</select>
+							</div>
+							<div class="mui-input-row">
+								<label>评价</label>
+								<input type="text" class="mui-input-clear judeContent" placeholder="请输入您的评价100字以内" data-input-clear="3"><span class="mui-icon mui-icon-clear mui-hidden"></span>
+							</div>
+							<div class="mui-button-row" data-orderid=<%=tempList.orderId%> data-i=<%=i%>>
+								<button class="mui-btn mui-btn-primary J-submit" type="button" onclick="return false;">确认</button>&nbsp;&nbsp;
+								<button class="mui-btn mui-btn-primary J-callagain" type="button" onclick="return false;">再喊一次</button>
+							</div>
+						</form>
+					<%}%>
+				</div>
+			</li>
+			
+		<%}%>
+	</ul>
+</script>
+<!-- 新消息 -->
+<script type="text/template" id="tplnews">
+	<ul class="newsUl">
+		<li class="newsLi">
+			<div class="message">
+				<p class="content">陈师傅已经修好了电视，快去看看吧</p>
+				<em class="time">2015-07-18 19:25:65</em>
+			</div>
+		</li>
+		<li class="newsLi">
+			<div class="message">
+				<p class="content">陈师傅已经修好了电视，快去看看吧</p>
+				<em class="time">2015-07-18 19:25:65</em>
+			</div>
+		</li>
+		<li class="newsLi">
+			<div class="message">
+				<p class="content">你的好友有新的动态了</p>
+				<em class="time">2015-07-18 19:25:65</em>
+			</div>
+			
+		</li>
+		<li class="newsLi message">
+			<div class="message">
+				<p class="content"><a class="checkout" data-id="15">依赖默契  </a>向你打了招呼，赶紧去看看吧</p>
+				<p class="hello">
+					<button type="button" class="mui-btn mui-btn-royal">接受</button>
+					<button type="button" class="mui-btn mui-btn-royal">忽略</button>
+				</p>
+				<em class="time">2015-07-18 19:25:65</em>
+			</div>
+			
+		</li>
+		<li class="newsLi message">
+			<div class="message">
+				<p class="content"><a data-id="">无名大侠 </a>回应了你的招呼，赶紧去加好友吧</p>
+				<p class="hello">
+					<button type="button" class="mui-btn mui-btn-royal">前往</button>
+				</p>
+				<em class="time">2015-07-18 19:25:65</em>
+			</div>
+			
+		</li>
+	</ul>
+</script>
+<!-- 个人意见和建议 -->
+<script type="text/template" id="tplsuggestion">
+	<div class="mui-pages">
+		<div id="feedback" class="mui-page feedback mui-page-center" style="">
+			<div class="mui-page-content">
+				<p>问题和意见</p>
+				<div class="row mui-input-row">
+						<textarea id="question" class="mui-input-clear question" placeholder="一起来建设公众号吧，留下您的意见，一经采取，有大奖哦！"></textarea>
+					</div>
+					<p>QQ/邮箱/电话</p>
+					<div class="mui-input-row">
+						<input id="contact" type="text" class="mui-input-clear  contact" placeholder="(选填,方便我们联系你 )" data-input-clear="19"><span class="mui-icon mui-icon-clear mui-hidden"></span>
+					</div>
+					<button id="submit" type="button" class="mui-btn mui-btn-green">提交</button>
+				</div>
+		</div>
+	</div>
+</script>
+<!-- 关于我们 -->
+<script type="text/template" id="tplaboutUs">
+	<div class="mui-content-padded">
+		<h4 style="margin-top:10px;">我们是谁</h4>
+		<p>
+			待续。。。。。。。。。。。。。。。
+		</p>
+		<p>
+			待续。。。。。。。。。。。。。。
+		</p>
+		<h4>为什么要做</h4>
+		<p>
+			待续。。。。。。。。。。。
+		</p>
+		<p>
+			若要使用MUI进行移动APP开发，可通过Hbuilder，新建“移动APP”，并选择“MUI”工程模板，该模板已内置MUI相关的资源文件。
+		</p>
+		<p></p>
+		<h4>我们的目标</h4>
+		<p>
+			待续。。。。。。。。。。。。。。
+		</p>
+	</div>
+</script>
+<!-- 更多功能 -->
+<script type="text/template" id="tplmoreFunction">
+	<div class="mui-content">
+		<ul class="mui-table-view mui-grid-view mui-grid-9">
+		    <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3"><a href="#">
+		            <span class="mui-icon mui-icon-home"></span>
+		            <div class="mui-media-body">待开通...</div></a>
+		    </li>
+		    <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3"><a href="#">
+		            <span class="mui-icon mui-icon-email"><span class="mui-badge">5</span></span>
+		            <div class="mui-media-body">待开通...</div></a>
+		    </li>
+		    <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3"><a href="#">
+		            <span class="mui-icon mui-icon-chatbubble"></span>
+		            <div class="mui-media-body">待开通...</div></a>
+		    </li>
+		    <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3"><a href="#">
+		            <span class="mui-icon mui-icon-location"></span>
+		            <div class="mui-media-body">待开通...</div></a>
+		    </li>
+		    <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3"><a href="#">
+		            <span class="mui-icon mui-icon-search"></span>
+		            <div class="mui-media-body">待开通...</div></a>
+		    </li>
+		    <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3"><a href="#">
+		            <span class="mui-icon mui-icon-phone"></span>
+		            <div class="mui-media-body">待开通...</div></a>
+		    </li>
+		    <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3"><a href="#">
+		            <span class="mui-icon mui-icon-gear"></span>
+		            <div class="mui-media-body">待开通...</div></a>
+		    </li>
+		    <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3"><a href="#">
+		            <span class="mui-icon mui-icon-info"></span>
+		            <div class="mui-media-body">待开通...</div></a>
+		            </li>
+		   <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3"><a href="#">
+		            <span class="mui-icon mui-icon-more"></span>
+		            <div class="mui-media-body">待开通...</div></a>
+		    </li>
+		</ul> 
+	</div>
+</script>

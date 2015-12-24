@@ -1,0 +1,176 @@
+<!-- 主界面 -->
+<script type="text/template" id="tplhome">
+	<ul class="list">
+    <%for(var i=0, l=infoList.length; i<l; i++){%>
+        <li class="cell" data-id="<%=infoList[i].id%>">
+        	<div class="leftimg"><img src="<%=infoList[i].headimg%>" class="headimg"></div>
+            <div class="middleinfo">
+                <h4 class="mui-ellipsis"><%=infoList[i].name%><em class="title">师傅</em></h4>
+                <h5><span class="oa-contact-email mui-h6"><em>服务范围</em>-<%=infoList[i].servicearea%></span></h5>
+                <p class="mui-ellipsis oa-contact-email mui-h6"><%=infoList[i].motto%></p>
+            </div>
+            <div class="rightother">
+            	
+            </div>
+        </li>
+    <%}%>
+    </ul>
+</script>
+<!-- 详情界面 -->
+<script type="text/template" id="tplinformation">
+    <header>
+        <img src="" class="imgHeader">
+        <div class="info">
+            <p class="mui-ellipsis">
+                <span><em class="name">姓名：</em><em class="value"><%=information.name%></em></span>
+                <span><em class="name">性别：</em><em class="value"><%= information.sex == 1 ? '男' : '女'%></em></span>
+            </p class="mui-ellipsis">
+            <p class="mui-ellipsis">
+                <span><em class="name">经验：</em><em class="value"><%=information.serviceyears%>年</em></span>
+                <span><em class="name">店铺：</em><em class="value"><%=information.shopname%></em></span>
+            </p>
+            <p class="mui-ellipsis">
+                <span><em class="name">个人评价：</em><em class="value"><%=information.motto%>年</em></span>
+            </p>
+        </div>
+    </header>
+    <div class="servicearea">
+        <p class="mui-ellipsis">
+            <span><em class="name">服务范围：</em><em class="value"><%=information.servicearea%></em></span>
+        </p> 
+    </div>
+    <div class="content">
+        <div id="segmentedControl" class="mui-segmented-control mui-segmented-control-inverted mui-segmented-control-primary">
+            <a class="mui-control-item mui-active J-tab" data-list="order"> 进行中的单（<%=orderList.length%>）</a>
+            <a class="mui-control-item J-tab" data-list="opposition">评价列表</a>
+        </div>
+    </div>
+    <div class="list">
+        <ul class="order">
+            <%for(var i=0; i<orderList.length; i++){
+                var cls, txt;
+                if(orderList[i].status==0){
+                    cls = 'mui-btn-outlined';
+                    txt = '未开始'
+                }else if(orderList[i].status==1) {
+                    cls = 'mui-btn-primary';
+                    txt = '进行中'
+                }else if(orderList[i].status==2){
+                    cls = 'mui-btn-success';
+                    txt = '已完成'
+                }
+
+            %>
+                <li>
+                    <div class="left">
+                        <span><em>订单</em><%=orderList[i].number%></span>
+                        <span><em>提交于</em><%=orderList[i].time%></span>
+                    </div>
+                    <button type="button" class="mui-btn <%=cls%>"><%=txt%></button>
+                </li>
+            <%}%>
+        </ul>
+        <ul class="opposition g-d-n">
+            <%for(var i=0; i<judeList.length; i++){%>
+                <li>
+                    <div class="title">
+                        <div class="left">
+                            <em>订单号：</em><em><%=judeList[i].number%></em>
+                        </div> 
+                        <div class="right">
+                            <%for(var u=0; u<judeList[i].stars; u++){%><span class="mui-icon mui-icon-star"></span><%}%>
+                        </div>
+                    </div>
+                    <p><em>评价：</em><em><%=judeList[i].description%></em></p>
+                    <p class="juder"><%=judeList[i].time%>--<%=judeList[i].juder%></p>
+                </li>
+            <%}%>
+        </ul>
+    </div>
+    <button type="button" class="mui-btn mui-btn-primary mui-btn-block J-bookup mybtn">喊师傅</button>
+</script>
+<!-- 填写预约信息 -->
+<script type="text/template" id="tplfillOrder">
+    <header>
+        <ul class="mui-table-view mui-table-view-chevron">
+            <li class="mui-table-view-cell mui-media myli">
+                <a class="mui-navigate-right" href="#account">
+                    <div class="mui-media-body">
+                        您的以下信息会将同时提交给<em class="mname"><%=masterInformation.masterName%>师傅</em>哦
+                        <p class="mui-ellipsis">昵称:<%=myInformation.name%></p>
+                        <p class="mui-ellipsis">电话:<%=myInformation.tel%></p>
+                        <%if(myInformation.adress){%><p class="mui-ellipsis">默认地址:<%=myInformation.adress%></p><%}%>
+                    </div>
+                </a>
+            </li>
+        </ul>
+    </header>
+    <div class="mui-collapse-content">
+        <form class="mui-input-group machine">
+            <div class="mui-input-row">
+                <label>*设备名称</label>
+                <input type="text" class="machineName" placeholder="电视、冰箱、洗衣机">
+            </div>
+            <div class="mui-input-row">
+                <label>*设备年限</label>
+                <select class="machineYear">
+                    <option value="1-">1年以下</option>
+                    <option value="1-3">1~3年</option>
+                    <option value="3-5">3~5年</option>
+                    <option value="5+">5年以上</option>
+                </select>
+            </div>
+            <div class="mui-input-row">
+                <label>设备品牌</label>
+                <input type="text" class="mui-input-clear machinePlate" placeholder="设备品牌" data-input-clear="3"><span class="mui-icon mui-icon-clear mui-hidden"></span>
+            </div>
+            <%if(myInformation.adress){%>
+                <div class="mui-input-row mui-checkbox">
+                    <label>*使用默认地址</label>
+                    <input name="checkbox1" class="J-adressSelect" value="Item 3" type="checkbox" checked="checked">
+                </div>
+            <%}%>
+            <div class="mui-input-row <%if(myInformation.adress){%>g-d-n<%}%>">
+                <label>*联系地址</label>
+                <input type="text" class="mui-input-clear adress" placeholder="师傅上门的地址" data-input-clear="3"><span class="mui-icon mui-icon-clear mui-hidden"></span>
+            </div>
+            <div class="mui-input-row">
+                <label>预约日期</label>
+                <input type="date" class="mui-input-clear date" placeholder="以师傅联系您的时间为准" data-input-clear="3"><span class="mui-icon mui-icon-clear mui-hidden"></span>
+            </div>
+            <div class="mui-input-row">
+                <label>预约时间</label>
+                <input type="time" class="mui-input-clear time" placeholder="以师傅联系您的时间为准" data-input-clear="3"><span class="mui-icon mui-icon-clear mui-hidden"></span>
+            </div>
+        </form>
+        <div class="mui-input-row descriptionSimple">
+            <textarea id="discriptionTextarea" rows="5" placeholder="请简要描述您的问题"></textarea>
+        </div>
+        <p class="supplementary">温馨提示：最终上门时间以师傅联系您的时间为准；<br/> 带星号的选项为必填选项</p>
+    </div>
+
+    <button type="button" class="mui-btn mui-btn-primary mui-btn-block J-submit mybtn">提交</button>
+</script>
+<!-- 成功提交订单 -->
+<script type="text/template" id="tplsubmitSuccess">
+    <header>
+         <span class="mui-icon mui-icon-paperplane"></span>
+         <span>恭喜您，订单<%=orderNum%>提交成功！</span>
+    </header>
+    <div class="content">
+        <p class="name"><%=masterName%>师傅</p>
+        <p>设备名称：<%=machinePlate%><%=machineName%></p>
+        <p>设备年限：<%=machineYear%></p>
+        <p>上门地址：<%=adress%></p>
+        <p>备注：<%=content%></p>
+        <p>下单时间：<%=orderDate%></p>
+    </div>
+    <p class="tip">提示：在个人中心可以查看、修改以及删除订单。</p>
+    <footer>
+       <div class="mui-button-row">
+            <button type="button" class="J-center mui-btn mui-btn-primary" onclick="return false;">个人中心</button>&nbsp;&nbsp;
+            <a type="button" class="J-content mui-btn mui-btn-danger" href="tel:<%=masterTel%>">联系师傅</a>
+        </div>
+    </footer>
+</script>
+

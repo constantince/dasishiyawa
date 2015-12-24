@@ -1,0 +1,192 @@
+<!-- 广场主界面 -->
+<script type="text/template" id="tplmakeFriends">
+    <ul class="my-css-cbox">
+        <li class="list">
+            <a href="#Personel" class="imgbox">
+                <img class="mui-media-object" src="../images/woman.jpg">
+                <div class="content">
+                    <div class="box1">
+                        <span>苏菲玛索</span>
+                        <span>萍乡湘东</span>
+                    </div>
+                    <p class="box2 mui-ellipsis">
+                       想要一间这样的木屋，静静的喝咖啡
+                    </p>
+                </div>
+                
+            </a>
+            <a href="#Personel" class="imgbox">
+                <img class="mui-media-object" src="../images/woman.jpg">
+                <div class="content">
+                    <div class="box1">
+                        <span>苏菲玛索</span>
+                        <span>萍乡湘东</span>
+                    </div>
+                    <p class="box2 mui-ellipsis">
+                       想要一间这样的木屋，静静的喝咖啡
+                    </p>
+                </div>
+                
+            </a>
+          </li>
+        <li class="list">
+            <a href="#Personel" class="imgbox">
+                <img class="mui-media-object" src="../images/woman.jpg">
+                <div class="content">
+                    <div class="box1">
+                        <span>苏菲玛索</span>
+                        <span>萍乡湘东</span>
+                    </div>
+                    <p class="box2 mui-ellipsis">
+                       想要一间这样的木屋，静静的喝咖啡
+                    </p>
+                </div>
+                
+            </a>
+            <a href="#Personel" class="imgbox">
+                <img class="mui-media-object" src="../images/woman.jpg">
+                <div class="content">
+                    <div class="box1">
+                        <span>苏菲玛索</span>
+                        <span>萍乡湘东</span>
+                    </div>
+                    <p class="box2 mui-ellipsis">
+                       想要一间这样的木屋，静静的喝咖啡
+                    </p>
+                </div>
+                
+            </a>
+          </li>
+    </ul>
+    <div class="mui-content-padded">
+        <ul class="mui-pager">
+            <li>
+                <a>
+                    首页
+                </a>
+            </li>
+            <li>
+                <a>
+                    上一页
+                </a>
+            </li>
+            <li>
+                <a>
+                    下一页
+                </a>
+            </li>
+        </ul>
+    </div>
+</script>
+<!-- 个人信息 -->
+<script type="text/template" id="tplpersonel">
+    <div class="banner">
+        <img class="mui-media-object" src="../images/woman.jpg">
+    </div>
+    <div class="content">
+        <p class=""><em class="name">姓名：</em><em class="value">苏菲玛索</em></p>
+        <p class=""><em class="name">年龄：</em><em class="value">26</em></p>
+        <p class=""><em class="name">身高：</em><em class="value">174</em></p>
+        <p class=""><em class="name">爱好：</em><em class="value">篮球</em></p>
+        <p class=""><em class="name">职业：</em><em class="value">程序猿</em></p>
+        <p class=""><em class="name">微信号：</em><em class="value">***** TA设置为打招呼后显示</em></p>
+        <p class=""><em class="name">交友宣言：</em><em class="value">希望认识各行各业的朋友，增加代码圈子哈哈哈哈哈</em></p>
+    </div>
+    <footer>
+        <button type="button" class="mui-btn mui-btn-primary mui-btn-block">打个招呼</button>
+        <button type="button" class="mui-btn mui-btn-success mui-btn-block">给TA个赞</button>
+    </footer>
+</script>
+<!-- 发布个人信息 -->
+<script type="text/template" id="tplpublishPerson">
+    <div class="mui-content feedback">
+        <div class="need line">
+            以下是必填项，不能偷懒哦
+        </div>
+        <p>昵称：</p>
+        <div class="mui-input-row">
+            <input  type="text" class="mui-input-clear nickname" placeholder="可以填写真名" data-input-clear="1">
+        </div>
+        <p>性别：</p>
+        <div class="mui-input-row mui-radio radiobox">
+            <input name="radio1" type="radio" checked>男
+            <input name="radio1" type="radio" class="woman">女
+        </div>
+        <div class="mui-checkbox needagree">
+            <div>微信号：</div>
+            <div class="discription">是否需要本人同意后向TA公开</div>
+            <input class="need" name="checkbox" value="Item 2" type="checkbox">
+            <div class="discription">不懂？</div>
+        </div>
+        <div class="mui-input-row">
+            <input  type="text" class="mui-input-clear wechat" placeholder="微信, （推荐微信）" data-input-clear="1">
+        </div>
+
+        <div class="noneed line">
+            以下是选填项，可以为你加分哦
+        </div>
+        <p>个人照(最多三张，第一张作为广场封面照和头像)</p>
+        <div id="image-list" class="row image-list">
+            <div class="image-item space">
+                <div class="image-close">X</div>
+                <input type="file" accept="image/*" id="image-1">
+            </div>
+        </div>
+        <p class="mui-checkbox">年龄：<em class="keepsecret">保密<input class="need" name="checkbox" value="Item 2" type="checkbox"></em></p>
+        <div class="mui-input-row">
+            <select>
+                <%for(var i=10; i<81; i++){%>
+                    <option value="<%=i%>"><%=i + '岁'%></option>
+                <%}%>
+            </select>
+        </div>
+        <p class="mui-checkbox">出生地: </p>
+        <div class="mui-input-row">
+            <input  type="text" class="mui-input-clear birthplace" placeholder="(选填,方便我们联系你 )" data-input-clear="1">
+        </div>
+        <p class="mui-checkbox">现居地：</p>
+        <div class="mui-input-row">
+            <input  type="text" class="mui-input-clear liveplace" placeholder="(选填,方便我们联系你 )" data-input-clear="1">
+        </div>
+        <p class="mui-checkbox">职业：<em class="keepsecret">保密<input class="need" name="checkbox" value="Item 2" type="checkbox"></em></p>
+        <div class="mui-input-row">
+            <input  type="text" class="mui-input-clear profession" placeholder="设计狮、程序猿" data-input-clear="1">
+        </div>
+        <p>特长：</p>
+        <div class="mui-input-row">
+            <input  type="text" class="mui-input-clear goodai" placeholder="说说你最擅长的" data-input-clear="1">
+        </div>
+        <p>爱好：</p>
+        <div class="mui-input-row">
+            <input  type="text" class="mui-input-clear hobby" placeholder="涉猎的那些领域" data-input-clear="1">
+        </div>
+        <p class="mui-checkbox">身高：<em class="keepsecret">保密<input class="need" name="checkbox" value="Item 2" type="checkbox"></em></p>
+        <div class="mui-input-row">
+            <input  type="text" class="mui-input-clear tall" placeholder="单位公分（cm）如（填写175即可）" data-input-clear="1">
+        </div>
+        <p class="mui-checkbox">体重：<em class="keepsecret">保密<input class="need" name="checkbox" value="Item 2" type="checkbox"></em></p>
+        <div class="mui-input-row">
+            <input  type="text" class="mui-input-clear weight" placeholder="单位公斤（KG）如（填写55即可）" data-input-clear="1">
+        </div>
+        <p class="mui-checkbox">其他社交账号：<em class="keepsecret">保密<input class="need" name="checkbox" value="Item 2" type="checkbox"></em></p>
+        <div class="mui-input-row">
+            <input  type="text" class="mui-input-clear contact" placeholder="QQ, fackbook，line，in, whatApp都可以" data-input-clear="1">
+        </div>
+        <p>婚恋状态</p>
+        <div class="mui-input-row">
+            <select>
+                <option>你猜</option>
+                <option>单身</option>
+                <option>已婚</option>
+                <option>未婚</option>
+                <option>丧偶</option>
+                <option>同性</option>
+            </select>
+        </div>
+        <p>交友宣言：</p>
+        <div class="row mui-input-row">
+            <textarea class="mui-input-clear question" placeholder="请详细描述你的问题和意见..."></textarea>
+        </div>
+        <button type="button" class="mui-btn mui-btn-green submit">提交</button>
+    </div>
+</script>

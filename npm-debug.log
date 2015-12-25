@@ -32,7 +32,7 @@
 19 error not with npm itself.
 19 error Tell the author that this fails on your system:
 19 error     node ./bin/www
-19 error You can get their info via:
+19 error You can get their info1 via:
 19 error     npm owner ls dasishiyawa
 19 error There is likely additional logging output above.
 20 verbose exit [ 1, true ]

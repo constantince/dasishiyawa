@@ -1,62 +1,22 @@
 <!-- 广场主界面 -->
 <script type="text/template" id="tplmakeFriends">
     <ul class="my-css-cbox">
-        <li class="list">
+        <%for(var i=0; i<list.length; i++){%>
+            <%if(i%2 ==0){%><li class="list"><%}%>
             <a href="#Personel" class="imgbox">
                 <img class="mui-media-object" src="../images/woman.jpg">
                 <div class="content">
                     <div class="box1">
-                        <span>苏菲玛索</span>
-                        <span>萍乡湘东</span>
+                        <span class="mui-ellipsis"><%=list[i].name%></span>
+                        <span class="mui-ellipsis"><%=list[i].area%></span>
                     </div>
                     <p class="box2 mui-ellipsis">
-                       想要一间这样的木屋，静静的喝咖啡
+                       <%=list[i].content%>
                     </p>
-                </div>
-                
+                </div>  
             </a>
-            <a href="#Personel" class="imgbox">
-                <img class="mui-media-object" src="../images/woman.jpg">
-                <div class="content">
-                    <div class="box1">
-                        <span>苏菲玛索</span>
-                        <span>萍乡湘东</span>
-                    </div>
-                    <p class="box2 mui-ellipsis">
-                       想要一间这样的木屋，静静的喝咖啡
-                    </p>
-                </div>
-                
-            </a>
-          </li>
-        <li class="list">
-            <a href="#Personel" class="imgbox">
-                <img class="mui-media-object" src="../images/woman.jpg">
-                <div class="content">
-                    <div class="box1">
-                        <span>苏菲玛索</span>
-                        <span>萍乡湘东</span>
-                    </div>
-                    <p class="box2 mui-ellipsis">
-                       想要一间这样的木屋，静静的喝咖啡
-                    </p>
-                </div>
-                
-            </a>
-            <a href="#Personel" class="imgbox">
-                <img class="mui-media-object" src="../images/woman.jpg">
-                <div class="content">
-                    <div class="box1">
-                        <span>苏菲玛索</span>
-                        <span>萍乡湘东</span>
-                    </div>
-                    <p class="box2 mui-ellipsis">
-                       想要一间这样的木屋，静静的喝咖啡
-                    </p>
-                </div>
-                
-            </a>
-          </li>
+            <%if(i%2 !=0){%></li><%}%>
+        <%}%>
     </ul>
     <div class="mui-content-padded">
         <ul class="mui-pager">

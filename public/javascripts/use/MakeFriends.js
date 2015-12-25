@@ -22,7 +22,7 @@ define(['base'], function(_PRO_) {
 		//路由名称 +无需赘述，如果没有配置路由名称，则该界面没有加入路由规则当中去。一般是弹出界面无需配置此项
 		route: 'MakeFriends',
 		//界面的异步加载数据地址
-		url: 'http://'+IP+':8800/?way=makeFriends',
+		url: '/makefriends/index?index=1&count=5',
 		//该界面需要显示出来的导航
 		nav: ['Bottom', 'Top'],
 		view: {

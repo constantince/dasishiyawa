@@ -200,7 +200,7 @@ function(C, _, Backbone) {
 						return
 					}
 					PDW.ajax({
-						url: 'js/tpl/tpl' + _loadHtml(n) + '.html?version=0.1',
+						url: 'javascripts/tpl/tpl' + _loadHtml(n) + '.html?version=0.1',
 						async: false,
 						headers: {
 							Accept: 'text/html'

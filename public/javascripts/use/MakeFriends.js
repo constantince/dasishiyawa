@@ -165,7 +165,7 @@ define(['base'], function(_PRO_) {
 			}
 		}
 	});
-	// //订单提交成功
+	// ////订单提交成功
 	// _exprots.SubmitSuccess = PDW.createClass({
 	// 	name : 'submitSuccess',
 	// 	route: 'SubmitSuccess',

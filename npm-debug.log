@@ -2,7 +2,7 @@
 1 verbose cli [ 'E:\\Program Files\\nodejs\\\\node.exe',
 1 verbose cli   'E:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js',
 1 verbose cli   'start' ]
-2 info using npm@2.7.4
+2 info using npm@2.7.4¡£22
 3 info using node@v0.12.2
 4 verbose node symlink E:\Program Files\nodejs\\node.exe
 5 verbose run-script [ 'prestart', 'start', 'poststart' ]

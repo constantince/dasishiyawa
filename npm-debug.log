@@ -11,7 +11,7 @@
 8 verbose unsafe-perm in lifecycle true
 9 info dasishiyawa@0.0.0 Failed to exec start script
 10 verbose stack Error: dasishiyawa@0.0.0 start: `node ./bin/www`
-10 verbose stack Exit status 1
+10 verbose stack Exit status 1073807364
 10 verbose stack     at EventEmitter.<anonymous> (E:\Program Files\nodejs\node_modules\npm\lib\utils\lifecycle.js:213:16)
 10 verbose stack     at EventEmitter.emit (events.js:110:17)
 10 verbose stack     at ChildProcess.<anonymous> (E:\Program Files\nodejs\node_modules\npm\lib\utils\spawn.js:14:12)
@@ -26,13 +26,13 @@
 16 error npm  v2.7.4
 17 error code ELIFECYCLE
 18 error dasishiyawa@0.0.0 start: `node ./bin/www`
-18 error Exit status 1
+18 error Exit status 1073807364
 19 error Failed at the dasishiyawa@0.0.0 start script 'node ./bin/www'.
 19 error This is most likely a problem with the dasishiyawa package,
 19 error not with npm itself.
 19 error Tell the author that this fails on your system:
 19 error     node ./bin/www
-19 error You can get their info123 via:
+19 error You can get their info via:
 19 error     npm owner ls dasishiyawa
 19 error There is likely additional logging output above.
 20 verbose exit [ 1, true ]

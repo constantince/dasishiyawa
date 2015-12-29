@@ -16,7 +16,7 @@ define(['base'], function(_PRO_) {
 		route: 'Center',
 		navInfo: {active: 'Center'},
 		nav: ['Bottom', 'Top'],
-		url: 'http://'+IP+':8800/?way=center',
+		// url: 'http://'+IP+':8800/?way=center',
 		view: {
 			pageEvent: {
 				//查看个人详细信息

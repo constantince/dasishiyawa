@@ -1,0 +1,4 @@
+#log file 
+*.log
+#files source like img, photo 
+publish/

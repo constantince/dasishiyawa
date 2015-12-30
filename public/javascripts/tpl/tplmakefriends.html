@@ -69,8 +69,8 @@
         </div>
         <p>性别：</p>
         <div class="mui-input-row mui-radio radiobox">
-            <input name="radio1" type="radio" checked>男
-            <input name="radio1" type="radio" class="woman">女
+            <input name="radio" type="radio" value="0" class="woman sex" checked>男
+            <input name="radio" type="radio" value="1" class="woman sex">女
         </div>
         <div class="mui-checkbox needagree">
             <div>微信号：</div>
@@ -85,16 +85,16 @@
         <div class="noneed line">
             以下是选填项，可以为你加分哦
         </div>
-        <p>个人照(最多三张，第一张作为广场封面照和头像)</p>
+        <p>个人照(目前只允许上传一张)</p>
         <div id="image-list" class="row image-list">
             <div class="image-item space">
                 <div class="image-close">X</div>
-                <input type="file" accept="image/*" id="image-1">
+                <input type="file" accept="image/*" class="img">
             </div>
         </div>
         <p class="mui-checkbox">年龄：<em class="keepsecret">保密<input class="need" name="checkbox" value="Item 2" type="checkbox"></em></p>
         <div class="mui-input-row">
-            <select>
+            <select class="age">
                 <%for(var i=10; i<81; i++){%>
                     <option value="<%=i%>"><%=i + '岁'%></option>
                 <%}%>
@@ -114,7 +114,7 @@
         </div>
         <p>特长：</p>
         <div class="mui-input-row">
-            <input  type="text" class="mui-input-clear goodai" placeholder="说说你最擅长的" data-input-clear="1">
+            <input  type="text" class="mui-input-clear goodat" placeholder="说说你最擅长的" data-input-clear="1">
         </div>
         <p>爱好：</p>
         <div class="mui-input-row">
@@ -134,19 +134,20 @@
         </div>
         <p>婚恋状态</p>
         <div class="mui-input-row">
-            <select>
-                <option>你猜</option>
-                <option>单身</option>
-                <option>已婚</option>
-                <option>未婚</option>
-                <option>丧偶</option>
-                <option>同性</option>
+            <select class="marriageable">
+                <option class="0">你猜</option>
+                <option class="1">单身</option>
+                <option class="2">未婚</option>
+                <option class="3">已婚</option>
+                <option class="4">丧偶</option>
+                <option class="5">丧偶</option>
+                <option class="6">同性</option>
             </select>
         </div>
         <p>交友宣言：</p>
         <div class="row mui-input-row">
             <textarea class="mui-input-clear question" placeholder="请详细描述你的问题和意见..."></textarea>
         </div>
-        <button type="button" class="mui-btn mui-btn-green submit">提交</button>
+        <button type="button" class="mui-btn mui-btn-green J-submit">提交</button>
     </div>
 </script>

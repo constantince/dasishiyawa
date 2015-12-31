@@ -37,7 +37,7 @@ define(['base'], function(_PRO_) {
 		//路由名称 +无需赘述，如果没有配置路由名称，则该界面没有加入路由规则当中去。一般是弹出界面无需配置此项
 		route: 'MakeFriends',
 		//界面的异步加载数据地址
-		url: '/makefriends/index?index=0&count=5',
+		url: '/makefriends/index?index=0&count=20',
 		//该界面需要显示出来的导航
 		nav: ['Bottom', 'Top'],
 		view: {
@@ -52,12 +52,15 @@ define(['base'], function(_PRO_) {
 			//注册界面事件
 			pageEvent: {
 				//查看师傅信息
-				'tap li.cell->toInfo': function(e) {
+				'tap li.list->toInfo': function(e) {
 						//params1:模块名称(B), params2:路由名称(B), params3: function.....:回掉函数。this上下文指向文件模块B
 						var tar = $(e.target);
-						tar = tar.hasClass('cell') ? tar : tar.parents('.cell').eq(0);
-						var id = tar.data('id');
-						router.myNavigate('Home', 'Information/' + id);
+						tar = tar.hasClass('list') ? tar : tar.parents('.list').eq(0);
+						var i = tar.data('i');
+						var json = this.model.toJSON().list[i];
+						router.myNavigate('MakeFriends', 'Personel', function(){
+							this.addDataToModel(json);
+						});
 					}
 					// 'tap .J-refresh->refreshPage': function() {
 					// 	_exprots.A.refresh('testname', {
@@ -77,35 +80,29 @@ define(['base'], function(_PRO_) {
 		name: 'personel',
 		route: 'Personel(/:id)',
 		title: '个人信息',
+		applyChange: true,
 		//url: 'http://'+IP+':8800/?way=Personel',
 		//该界面需要显示出来的导航
 		nav: ['Top'],
 		view: {
 			pageEvent: {
-				'tap .J-bookup->callMaster': function(e) {
-					var json = this.model.toJSON().information;
-					router.myNavigate('Home', 'FillOrder', function() {
-						this.addDataToModel({
-							masterInformation: {
-								masterId: json.id,
-								masterName: json.name,
-								masterTel: json.tel
-							}
-
-						});
-					});
+				'tap .say-hello->sayHello': function(e) {
+					var id = this.model.toJSON().id;
+					PDW.ajax({
+						url: '/makefriends/sayHello?user='+id+'&sender=1',
+						success: function(r) {
+							console.log(r);
+						}
+					})
 				},
-				'tap .J-tab->tabChange': function(e) {
-					var tar = $(e.target);
-					var listName = tar.data('list');
-					if (tar.hasClass('mui-active')) {
-						return;
-					} else {
-						this.$el.find('a.mui-active').removeClass('mui-active');
-						tar.addClass('mui-active');
-					}
-					this.$el.find('.list ul').addClass('g-d-n');
-					this.$el.find('.list').find('ul.' + listName).removeClass('g-d-n');
+				'tap .like-it->likeIt': function(e) {
+					var id = this.model.toJSON().id;
+					PDW.ajax({
+						url: '/makefriends/likeit?user='+id+'&sender=1',
+						success: function() {
+							
+						}
+					})
 				}
 			}
 		}

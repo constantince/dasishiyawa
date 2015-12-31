@@ -261,21 +261,29 @@
 #makeFriends {
 	
 }
+#makeFriends .my-css-cbox{
+    overflow: scroll;
+    height: 100%;
+}
 #makeFriends ul li.list{
-	display: -webkit-box;
+	
 }
 #makeFriends li.list img{
-	height:100%;
-	width: 100%;
+    height: 65px;
+    width: 65px;
+    border-radius: 50%;
 }
 #makeFriends li.list a{
-	display: block;
-    -webkit-box-flex: 1;
-    border: 1px solid #d9d9d9;
-    margin: 5px;
+    border-bottom: 1px solid #d9d9d9;
+    border-top: 1px solid #d9d9d9;
+    padding: 0px 10px 5px;
+    margin-top: 5px;
+    display: -webkit-box;
+    -webkit-box-align: center;
 }
 #makeFriends li.list .content {
-	padding: 5px;
+	    padding: 5px;
+    -webkit-box-flex: 1;
 }
 #makeFriends li.list a .box1{
 	display: -webkit-box;

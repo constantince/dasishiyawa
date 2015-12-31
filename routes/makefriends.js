@@ -22,11 +22,34 @@ module.exports = function(app) {
 			});
 		})
 	});
+	//打招呼
+	app.get('/makefriends/sayHello', function(req, res, next) {
+		var sql = 'INSERT INTO news (user, type, sender, status) VALUES(' + req.query.user + ',1,' + req.query.sender+',0)';
+		Query(sql, function(err, rows, filed) {
+			if (err) return;
+			res.json({
+				status: 1,
+				data: 'success'
+			});
+		})
+	});
+	//赞
+	app.get('/makefriends/likeIt', function(req, res, next) {
+		var sql = 'INSERT INTO likes (recevoir, send) VALUES(' + req.query.user + ',' + req.query.sender+')';
+		console.log(sql);
+		Query(sql, function(err, rows, filed) {
+			if (err) return;
+			res.json({
+				status: 1,
+				data: 'success'
+			});
+		})
+	});
 	//发布个人信息接口
 	app.post('/makefriends/publish', function(req, res, next) {
 		var form = new formidable.IncomingForm();
 		form.encoding = 'utf-8'; //设置编辑
-		form.uploadDir = './publish/upload/images/'; //设置上传目录
+		form.uploadDir = './public/publish/upload/images/'; //设置上传目录
 		form.keepExtensions = true; //保留后缀
 		form.maxFieldsSize = 2 * 1024 * 1024; //文件大小
 		//处理图片
@@ -63,7 +86,7 @@ module.exports = function(app) {
 			}
 
 			var avatarName = Math.random() + '.' + extName;
-			var newPath = form.uploadDir + avatarName;
+			var newPath = './publish/upload/images/' + avatarName;
 			var filesName = ['show_img="' + newPath + '"', 'is_show=1'];
 			for (var i in fields) {
 				if (typeof fields[i] !== 'object') {
@@ -85,7 +108,7 @@ module.exports = function(app) {
 		});
 		//处理其他信息
 
-		//res.end();
+		res.end();
 	});
 }
 

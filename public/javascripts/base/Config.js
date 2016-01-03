@@ -19,7 +19,7 @@ define(function(){
 			Home: ['home', 'fillorder'],
 			Center: ['center'],
 			Nav: ['bottom', 'top'],
-			MakeFriends: ['makefriends', 'personel']
+			MakeFriends: ['makefriends', 'personel', 'publishperson']
 		}
 	}
 });

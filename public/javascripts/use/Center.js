@@ -16,7 +16,7 @@ define(['base'], function(_PRO_) {
 		route: 'Center',
 		navInfo: {active: 'Center'},
 		nav: ['Bottom', 'Top'],
-		// url: 'http://'+IP+':8800/?way=center',
+		url: '/center/index',
 		view: {
 			pageEvent: {
 				//查看个人详细信息
@@ -28,9 +28,9 @@ define(['base'], function(_PRO_) {
 					
 				// },
 				// //信息消息通知
-				// 'tap .J-infomation->toPage': function(e) {
+				'tap .J-infomation->toPage': function(e) {
 					
-				// },
+				},
 				// //建议和意见
 				// 'tap .J-infomation->toPage': function(e) {
 					
@@ -59,7 +59,24 @@ define(['base'], function(_PRO_) {
 		title: '详细信息',
 		route: 'MyInformation',
 		nav: ['Top'],
-		url: 'http://'+IP+':8800/?way=myInformation',
+		url: '/center/myInfo',
+		view: {
+			pageEvent: {
+				//填写交友信息
+				'tap .J-try->try': function(e) {
+					router.myNavigate('MakeFriends', 'PublishPerson', function(){
+
+					});
+				},
+				//修改交友信息
+				'tap .J-editor->editor': function(e) {
+					var id = $(e.target).data('id');
+					router.myNavigate('MakeFriends', 'PublishPerson', function(){
+						
+					});
+				}
+			}
+		}
 	});
 	//查看个人订单
 	_exprots.MyOrder = PDW.createClass({
@@ -118,7 +135,7 @@ define(['base'], function(_PRO_) {
 		title: '我的消息',
 		route: 'News',
 		nav: ['Top'],
-		url: 'http://'+IP+':8800/?way=news',
+		url: '/center/checknews?page=1&count=15',
 		view: {
 			pageEvent: {
 				'tap .checkout->go': function(e) {
@@ -134,7 +151,26 @@ define(['base'], function(_PRO_) {
 		title: '建议和意见',
 		route: 'Suggestion',
 		nav: ['Top'],
-		url: 'http://'+IP+':8800/?way=suggestion'
+		// url: 'http://'+IP+':8800/?way=suggestion',
+		view: {
+			pageEvent: {
+				'tap .J-submit->go': function(e) {
+					var question = this.$el.find('.question')[0].value;
+					var contact = this.$el.find('.contact').val();
+					PDW.ajax({
+						type: 'POST',
+						url: '/center/suggestion',
+						data: {
+							connection: contact,
+							content: question
+						},
+						success: function(r) {
+							console.log(r)
+						}
+					})
+				}
+			}
+		}
 	});
 	//关于我们
 	_exprots.AboutUs = PDW.createClass({
@@ -142,7 +178,7 @@ define(['base'], function(_PRO_) {
 		title: '关于我们',
 		route: 'AboutUs',
 		nav: ['Top'],
-		url: 'http://'+IP+':8800/?way=aboutUs'
+		url: '/center/aboutus'
 	});
 	//更多功能
 	_exprots.MoreFunction = PDW.createClass({

@@ -248,6 +248,22 @@
     height: 100%;
     overflow: scroll;
 }
+#myInformation .mybtn {
+    border-radius: 0;
+    height: 40px;
+    font-size: 2.0rem;
+    line-height: 40px;
+    padding: 0;
+    width: 80%;
+    margin: 25px auto;
+}
+#myInformation h4 {
+	text-align: center;
+}
+#center .nick {
+	height: 42px;
+	line-height: 42px;
+}
 #news li .mui-btn {
 	margin: 0;
     height: 25px;
@@ -394,6 +410,9 @@
     font-size: 1.4rem;
     padding-left: 14px;
     color: #8f8f94;
+}
+#publishPerson submit {
+	margin: 15px 0;
 }
 #publishPerson .needagree div.discription {
 	font-size: 1.2rem;

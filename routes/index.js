@@ -8,6 +8,8 @@ var fs = require('fs');
 var home = require('./home');
 //广场查询业务
 var makefriends = require('./makefriends');
+//个人中心界面查询
+var center = require('./center');
 // var sql = require('../sql/query');
 module.exports = function(app) {
     /* GET home page. */
@@ -26,6 +28,7 @@ module.exports = function(app) {
 
     home(app);
     makefriends(app);
+    center(app);
 }
 
 

@@ -78,9 +78,9 @@ module.exports = function(app) {
 					break;
 			}
 			if (extName.length == 0) {
-				res.locals.error = '只支持png和jpg格式图片';
-				res.render(index, {
-					title: TITLE
+				res.json({
+					status: 1,
+					data: {info: 'jpg, png'}
 				});
 				return;
 			}
@@ -107,8 +107,6 @@ module.exports = function(app) {
 			});
 		});
 		//处理其他信息
-
-		res.end();
 	});
 }
 

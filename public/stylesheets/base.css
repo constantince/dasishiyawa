@@ -87,7 +87,7 @@ div.amap-sug-result {
 	line-height: 22px;
 	z-index: -1;
 }
-.normal > .scrollBox {
+.normal .scrollBox {
 	height: 100%;
 	overflow: scroll;
 }

@@ -87,6 +87,10 @@ div.amap-sug-result {
 	line-height: 22px;
 	z-index: -1;
 }
+.normal .scrollBox {
+	height: 100%;
+	overflow: scroll;
+}
 ._tipBx ._tipWp {
 	position: relative;
 	background-color: rgba(0, 0, 0, 0.7);

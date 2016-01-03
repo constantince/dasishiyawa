@@ -22,15 +22,38 @@ module.exports = function(app) {
 			});
 		})
 	});
+	//打招呼
+	app.get('/makefriends/sayHello', function(req, res, next) {
+		var sql = 'INSERT INTO news (user, type, sender, status) VALUES(' + req.query.user + ',1,' + req.query.sender+',0)';
+		Query(sql, function(err, rows, filed) {
+			if (err) return;
+			res.json({
+				status: 1,
+				data: 'success'
+			});
+		})
+	});
+	//赞
+	app.get('/makefriends/likeIt', function(req, res, next) {
+		var sql = 'INSERT INTO likes (recevoir, send) VALUES(' + req.query.user + ',' + req.query.sender+')';
+		console.log(sql);
+		Query(sql, function(err, rows, filed) {
+			if (err) return;
+			res.json({
+				status: 1,
+				data: 'success'
+			});
+		})
+	});
 	//发布个人信息接口
 	app.post('/makefriends/publish', function(req, res, next) {
 		var form = new formidable.IncomingForm();
 		form.encoding = 'utf-8'; //设置编辑
-		form.uploadDir = './publish/upload/images/'; //设置上传目录
+		form.uploadDir = './public/publish/upload/images/'; //设置上传目录
 		form.keepExtensions = true; //保留后缀
-		form.maxFieldsSize = 1 * 1024 * 1024; //文件大小
+		form.maxFieldsSize = 2 * 1024 * 1024; //文件大小
+		//处理图片
 		form.parse(req, function(err, fields, files) {
-
 			if (err) {
 				res.locals.error = err;
 				res.render(index, {
@@ -38,9 +61,9 @@ module.exports = function(app) {
 				});
 				return;
 			}
-
+			if (files.show_img === undefined) return;
 			var extName = ''; //后缀名
-			switch (files.pic.type) {
+			switch (files.show_img.type) {
 				case 'image/pjpeg':
 					extName = 'jpg';
 					break;
@@ -54,26 +77,36 @@ module.exports = function(app) {
 					extName = 'png';
 					break;
 			}
-
 			if (extName.length == 0) {
-				res.locals.error = '只支持png和jpg格式图片';
-				res.render(index, {
-					title: TITLE
+				res.json({
+					status: 1,
+					data: {info: 'jpg, png'}
 				});
 				return;
 			}
 
 			var avatarName = Math.random() + '.' + extName;
-			var newPath = form.uploadDir + avatarName;
+			var newPath = './publish/upload/images/' + avatarName;
+			var filesName = ['show_img="' + newPath + '"', 'is_show=1'];
+			for (var i in fields) {
+				if (typeof fields[i] !== 'object') {
+					filesName.push(i + '="' + fields[i] + '"');
+				}
 
-			console.log(newPath);
-			fs.renameSync(files.pic.path, newPath); //重命名
-			res.end();
+			}
+			var sql = 'UPDATE user SET ' + filesName.join(',') + ' WHERE id = 1';
+			Query(sql, function(err, rows, filed) {
+				if (err) {
+					console.log(err);
+					return;
+				}
+				res.json({
+					status: 1,
+					data: {}
+				});
+			});
 		});
-
-		// res.locals.success = '上传成功';
-		//res.render(index, { title: TITLE });      
-
+		//处理其他信息
 	});
 }
 

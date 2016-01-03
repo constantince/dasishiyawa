@@ -13,11 +13,10 @@
 				<!--头像信息栏-->
 				<ul class="mui-table-view mui-table-view-chevron">
 					<li class="mui-table-view-cell mui-media">
-						<a class="mui-navigate-right" href="#MyInformation">
-							<img class="mui-media-object mui-pull-left head-img" id="head-img" src="">
-							<div class="mui-media-body">
-								伊娜股
-								<p class="mui-ellipsis">手机:15444565887</p>
+						<a class="mui-navigate-right">
+							<img class="mui-media-object mui-pull-left head-img" id="head-img" src="<%=chat.headimgurl%>">
+							<div class="mui-media-body nick">
+								<p class="mui-ellipsis"><%=chat.nickname%></p>
 							</div>
 						</a>
 					</li>
@@ -25,9 +24,12 @@
 				<!--订单-->
 				<ul class="mui-table-view mui-table-view-chevron J-checkOrder">
 					<li class="mui-table-view-cell">
+						<a href="#MyInformation" class="mui-navigate-right">交友资料</a>
+					</li>
+					<li class="mui-table-view-cell">
 						<a href="#MyOrder" class="mui-navigate-right">我的订单<span class="mui-badge mui-badge-primary">4</span></a>
 					</li>
-				</ul>
+				</ul>	
 				<!--消息和建议入口-->
 				<ul class="mui-table-view mui-table-view-chevron">
 					<li class="mui-table-view-cell">
@@ -59,42 +61,100 @@
 		</div>
 	</div>
 </script>
-<!-- 个人详细信息 -->
+<!-- 个人发布的交友详细信息 -->
 <script type="text/template" id="tplmyInformation">
-	<div class="mui-pages">
-			<div id="account" class="mui-page mui-page-center" style="">
-			<div class="mui-page-content">
-				<div class="mui-scroll-wrapper" data-scroll="3">
-					<ul class="mui-table-view">
-						<li class="mui-table-view-cell">
-							<a id="head" class="mui-navigate-right">头像
-								<span class="mui-pull-right head">
-									<img class="head-img mui-action-preview" id="head-img1" src="">
-								</span>
-							</a>
-						</li>
-						<li class="mui-table-view-cell">
-							<a>姓名<span class="mui-pull-right">易来古</span></a>
-						</li>
-						<li class="mui-table-view-cell">
-							<a>微信账号<span class="mui-pull-right">hbuilder@dcloud.io</span></a>
-						</li>
-					</ul>
-					<ul class="mui-table-view">
-						<li class="mui-table-view-cell">
-							<a>QQ号<span class="mui-pull-right">88888888</span></a>
-						</li>
-						<li class="mui-table-view-cell">
-							<a>手机号<span class="mui-pull-right">18601234567</span></a>
-						</li>
-						<li class="mui-table-view-cell">
-							<a>联系地址<span class="mui-pull-right">hbuilder@dcloud.io</span></a>
-						</li>
-					</ul>
-				<div class="mui-scrollbar mui-scrollbar-vertical"><div class="mui-scrollbar-indicator"></div></div></div>
+<%if(hasInfo == 1){%>
+		<div class="mui-pages">
+				<div id="account" class="mui-page mui-page-center" style="">
+				<div class="mui-page-content">
+					<div class="mui-scroll-wrapper scrollBox" data-scroll="3">
+						<ul class="mui-table-view">
+							<li class="mui-table-view-cell">
+								<a class="mui-navigate-right">
+									<span class="head">
+										<img class="head-img mui-action-preview" src="<%=info.show_img%>">
+									</span>
+								</a>
+							</li>
+							<li class="mui-table-view-cell">
+								<a>姓名<span class="mui-pull-right"><%=info.nick%></span></a>
+							</li>
+							<li class="mui-table-view-cell">
+								<a>微信账号<span class="mui-pull-right"><%=info.chat%></span></a>
+							</li>
+							<li class="mui-table-view-cell">
+								<a>性别<span class="mui-pull-right"><%=info.sex%></span></a>
+							</li>
+						</ul>
+						<ul class="mui-table-view">
+						<%if(info.age){%>
+							<li class="mui-table-view-cell">
+								<a>年龄：<span class="mui-pull-right"><%=info.age%></span></a>
+							</li>
+						<%}%>
+						<%if(info.birthplace){%>
+							<li class="mui-table-view-cell">
+								<a>出生地：<span class="mui-pull-right"><%=info.birthplace%></span></a>
+							</li>
+						<%}%>
+						<%if(info.liveplace){%>
+							<li class="mui-table-view-cell">
+								<a>现居地：<span class="mui-pull-right"><%=info.liveplace%></span></a>
+							</li>
+						<%}%>
+						<%if(info.profession){%>
+							<li class="mui-table-view-cell">
+								<a>职业：<span class="mui-pull-right"><%=info.profession%></span></a>
+							</li>
+						<%}%>
+						<%if(info.speciality){%>
+							<li class="mui-table-view-cell">
+								<a>特长：<span class="mui-pull-right"><%=info.speciality%></span></a>
+							</li>
+						<%}%>
+						<%if(info.hobby){%>
+							<li class="mui-table-view-cell">
+								<a>爱好：<span class="mui-pull-right"><%=info.hobby%></span></a>
+							</li>
+						<%}%>
+						<%if(info.tall){%>
+							<li class="mui-table-view-cell">
+								<a>身高：<span class="mui-pull-right"><%=info.tall%>cm</span></a>
+							</li>
+						<%}%>
+						<%if(info.weight){%>
+							<li class="mui-table-view-cell">
+								<a>体重：<span class="mui-pull-right"><%=info.weight%>KG</span></a>
+							</li>
+						<%}%>
+						<%if(info.marriageable){%>
+							<li class="mui-table-view-cell">
+								<a>婚姻状态<span class="mui-pull-right"><%=info.marriageable%></span></a>
+							</li>
+						<%}%>
+						<%if(info.socialaccount){%>
+							<li class="mui-table-view-cell">
+								<a>其他社交号<span class="mui-pull-right"><%=info.socialaccount%></span></a>
+							</li>
+						<%}%>
+						
+						</ul>
+						<%if(info.introduction){%>
+						<ul class="mui-table-view">
+							<li class="mui-table-view-cell">
+								<a>交友宣言<span class="mui-pull-right"><%=info.introduction%></span></a>
+							</li>
+						</ul>
+						<%}%>
+						<button class="mui-btn mui-btn-primary mui-btn-block mybtn J-editor">修改</button>
+					<div class="mui-scrollbar mui-scrollbar-vertical"><div class="mui-scrollbar-indicator"></div></div></div>
+				</div>
 			</div>
 		</div>
-	</div>
+<%}else{%>
+	<h4>您还未发布交友资料</h4>
+	<button class="mui-btn mui-btn-primary mui-btn-block mybtn J-try">去试试看</button>
+<%}%>
 </script>
 <!-- 个人订单 -->
 <script type="text/template" id="tplmyOrder">
@@ -159,13 +219,15 @@
 <!-- 新消息 -->
 <script type="text/template" id="tplnews">
 	<ul class="newsUl">
+	<%for(var i=0, l=newslist.length; i<l; i++){%>
 		<li class="newsLi">
 			<div class="message">
-				<p class="content">陈师傅已经修好了电视，快去看看吧</p>
-				<em class="time">2015-07-18 19:25:65</em>
+				<p class="content"><%=newslist[i].content%></p>
+				<em class="time"><%=newslist[i].create_time.replace(/[a-z]/gim, ' ')%></em>
 			</div>
 		</li>
-		<li class="newsLi">
+	<%}%>
+<!-- 		<li class="newsLi">
 			<div class="message">
 				<p class="content">陈师傅已经修好了电视，快去看看吧</p>
 				<em class="time">2015-07-18 19:25:65</em>
@@ -198,7 +260,7 @@
 				<em class="time">2015-07-18 19:25:65</em>
 			</div>
 			
-		</li>
+		</li> -->
 	</ul>
 </script>
 <!-- 个人意见和建议 -->
@@ -208,13 +270,13 @@
 			<div class="mui-page-content">
 				<p>问题和意见</p>
 				<div class="row mui-input-row">
-						<textarea id="question" class="mui-input-clear question" placeholder="一起来建设公众号吧，留下您的意见，一经采取，有大奖哦！"></textarea>
+						<textarea class="mui-input-clear question" placeholder="一起来建设公众号吧，留下您的意见，一经采取，有大奖哦！"></textarea>
 					</div>
-					<p>QQ/邮箱/电话</p>
+					<p>QQ/电话/邮箱</p>
 					<div class="mui-input-row">
-						<input id="contact" type="text" class="mui-input-clear  contact" placeholder="(选填,方便我们联系你 )" data-input-clear="19"><span class="mui-icon mui-icon-clear mui-hidden"></span>
+						<input type="text" class="mui-input-clear contact" placeholder="(选填,方便我们联系你 )" data-input-clear="19"><span class="mui-icon mui-icon-clear mui-hidden"></span>
 					</div>
-					<button id="submit" type="button" class="mui-btn mui-btn-green">提交</button>
+					<button type="button" class="mui-btn mui-btn-green J-submit">提交</button>
 				</div>
 		</div>
 	</div>
@@ -222,24 +284,12 @@
 <!-- 关于我们 -->
 <script type="text/template" id="tplaboutUs">
 	<div class="mui-content-padded">
-		<h4 style="margin-top:10px;">我们是谁</h4>
+		<h3><%=version%></h3>
 		<p>
-			待续。。。。。。。。。。。。。。。
+			<%=discription%>
 		</p>
 		<p>
-			待续。。。。。。。。。。。。。。
-		</p>
-		<h4>为什么要做</h4>
-		<p>
-			待续。。。。。。。。。。。
-		</p>
-		<p>
-			若要使用MUI进行移动APP开发，可通过Hbuilder，新建“移动APP”，并选择“MUI”工程模板，该模板已内置MUI相关的资源文件。
-		</p>
-		<p></p>
-		<h4>我们的目标</h4>
-		<p>
-			待续。。。。。。。。。。。。。。
+			<%=create_time%>
 		</p>
 	</div>
 </script>

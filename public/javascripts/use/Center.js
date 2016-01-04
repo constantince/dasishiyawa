@@ -53,6 +53,34 @@ define(['base'], function(_PRO_) {
 			}
 		}
 	});
+	//签到领取红包
+	_exprots.SignIn = PDW.createClass({
+		name: 'signIn',
+		title: '签到领红包',
+		route: 'SignIn',
+		nav: ['Top'],
+		url: '/center/hassignin',
+		view: {
+			pageEvent: {
+				//填写交友信息
+				'tap .J-signIn->signIn': function(e) {
+					var tar = $(e.target);
+					PDW.ajax({
+						url: '/center/signin',
+						success: function(r) {
+							if(r.data.go === 'ok') {
+								PB.toast({
+									message: '签到成功！',
+									type: 'success',
+									delay: 2500
+								})
+							}
+						}
+					});
+				}
+			}
+		}
+	});
 	//查看个人信息
 	_exprots.MyInformation = PDW.createClass({
 		name: 'myInformation',
@@ -84,7 +112,7 @@ define(['base'], function(_PRO_) {
 		title: '我的订单',
 		route: 'MyOrder',
 		nav: ['Top'],
-		url: 'http://'+IP+':8800/?way=myOrder',
+		url: '/center/myorder',
 		view:{
 			pageEvent:{
 				//展开收起订单

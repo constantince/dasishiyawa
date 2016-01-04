@@ -7,13 +7,14 @@ body {
 	font-size: 24px;
 	font-family: Helvetica, Arial, sans-serif;
 	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-    		-webkit-user-select: none;
-			-moz-user-select: none;
--ms-user-select: none;
-user-select: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
 }
 #pageWindow {
-	width: 100%; height: 100%;
+	width: 100%;
+	height: 100%;
 }
 #pageWindow > .hasnav-top {
 	padding-top: 50px;
@@ -25,14 +26,15 @@ body >.fixednav {
 	display: none;
 }
 body > .navigate {
-	z-index:1000;
+	z-index: 1000;
 }
+
 /*reset*/
 body, h1, h2, h3, h4, h5, h6, hr, p, blockquote, dl, dt, dd, ul, ol, li, pre, form, fieldset, legend, button, input, textarea, th, td {
 	margin: 0;
 	padding: 0;
 }
-em ,i {
+em, i {
 	font-style: normal;
 }
 body, button, input, select, textarea {
@@ -141,35 +143,83 @@ div.amap-sug-result {
 	background: #fafafa;
 	font-size: 55%;
 	display: none;
-	position: absolute;
-	/*left: 0px;
-	top: 0px; */
+	position: absolute;	/*left: 0px;
+		top: 0px; */
+
 	/*box-shadow: 0 -12px 12px #101010;*/
-	box-shadow: 0 0 12px rgba(0,0,0,0.2);
+	box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
 	width: 100%;
-	height: 100%;
-	/* overflow: scroll; */
+	height: 100%;	/* overflow: scroll; */
 }
 #pageWindow > .navigate {
 	position: fixed;
-    width: 100%;
-    display: none;
+	width: 100%;
+	display: none;
 }
 #pageWindow > .mask {
-
 }
 #pageWindow > div.hide {
-	display: none!important;
+	display: none !important;
 }
 #pageWindow > .page_show {
 	display: block;
 }
-#pageWindow > .navigate_show{
+#pageWindow > .navigate_show {
 	display: block;
 }
 .g-d-n {
-	display: none;
+	display: none !important;
 }
+@-webkit-keyframes rotate {
+	0% {
+		-webkit-transform: rotate(0deg);
+    	transform: rotate(0deg)
+	}
+	100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg)
+    }
+}
+body .am-toast-text .am-icon{
+	height:36px;
+	width:36px;
+	display:block;
+	margin: 0 auto;
+}
+body .am-toast-text em{
+	margin-top: 8px;
+    display: block;
+    font-size: 14px;
+}
+body .am-toast-text .am-icon[am-mode~="loading"] {
+	animation: rotate linear 1.85s infinite;
+    background: url(../images/loading.png) -80px 0px/160px 35px no-repeat;
+}
+body .am-toast-text .am-icon[am-mode~="success"] {
+    background: url(../images/loading.png) 0px 0px/160px 35px no-repeat;
+}
+body .am-toast-text .am-icon[am-mode~="faile"] {
+    background: url(../images/loading.png) -40px 0px/160px 35px no-repeat;
+}
+body .am-toast-text .am-icon[am-mode~="unconnectable"] {
+    background: url(../images/loading.png) -120px 0px/160px 35px no-repeat;
+}
+body .am-toast-text {
+	display: inline-block;
+    margin: 24px auto auto;
+    padding: 9px;
+    width: 100px;
+    height: 80px;
+    font-size: 20px;
+    border-radius: 10px;
+    -webkit-background-clip: padding-box;
+    color: #fff;
+    background-color: #1E2238;
+    position: fixed;
+    opacity: .8;
+    text-align: center;
+}
+
 /**
  *
  * Horizontal Scrollbar

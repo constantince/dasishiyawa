@@ -698,6 +698,46 @@ function(C, _, Backbone) {
 			},
 			paramObj.delay)
 		}
+		//插件，toast提示
+        exports.toast = function(opt, show) {
+            //强行停止加载toast
+            if(show === 'hide') {
+                clearTimeout(exports.publicVar['toast-meter']);
+                $('.J-toast').addClass('g-d-n');
+                exports.publicVar['toast-key'] = undefined;
+                return;
+            }
+            //防止重复点击
+            if(exports.publicVar['toast-key'] !== undefined) {
+                return;
+            }
+            exports.publicVar['toast-key'] = 1;
+            var defaults = $.extend({
+                message: 'loading',
+                delay: 2000,//
+                type: 'loading',//loading, success, faile, unconnectable;
+                callback: function(){
+
+                }
+            }, opt);
+            var height = $(window).height();
+            var width = $(window).width();
+            var w = width/2 - 40 ;
+            var h = height/2 - 60;
+            var htmlstring = '<div class="am-toast-text J-toast" style="top:'+ h +'px; left:'+w+'px;">' + 
+                                '<span class="am-icon" am-mode="'+defaults.type+'"></span><em>'+ defaults.message + '</em>' +
+                            '</div>';
+            if($('.J-toast').length) {
+                var el = $('.J-toast').removeClass('g-d-n');
+            }else{
+                var el = $('body').append(htmlstring).find('.J-toast');
+            }
+            exports.publicVar['toast-meter'] = setTimeout(function(){
+                exports.publicVar['toast-key'] = undefined;
+                el.addClass('g-d-n');
+                defaults.callback();
+            }, defaults.delay);
+        }
 		exports.loadCss = function(g) {
 			switch (g) {
 			case 1:

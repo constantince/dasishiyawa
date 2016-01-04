@@ -59,7 +59,7 @@ module.exports = function(app) {
 			});
 		});
 	});
-	//关于我们
+	//我们的交友信息
 	app.get('/center/myinfo', function(req, res, next) {
 		var sql = 'SELECT * FROM user WHERE id = 2';
 		Query(sql, function(err, rows, filed) {
@@ -79,6 +79,49 @@ module.exports = function(app) {
 				returnInfo.data.hasInfo = 1; 
 			}
 			res.json(returnInfo);
+		});
+	});
+	//我的订单
+	app.get('/center/myorder', function(req, res, next) {
+		var sql = 'SELECT * FROM `order` LEFT JOIN `master` ON (order.master = master.id) WHERE order.user = 1';
+		Query(sql, function(err, rows, filed) {
+			if (err) {
+				console.log(err);
+				return;
+			}
+			//输出我的订单
+			res.json({
+				status: 1,
+				data: {orderList: rows}
+			});
+		});
+	});
+	//查询是否签到
+	app.get('/center/hassignin', function(req, res, next) {
+		var sql = 'SELECT count(*) as num FROM signin WHERE id = 1';
+		Query(sql, function(err, rows, filed) {
+			if (err) {
+				console.log(err);
+				return;
+			}
+			res.json({
+				status: 1,
+				data: {hasSignin: rows[0]}
+			});
+		});
+	});
+	//签到
+	app.get('/center/signin', function(req, res, next) {
+		var sql = 'UPDATE signin SET num = num + 1 WHERE user =  1';
+		Query(sql, function(err, rows, filed) {
+			if (err) {
+				console.log(err);
+				return;
+			}
+			res.json({
+				status: 1,
+				data: {go: 'ok'}
+			});
 		});
 	});
 }

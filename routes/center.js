@@ -10,11 +10,7 @@ var fs = require('fs');
 module.exports = function(app) {
 	//个人资料主界面
 	app.get('/center/index', function(req, res, next) {
-<<<<<<< HEAD
-		Query('SELECT * FROM wechat WHERE id = 1 ', function(err, rows, filed) {
-=======
 		Query('SELECT *,(SELECT COUNT(*) FROM `news` WHERE  news.`sender` = user.`news_id`) AS ncount FROM `user` WHERE id = 1', function(err, rows, filed) {
->>>>>>> dev
 			if (err) return;
 			res.json({
 				status: 1,
@@ -50,31 +46,20 @@ module.exports = function(app) {
 	});
 	//关于我们
 	app.get('/center/aboutus', function(req, res, next) {
-<<<<<<< HEAD
-		var sql = 'SELECT * FROM aboutus';
-=======
 		var sql = "SELECT * FROM aboutus";
->>>>>>> dev
 		Query(sql, function(err, rows, filed) {
 			if (err) {
 				console.log(err);
 				return;
 			}
-<<<<<<< HEAD
-=======
 			rows[0].create_time = rows[0].create_time.toISOString().replace(/T/, ' ').replace(/\..+/, '');
->>>>>>> dev
 			res.json({
 				status: 1,
 				data: rows[0]
 			});
 		});
 	});
-<<<<<<< HEAD
-	//关于我们
-=======
 	//我们的交友信息
->>>>>>> dev
 	app.get('/center/myinfo', function(req, res, next) {
 		var sql = 'SELECT * FROM user WHERE id = 2';
 		Query(sql, function(err, rows, filed) {
@@ -96,8 +81,6 @@ module.exports = function(app) {
 			res.json(returnInfo);
 		});
 	});
-<<<<<<< HEAD
-=======
 	//我的订单
 	app.get('/center/myorder', function(req, res, next) {
 		var sql = 'SELECT * FROM `order` LEFT JOIN `master` ON (order.master = master.id) WHERE order.user = 1';
@@ -141,7 +124,6 @@ module.exports = function(app) {
 			});
 		});
 	});
->>>>>>> dev
 }
 
 // module.exports = router;

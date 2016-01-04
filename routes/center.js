@@ -10,7 +10,7 @@ var fs = require('fs');
 module.exports = function(app) {
 	//个人资料主界面
 	app.get('/center/index', function(req, res, next) {
-		Query('SELECT * FROM wechat WHERE id = 1 ', function(err, rows, filed) {
+		Query('SELECT *,(SELECT COUNT(*) FROM `news` WHERE  news.`sender` = user.`news_id`) AS ncount FROM `user` WHERE id = 1', function(err, rows, filed) {
 			if (err) return;
 			res.json({
 				status: 1,
@@ -46,12 +46,13 @@ module.exports = function(app) {
 	});
 	//关于我们
 	app.get('/center/aboutus', function(req, res, next) {
-		var sql = 'SELECT * FROM aboutus';
+		var sql = "SELECT * FROM aboutus";
 		Query(sql, function(err, rows, filed) {
 			if (err) {
 				console.log(err);
 				return;
 			}
+			rows[0].create_time = rows[0].create_time.toISOString().replace(/T/, ' ').replace(/\..+/, '');
 			res.json({
 				status: 1,
 				data: rows[0]

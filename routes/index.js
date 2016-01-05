@@ -15,8 +15,6 @@ var login = require('./login');
 module.exports = function(app) {
     /* GET home page. */
     app.get('/page', function(req, res, next) {
-      //输出模板 jade
-      //res.render('index', { title: 'Express' });
       //输出文件静态html
       fs.readFile('./public/page_main.html', 'utf-8', function(err, data) {//读取内容
             if(err) throw err;

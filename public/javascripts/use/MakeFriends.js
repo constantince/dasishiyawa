@@ -51,15 +51,15 @@ define(['base'], function(_PRO_) {
 			},
 			//注册界面事件
 			pageEvent: {
-				//查看师傅信息
+				//查看个人交友信息
 				'tap li.list->toInfo': function(e) {
 						//params1:模块名称(B), params2:路由名称(B), params3: function.....:回掉函数。this上下文指向文件模块B
 						var tar = $(e.target);
 						tar = tar.hasClass('list') ? tar : tar.parents('.list').eq(0);
 						var i = tar.data('i');
 						var json = this.model.toJSON().list[i];
-						router.myNavigate('MakeFriends', 'Personel', function(){
-							this.addDataToModel(json);
+						router.myNavigate('MakeFriends', 'Personel/'+json.id, function(){
+							//this.addDataToModel(json);
 						});
 					}
 					// 'tap .J-refresh->refreshPage': function() {
@@ -78,10 +78,10 @@ define(['base'], function(_PRO_) {
 	//个人资料
 	_exprots.Personel = PDW.createClass({
 		name: 'personel',
-		route: 'Personel(/:id)',
+		route: 'Personel/:id',
 		title: '个人信息',
 		applyChange: true,
-		//url: 'http://'+IP+':8800/?way=Personel',
+		url: '/makefriends/personel?personel=[0]',
 		//该界面需要显示出来的导航
 		nav: ['Top'],
 		view: {

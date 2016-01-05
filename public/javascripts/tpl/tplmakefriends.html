@@ -36,21 +36,21 @@
 <script type="text/template" id="tplpersonel">
     <div class="scrollBox">
         <div class="banner">
-            <img class="mui-media-object" src="<%=show_img%>">
+            <img class="mui-media-object" src="<%=list.show_img%>">
         </div>
         <div class="content">
-            <p class=""><em class="name">姓名：</em><em class="value"><%=nick||'暂未填写'%></em></p>
-            <p class=""><em class="name">性别：</em><em class="value"><%= (sex == 0 ? '男': '女')%></em></p>
-            <p class=""><em class="name">年龄：</em><em class="value"><%=age||'暂未填写'%></em></p>
-            <p class=""><em class="name">身高：</em><em class="value"><%=tall||'暂未填写'%></em></p>
-            <p class=""><em class="name">体重：</em><em class="value"><%=weight||'暂未填写'%></em></p>
-            <p class=""><em class="name">现居地：</em><em class="value"><%=liveplace||'暂未填写'%></em></p>
-            <p class=""><em class="name">家乡：</em><em class="value"><%=birthplace||'暂未填写'%></em></p>
-            <p class=""><em class="name">婚姻状态：</em><em class="value"><%=marriageable||'暂未填写'%></em></p>
-            <p class=""><em class="name">爱好：</em><em class="value"><%=hobby||'暂未填写'%></em></p>
-            <p class=""><em class="name">职业：</em><em class="value"><%=profession||'暂未填写'%></em></p>
+            <p class=""><em class="name">姓名：</em><em class="value"><%=list.nick||'暂未填写'%></em></p>
+            <p class=""><em class="name">性别：</em><em class="value"><%= (list.sex == 0 ? '男': '女')%></em></p>
+            <p class=""><em class="name">年龄：</em><em class="value"><%=list.age||'暂未填写'%></em></p>
+            <p class=""><em class="name">身高：</em><em class="value"><%=list.tall||'暂未填写'%></em></p>
+            <p class=""><em class="name">体重：</em><em class="value"><%=list.weight||'暂未填写'%></em></p>
+            <p class=""><em class="name">现居地：</em><em class="value"><%=list.liveplace||'暂未填写'%></em></p>
+            <p class=""><em class="name">家乡：</em><em class="value"><%=list.birthplace||'暂未填写'%></em></p>
+            <p class=""><em class="name">婚姻状态：</em><em class="value"><%=list.marriageable||'暂未填写'%></em></p>
+            <p class=""><em class="name">爱好：</em><em class="value"><%=list.hobby||'暂未填写'%></em></p>
+            <p class=""><em class="name">职业：</em><em class="value"><%=list.profession||'暂未填写'%></em></p>
             <p class=""><em class="name">微信号：</em><em class="value">***** TA设置为打招呼后显示</em></p>
-            <p class=""><em class="name">交友宣言：</em><em class="value"><%=introduction||'暂未填写'%></em></p>
+            <p class=""><em class="name">交友宣言：</em><em class="value"><%=list.introduction||'暂未填写'%></em></p>
         </div>
         <footer>
             <button type="button" class="mui-btn mui-btn-primary mui-btn-block say-hello">打个招呼</button>

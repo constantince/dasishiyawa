@@ -479,7 +479,7 @@ function(C, _, Backbone) {
 						url: u
 					}
 				}
-				_loadPage(this.options)
+				_loadPage($.extend(this.options, s));
 			},
 			refresh: function(n, d) {
 				var html = _.template($('#tpl' + this.options.name + '-refresh-' + n).html())(d);

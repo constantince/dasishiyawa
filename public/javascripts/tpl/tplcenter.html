@@ -220,47 +220,25 @@
 <script type="text/template" id="tplnews">
 	<ul class="newsUl">
 	<%for(var i=0, l=newslist.length; i<l; i++){%>
-		<li class="newsLi">
+		<li class="newsLi" kind="<%=newslist[i].type%>">
 			<div class="message">
 				<p class="content"><%=newslist[i].content%></p>
-				<em class="time"><%=newslist[i].create_time.replace(/[a-z]/gim, ' ')%></em>
+				<em class="time"><%=newslist[i].create_time.replace(/T/, ' ').replace(/\..+/, '')%></em>
+				<!-- 打招呼 -->
+				<%if(newslist[i].type == 1){%>
+					<button class="mui-btn mui-btn-primary mybtn J-checksomebody" data-sender="<%=newslist[i].sender%>">查看</button><button class="mui-btn mui-btn-success mybtn J-accpect" data-sender="<%=newslist[i].sender%>">接受</button><button class="mui-btn mui-btn-danger mybtn J-forget" data-sender="<%=newslist[i].sender%>">忽略</button>
+				<%}%>
+				<!-- 订单类 -->
+				<%if(newslist[i].type == 2){%>
+					<button class="mui-btn mui-btn-primary mybtn J-checkorder">查看</button>
+				<%}%>
+				<!-- 处理红包 -->
+				<%if(newslist[i].type == 4){%>
+					<button class="mui-btn mybtn J-red">收红包</button>
+				<%}%>
 			</div>
 		</li>
 	<%}%>
-<!-- 		<li class="newsLi">
-			<div class="message">
-				<p class="content">陈师傅已经修好了电视，快去看看吧</p>
-				<em class="time">2015-07-18 19:25:65</em>
-			</div>
-		</li>
-		<li class="newsLi">
-			<div class="message">
-				<p class="content">你的好友有新的动态了</p>
-				<em class="time">2015-07-18 19:25:65</em>
-			</div>
-			
-		</li>
-		<li class="newsLi message">
-			<div class="message">
-				<p class="content"><a class="checkout" data-id="15">依赖默契  </a>向你打了招呼，赶紧去看看吧</p>
-				<p class="hello">
-					<button type="button" class="mui-btn mui-btn-royal">接受</button>
-					<button type="button" class="mui-btn mui-btn-royal">忽略</button>
-				</p>
-				<em class="time">2015-07-18 19:25:65</em>
-			</div>
-			
-		</li>
-		<li class="newsLi message">
-			<div class="message">
-				<p class="content"><a data-id="">无名大侠 </a>回应了你的招呼，赶紧去加好友吧</p>
-				<p class="hello">
-					<button type="button" class="mui-btn mui-btn-royal">前往</button>
-				</p>
-				<em class="time">2015-07-18 19:25:65</em>
-			</div>
-			
-		</li> -->
 	</ul>
 </script>
 <!-- 个人意见和建议 -->

@@ -11,7 +11,7 @@ module.exports = function(app) {
 	app.get('/center/index', function(req, res, next) {
 		var user_id = req.session['user'];
 		var chat_id = req.session['chat'];
-		var sql = 'SELECT wechat.headimgurl,(SELECT COUNT(*) FROM `news` WHERE  news.`user` = '+ user_id +') AS ncount FROM `wechat` WHERE id = ' + chat_id;
+		var sql = 'SELECT wechat.headimgurl, wechat.nickname, (SELECT COUNT(*) FROM `news` WHERE  news.`user` = '+ user_id +') AS ncount FROM `wechat` WHERE id = ' + chat_id;
 		Query(sql, function(err, rows, filed) {
 			if (err){
 				console.log(sql);
@@ -125,6 +125,22 @@ module.exports = function(app) {
 	app.get('/center/signin', function(req, res, next) {
 		var user_id = req.session['user'];
 		var sql = 'UPDATE signin SET num = num + 1 WHERE user = '+ user_id;
+		Query(sql, function(err, rows, filed) {
+			if (err) {
+				console.log(err);
+				return;
+			}
+			res.json({
+				status: 1,
+				data: {go: 'ok'}
+			});
+		});
+	});
+	//接受别人的招呼
+	app.get('/center/accpect', function(req, res, next) {
+		var user_id = req.session['user'];
+		var sender = req.query.sender;
+		var sql = 'UPDATE relactionshop SET status = 1 WHERE user = '+ user_id + ' AND sender = '+ sender;
 		Query(sql, function(err, rows, filed) {
 			if (err) {
 				console.log(err);

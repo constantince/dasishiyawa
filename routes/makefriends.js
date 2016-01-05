@@ -108,6 +108,28 @@ module.exports = function(app) {
 		});
 		//处理其他信息
 	});
+	//查看别人资料
+	app.get('/makefriends/personel', function(req, res, next) {
+		var personel = req.query.personel;
+		if(!personel) {
+			res.json({
+				status: 1,
+				data: {
+					list: {}
+				}
+			});
+			return;
+		}
+		Query('SELECT * FROM user WHERE id = ' + req.query.personel, function(err, rows, filed) {
+			if (err) return;
+			res.json({
+				status: 1,
+				data: {
+					list: rows[0]
+				}
+			});
+		})
+	});
 }
 
 // module.exports = router;

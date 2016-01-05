@@ -166,10 +166,36 @@ define(['base'], function(_PRO_) {
 		url: '/center/checknews?page=1&count=15',
 		view: {
 			pageEvent: {
-				'tap .checkout->go': function(e) {
-					var id = $(e.target).data('id');
-					router.myNavigate('MakeFriends', 'Personel/'+id, function(){});
-				}
+				//查看向我打招呼的人
+				'tap .J-checksomebody->checkout': function(e) {
+					var sender_id = $(e.target).data('sender');
+					router.myNavigate('MakeFriends', 'Personel/'+sender_id, function(){});
+				},
+				//接受打招呼
+				'tap .J-accpect->accpect': function(e) {
+					var tar = $(e.target);
+					var sender_id = tar.data('sender');
+					if(confirm('接受后对方可以查看您的微信号')) {
+						PDW.ajax({
+							url: '/center/accpect?sender=' + sender_id,
+							success: function(r) {
+								if(r.data.go == 'ok') {
+									PB.toast({
+										message: '接受成功！',
+										type: 'success'
+									});
+									tar.remove();
+								}
+								
+							}
+						});
+					}
+				},
+				//忽略该信息
+				'tap .J-checksomebody->checkout': function(e) {
+					var sender_id = $(e.target).data('sender');
+					router.myNavigate('MakeFriends', 'Personel/'+sender_id, function(){});
+				},
 			}
 		}
 	});

@@ -6,12 +6,18 @@ var Query = require('../sql/query');
 //引入文件查询
 var fs = require('fs');
 
-// console.log('hello');
 module.exports = function(app) {
 	//个人资料主界面
 	app.get('/center/index', function(req, res, next) {
-		Query('SELECT *,(SELECT COUNT(*) FROM `news` WHERE  news.`sender` = user.`news_id`) AS ncount FROM `user` WHERE id = 1', function(err, rows, filed) {
-			if (err) return;
+		var user_id = req.session['user'];
+		var chat_id = req.session['chat'];
+		var sql = 'SELECT wechat.headimgurl,(SELECT COUNT(*) FROM `news` WHERE  news.`user` = '+ user_id +') AS ncount FROM `wechat` WHERE id = ' + chat_id;
+		Query(sql, function(err, rows, filed) {
+			if (err){
+				console.log(sql);
+				console.log(err);
+				return;	
+			} 
 			res.json({
 				status: 1,
 				data: {
@@ -22,7 +28,8 @@ module.exports = function(app) {
 	});
 	//查看个人消息
 	app.get('/center/checknews', function(req, res, next) {
-		var sql = 'SELECT * FROM news WHERE user = 1 LIMIT ' + req.query.page + ',' + req.query.count;
+		var user_id = req.session['user'];
+		var sql = 'SELECT * FROM news WHERE user = '+user_id+' LIMIT ' + req.query.page + ',' + req.query.count;
 		Query(sql, function(err, rows, filed) {
 			if (err) return;
 			res.json({
@@ -35,7 +42,8 @@ module.exports = function(app) {
 	});
 	//建议
 	app.post('/center/suggestion', function(req, res, next) {
-		var sql = 'INSERT INTO suggestion (user, connection, content) VALUES(1,"' + req.body.connection + '", "' + req.body.content + '")';
+		var user_id = req.session['user'];
+		var sql = 'INSERT INTO suggestion (user, connection, content) VALUES('+user_id+',"' + req.body.connection + '", "' + req.body.content + '")';
 		Query(sql, function(err, rows, filed) {
 			if (err) return;
 			res.json({
@@ -59,9 +67,10 @@ module.exports = function(app) {
 			});
 		});
 	});
-	//我们的交友信息
+	//我的交友信息
 	app.get('/center/myinfo', function(req, res, next) {
-		var sql = 'SELECT * FROM user WHERE id = 2';
+		var user_id = req.session['user'];
+		var sql = 'SELECT * FROM user WHERE id = ' + user_id;
 		Query(sql, function(err, rows, filed) {
 			if (err) {
 				console.log(err);
@@ -83,7 +92,8 @@ module.exports = function(app) {
 	});
 	//我的订单
 	app.get('/center/myorder', function(req, res, next) {
-		var sql = 'SELECT * FROM `order` LEFT JOIN `master` ON (order.master = master.id) WHERE order.user = 1';
+		var user_id = req.session['user'];
+		var sql = 'SELECT * FROM `order` LEFT JOIN `master` ON (order.master = master.id) WHERE order.user = ' + user_id;
 		Query(sql, function(err, rows, filed) {
 			if (err) {
 				console.log(err);
@@ -98,7 +108,8 @@ module.exports = function(app) {
 	});
 	//查询是否签到
 	app.get('/center/hassignin', function(req, res, next) {
-		var sql = 'SELECT count(*) as num FROM signin WHERE id = 1';
+		var user_id = req.session['user'];
+		var sql = 'SELECT count(*) as num FROM signin WHERE user = '+ user_id;
 		Query(sql, function(err, rows, filed) {
 			if (err) {
 				console.log(err);
@@ -112,7 +123,8 @@ module.exports = function(app) {
 	});
 	//签到
 	app.get('/center/signin', function(req, res, next) {
-		var sql = 'UPDATE signin SET num = num + 1 WHERE user =  1';
+		var user_id = req.session['user'];
+		var sql = 'UPDATE signin SET num = num + 1 WHERE user = '+ user_id;
 		Query(sql, function(err, rows, filed) {
 			if (err) {
 				console.log(err);

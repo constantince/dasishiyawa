@@ -10,7 +10,8 @@ var home = require('./home');
 var makefriends = require('./makefriends');
 //个人中心界面查询
 var center = require('./center');
-// var sql = require('../sql/query');
+// 登录中心
+var login = require('./login');
 module.exports = function(app) {
     /* GET home page. */
     app.get('/page', function(req, res, next) {
@@ -29,6 +30,8 @@ module.exports = function(app) {
     home(app);
     makefriends(app);
     center(app);
+    login(app);
+
 }
 
 

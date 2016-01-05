@@ -4,6 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var session = require('express-session');
 
 var routes = require('./routes/index');
 // var home = require('./routes/home');
@@ -21,10 +22,20 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
+//初始化session
+app.use(session({
+  secret: 'recommand128bytesrandomstring',
+  cookie: {maxAge: 24 * 3600 * 1000}
+}));
+// 未登录或者session失效
+app.use(function(req, res, next){
+  var user = req.session['user'];
+  if(!user) {
+    console.log('please login first!');
+  }
+  next();
+})
 routes(app);
-// app.use('/', routes);
-// app.use('/home', home);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -336,6 +336,28 @@
 #personel {
 	
 }
+#personel .wechatimg {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    display: block;
+    margin: 20px auto 0;
+}
+#personel .wechatdiv {
+    height: 50px;
+    line-height: 50px;
+    margin: 10px auto;
+    text-align: center;
+    border-bottom: 1px solid #d9d9d9;
+}
+#personel .wechatdiv span {
+    margin: 0 5px;
+    font-size: 1.5rem;
+}
+#personel .wechatp {
+    margin: 0 auto;
+    text-align: center;
+}
 #personel .banner{
 	width: 100%;
 }

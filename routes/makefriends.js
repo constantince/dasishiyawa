@@ -120,7 +120,7 @@ module.exports = function(app) {
 			});
 			return;
 		}
-		Query('SELECT * FROM user WHERE id = ' + req.query.personel, function(err, rows, filed) {
+		Query('SELECT * FROM user LEFT JOIN wechat ON user.id = wechat.user WHERE user.id = ' + req.query.personel, function(err, rows, filed) {
 			if (err) return;
 			res.json({
 				status: 1,

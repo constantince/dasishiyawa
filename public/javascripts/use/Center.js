@@ -170,14 +170,15 @@ define(['base'], function(_PRO_) {
 				'tap .J-checksomebody->checkout': function(e) {
 					var sender_id = $(e.target).data('sender');
 					router.myNavigate('MakeFriends', 'Personel/'+sender_id, function(){});
+					// router.myNavigate('MakeFriends', 'NoInfo/'+sender_id, function(){});
 				},
 				//接受打招呼
 				'tap .J-accpect->accpect': function(e) {
 					var tar = $(e.target);
-					var sender_id = tar.data('sender');
+					var id = tar.data('id');
 					if(confirm('接受后对方可以查看您的微信号')) {
 						PDW.ajax({
-							url: '/center/accpect?sender=' + sender_id,
+							url: '/center/accpect?id=' + id,
 							success: function(r) {
 								if(r.data.go == 'ok') {
 									PB.toast({
@@ -192,9 +193,18 @@ define(['base'], function(_PRO_) {
 					}
 				},
 				//忽略该信息
-				'tap .J-checksomebody->checkout': function(e) {
-					var sender_id = $(e.target).data('sender');
-					router.myNavigate('MakeFriends', 'Personel/'+sender_id, function(){});
+				'tap .J-forget->forget': function(e) {
+					var tar = $(e.target);
+					var id = tar.data('id');
+					PDW.ajax({
+							url: '/center/forget?id=' + id,
+							success: function(r) {
+								if(r.data.go == 'ok') {
+									tar.parents('.newsLi').eq(0).remove();
+								}
+								
+							}
+						});
 				},
 			}
 		}
@@ -211,6 +221,7 @@ define(['base'], function(_PRO_) {
 				'tap .J-submit->go': function(e) {
 					var question = this.$el.find('.question')[0].value;
 					var contact = this.$el.find('.contact').val();
+					if(!question) return alert('请填写您的建议！');
 					PDW.ajax({
 						type: 'POST',
 						url: '/center/suggestion',
@@ -219,7 +230,10 @@ define(['base'], function(_PRO_) {
 							content: question
 						},
 						success: function(r) {
-							console.log(r)
+							PB.toast({
+								message: '提交成功！',
+								type: 'success'
+							});
 						}
 					})
 				}

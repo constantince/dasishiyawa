@@ -21,12 +21,8 @@ define(['base'], function(_PRO_) {
 				Route: 'MakeFriends',
 				Name: '广场',
 				icon: 'image'
-			}, {
-				Module: 'MakeFriends',
-				Route: 'PublishPerson',
-				Name: '发布',
-				icon: 'compose'
-			}, {
+			},
+			{
 				Module: 'Center',
 				Route: 'Center',
 				Name: '我的',
@@ -80,7 +76,6 @@ define(['base'], function(_PRO_) {
 		name: 'personel',
 		route: 'Personel/:id',
 		title: '个人信息',
-		applyChange: true,
 		url: '/makefriends/personel?personel=[0]',
 		//该界面需要显示出来的导航
 		nav: ['Top'],
@@ -160,9 +155,11 @@ define(['base'], function(_PRO_) {
 					fd.append('hobby', hobby);
 					//身高
 					var tall = father.find('.tall').val();
+					if(tall !='' && ! (/^\d{3}$/.test(tall))) return alert('身高为三位数数字！')
 					fd.append('tall', tall);
 					//体重
 					var weight = father.find('.weight').val();
+					if(weight !='' && !(/^\d{2}$/.test(weight))) return alert('体重为两位数数字！')
 					fd.append('weight', weight);
 					//其他社交账号
 					var contact = father.find('.contact').val();

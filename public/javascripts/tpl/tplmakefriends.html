@@ -34,6 +34,8 @@
 </script>
 <!-- 个人信息 -->
 <script type="text/template" id="tplpersonel">
+<!-- 通过有无微信好 判断时候填写交友嘻嘻你 -->
+<%if(list.chat){%>
     <div class="scrollBox">
         <div class="banner">
             <img class="mui-media-object" src="<%=list.show_img%>">
@@ -57,6 +59,11 @@
             <button type="button" class="mui-btn mui-btn-success mui-btn-block like-it">给TA个赞</button>
         </footer>
     </div>
+<%}else{%>
+    <img class="wechatimg" src="<%=list.headimgurl%>">
+    <div class="wechatdiv"><span><%=list.nickname%></span><span><%=list.sex== 1 ? '男' : '女'%></span><span><%=list.country + list.province + list.city%></span></div>
+    <p class="wechatp">该用户暂时没有发布交友信息</p>
+<%}%>
 </script>
 <!-- 发布个人信息 -->
 <script type="text/template" id="tplpublishPerson">

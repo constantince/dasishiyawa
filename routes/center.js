@@ -5,7 +5,7 @@
 var Query = require('../sql/query');
 //引入文件查询
 var fs = require('fs');
-
+var formidable = require("formidable");
 module.exports = function(app) {
 	//个人资料主界面
 	app.get('/center/index', function(req, res, next) {
@@ -190,6 +190,34 @@ module.exports = function(app) {
 				data: {
 					go: 'ok'
 				}
+			});
+		});
+	});
+	//注册成为师傅
+	app.post('/center/register', function(req, res, next) {
+		var form = new formidable.IncomingForm();
+		form.encoding = 'utf-8'; //设置编辑
+		var user_id = req.session['user'];
+		form.parse(req, function(err, fields, files) {
+			var body = fields;
+			var filedName = ['user'];
+			var valueName = ['"' + user_id + '"'];
+			for (var i in body) {
+				if (typeof body[i] !== 'object') {
+					filedName.push(i);
+					valueName.push('"' + body[i] + '"');
+				}
+			}
+			var sql = 'INSERT INTO master (' + filedName.join(',') + ') VALUES(' + valueName.join(',') + ')';
+			Query(sql, function(err, rows, filed) {
+				if (err) {
+					console.log(err);
+					return;
+				}
+				res.json({
+					status: 1,
+					data: {go: 'ok'}
+				});
 			});
 		});
 	});

@@ -255,6 +255,64 @@ define(['base'], function(_PRO_) {
 		route: 'MoreFunction',
 		nav: ['Top']
 	});
+	//注册成为师傅
+	_exprots.Register = PDW.createClass({
+		name : 'register',
+		route: 'Register',
+		title: '填写信息',
+		nav: ['Top'],
+		// url: 'http://'+IP+':8800/?way=fillOrder',
+		view: {
+			pageEvent: {
+				'tap .J-submit->submitOrder': function(e) {
+					var father = this.$el;
+					var fd = new FormData();
+					//称谓
+					var name = father.find('.appellation').val();
+					if (name == '' || name.length > 6) {
+						return alert('昵称为1~6个字符')
+					}
+					fd.append('name', name);
+					//性别
+					var sex = father.find('.sex').val();
+					fd.append('sex', sex);
+					//行业
+					var occupation = father.find('.occupation').val();
+					fd.append('skill_id', occupation);
+					//年龄
+					var age = father.find('.age').val();
+					fd.append('age', age);
+					//技能
+					var skill = father.find('.skill').val();
+					fd.append('skill', skill);
+					//经验
+					var experience = father.find('.experience').val();
+					fd.append('experience', experience);
+					//自我介绍
+					var interduce = father.find('.interduce').val();
+					fd.append('introduction', interduce);
+					//服务范围
+					var area = father.find('.area').val();
+					fd.append('area', area);
+					//地址
+					var adress = father.find('.adress').val();
+					fd.append('adress', adress);
+					//电话
+					var phone = father.find('.phone').val();
+					fd.append('phone', phone);
+					$.ajax({
+						url: "/center/register",
+						type: "POST",
+						data: fd,
+						processData: false, // 告诉zepto不要去处理发送的数据
+						contentType: false // 告诉zepto不要去设置Content-Type请求头
+					});
+
+					//router.myNavigate('Home','SubmitSuccess');
+				}
+			}
+		}
+	});
 
 	return _exprots;
 });

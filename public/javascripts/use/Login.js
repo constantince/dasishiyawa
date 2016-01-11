@@ -21,21 +21,7 @@ define(['base'], function(_PRO_) {
 		}
 	});
 	
-	//注册界面
-	_exprots.Register = PDW.createClass({
-		name : 'register',
-		route: 'Register',
-		title: '填写信息',
-		nav: ['Top'],
-		// url: 'http://'+IP+':8800/?way=fillOrder',
-		view: {
-			pageEvent: {
-				'tap .J-submit->submitOrder': function(e) {
-					router.myNavigate('Home','SubmitSuccess');
-				}
-			}
-		}
-	});
+
 	
 	//忘记密码
 	_exprots.ForgetPassword = PDW.createClass({

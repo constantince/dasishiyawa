@@ -2,12 +2,12 @@
 <script type="text/template" id="tplhome">
 	<ul class="list">
     <%for(var i=0, l=infoList.length; i<l; i++){%>
-        <li class="cell" data-id="<%=infoList[i].id%>">
-        	<div class="leftimg"><img src="<%=infoList[i].headimg%>" class="headimg"></div>
+        <li class="cell" data-id="<%=infoList[i].user%>">
+        	<div class="leftimg"><img src="<%=infoList[i].head_img%>" class="headimg"></div>
             <div class="middleinfo">
                 <h4 class="mui-ellipsis"><%=infoList[i].name%><em class="title">师傅</em></h4>
-                <h5><span class="oa-contact-email mui-h6"><em>服务范围</em>-<%=infoList[i].servicearea%></span></h5>
-                <p class="mui-ellipsis oa-contact-email mui-h6"><%=infoList[i].motto%></p>
+                <h5><span class="oa-contact-email mui-h6"><em>服务范围</em>-<%=infoList[i].area%></span></h5>
+                <p class="mui-ellipsis oa-contact-email mui-h6"><%=infoList[i].introduction%></p>
             </div>
             <div class="rightother">
             	
@@ -23,20 +23,20 @@
         <div class="info">
             <p class="mui-ellipsis">
                 <span><em class="name">姓名：</em><em class="value"><%=information.name%></em></span>
-                <span><em class="name">性别：</em><em class="value"><%= information.sex == 1 ? '男' : '女'%></em></span>
+                <span><em class="name">性别：</em><em class="value"><%= information.sex == 0 ? '男' : '女'%></em></span>
             </p class="mui-ellipsis">
             <p class="mui-ellipsis">
-                <span><em class="name">经验：</em><em class="value"><%=information.serviceyears%>年</em></span>
-                <span><em class="name">店铺：</em><em class="value"><%=information.shopname%></em></span>
+                <span><em class="name">经验：</em><em class="value"><%=information.experience%>年</em></span>
+                <span><em class="name">地址：</em><em class="value"><%=information.adress%></em></span>
             </p>
             <p class="mui-ellipsis">
-                <span><em class="name">个人评价：</em><em class="value"><%=information.motto%>年</em></span>
+                <span><em class="name">个人评价：</em><em class="value"><%=information.introduction%></em></span>
             </p>
         </div>
     </header>
     <div class="servicearea">
         <p class="mui-ellipsis">
-            <span><em class="name">服务范围：</em><em class="value"><%=information.servicearea%></em></span>
+            <span><em class="name">服务范围：</em><em class="value"><%=information.area%></em></span>
         </p> 
     </div>
     <div class="content">
@@ -63,8 +63,8 @@
             %>
                 <li>
                     <div class="left">
-                        <span><em>订单</em><%=orderList[i].number%></span>
-                        <span><em>提交于</em><%=orderList[i].time%></span>
+                        <span><em>订单</em><%=orderList[i].order_number%></span>
+                        <span><em>提交于</em><%=orderList[i].bookup_time%></span>
                     </div>
                     <button type="button" class="mui-btn <%=cls%>"><%=txt%></button>
                 </li>
@@ -75,14 +75,14 @@
                 <li>
                     <div class="title">
                         <div class="left">
-                            <em>订单号：</em><em><%=judeList[i].number%></em>
+                            <em>订单号：</em><em><%=judeList[i].order_number%></em>
                         </div> 
                         <div class="right">
                             <%for(var u=0; u<judeList[i].stars; u++){%><span class="mui-icon mui-icon-star"></span><%}%>
                         </div>
                     </div>
-                    <p><em>评价：</em><em><%=judeList[i].description%></em></p>
-                    <p class="juder"><%=judeList[i].time%>--<%=judeList[i].juder%></p>
+                    <p><em>评价：</em><em><%=judeList[i].content%></em></p>
+                    <p class="juder"><%=judeList[i].create_time%>--<%=judeList[i].user%></p>
                 </li>
             <%}%>
         </ul>

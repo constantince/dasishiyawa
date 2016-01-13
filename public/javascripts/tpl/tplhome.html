@@ -2,7 +2,7 @@
 <script type="text/template" id="tplhome">
 	<ul class="list">
     <%for(var i=0, l=infoList.length; i<l; i++){%>
-        <li class="cell" data-id="<%=infoList[i].user%>">
+        <li class="cell" data-id="<%=infoList[i].id%>">
         	<div class="leftimg"><img src="<%=infoList[i].head_img%>" class="headimg"></div>
             <div class="middleinfo">
                 <h4 class="mui-ellipsis"><%=infoList[i].name%><em class="title">师傅</em></h4>
@@ -97,8 +97,8 @@
                 <a class="mui-navigate-right" href="#account">
                     <div class="mui-media-body">
                         您的以下信息会将同时提交给<em class="mname"><%=masterInformation.masterName%>师傅</em>哦
-                        <p class="mui-ellipsis">昵称:<%=myInformation.name%></p>
-                        <p class="mui-ellipsis">电话:<%=myInformation.tel%></p>
+                        <p class="mui-ellipsis">昵称:<%=myInformation.nick%></p>
+                        <p class="mui-ellipsis">电话:<%=myInformation.phone%></p>
                         <%if(myInformation.adress){%><p class="mui-ellipsis">默认地址:<%=myInformation.adress%></p><%}%>
                     </div>
                 </a>
@@ -114,10 +114,16 @@
             <div class="mui-input-row">
                 <label>*设备年限</label>
                 <select class="machineYear">
-                    <option value="1-">1年以下</option>
-                    <option value="1-3">1~3年</option>
-                    <option value="3-5">3~5年</option>
-                    <option value="5+">5年以上</option>
+                    <option value="1">1年</option>
+                    <option value="2">2年</option>
+                    <option value="3">3年</option>
+                    <option value="4">4年</option>
+                    <option value="5">5年</option>
+                    <option value="6">6年</option>
+                    <option value="7">7年</option>
+                    <option value="7">8年</option>
+                    <option value="7">9年</option>
+                    <option value="7">10年</option>
                 </select>
             </div>
             <div class="mui-input-row">

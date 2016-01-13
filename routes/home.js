@@ -21,7 +21,7 @@ module.exports = function(app) {
 		//师傅信息查询
 		app.get('/home/masterinfo', function(req, res, next) {
 			var master = req.query.master;
-			Query('SELECT * FROM `master` WHERE `user` = ' + master, function(err, rows, filed) {
+			Query('SELECT * FROM `master` WHERE `id` = ' + master, function(err, rows, filed) {
 				if (err) {
 					console.log(err);
 					return;
@@ -55,5 +55,54 @@ module.exports = function(app) {
 				})
 			})
 		});
+
+		//填写信息
+		app.get('/home/fillorder', function(req, res, next) {
+			var user_id = req.session['user'];
+			Query('SELECT * FROM user WHERE id = ' + user_id, function(err, rows, filed) {
+				if (err) {
+					console.log(err);
+					return;
+				}
+				res.json({
+					status: 1,
+					data: {
+						myInformation: rows[0]
+					}
+				});
+			})
+		});
+
+		//提交故障信息界面接口
+		app.post('/home/submitOrder', function(req, res, next) {
+			var user_id = req.session['user'];
+			var result = req.body;
+			var adress = result.adress;
+			delete result.adress;
+			var nameArr = ['user', 'status'];
+			var valueArr = [user_id, 0];
+			for(var i in result) {
+				nameArr.push(i);
+				valueArr.push('"' + result[i] + '"');
+			}
+			Query('INSERT INTO `order` ('+ nameArr.join(',') +') VALUES ('+ valueArr.join(',') +')', function(err, rows, filed) {
+				if (err) {
+					console.log(err);
+					return;
+				}
+				var sql = 'UPDATE `user` SET adress = "' + adress + '" WHERE id = ' + user_id;
+				//插入更新用户的地址
+				if(adress) {
+					Query(sql);
+				}
+				res.json({
+					status: 1,
+					data: {
+						orderNum: rows.insertId
+					}
+				});
+			})
+		});
+		
 	}
 	// module.exports = router;

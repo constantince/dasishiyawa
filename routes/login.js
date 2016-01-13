@@ -15,6 +15,7 @@ module.exports = function(app) {
 				return;
 			}
 			req.session['user'] = rows[0].id;
+			req.session['user_type'] = rows[0].identification;
 			req.session['name'] = rows[0].nickname;
 			req.session['chat'] = rows[0].wechat_id;
 			req.session['open_id'] = req.query.opendid;

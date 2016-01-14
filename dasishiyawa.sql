@@ -38,6 +38,7 @@ DROP TABLE IF EXISTS `comment`;
 
 CREATE TABLE `comment` (
   `id` int(4) NOT NULL AUTO_INCREMENT COMMENT '评论表id',
+  `order_number` int(10) NOT NULL COMMENT '对应订单id',
   `user` int(4) NOT NULL COMMENT '用户',
   `master` int(4) NOT NULL COMMENT '师傅',
   `star` int(1) DEFAULT NULL COMMENT '评论分数5分最高',
@@ -110,6 +111,7 @@ DROP TABLE IF EXISTS `master`;
 
 CREATE TABLE `master` (
   `id` int(4) NOT NULL AUTO_INCREMENT COMMENT '师傅id',
+  `user` int(4) NOT NULL COMMENT '对应的用户',
   `name` varchar(5) NOT NULL COMMENT '师傅名字',
   `phone` varchar(13) NOT NULL COMMENT '师傅联系电话',
   `experience` int(4) DEFAULT NULL COMMENT '维修经验（年）',
@@ -122,11 +124,11 @@ CREATE TABLE `master` (
   `head_img` varchar(50) DEFAULT NULL COMMENT '头像',
   `area` varchar(20) NOT NULL COMMENT '服务范围',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 /*Data for the table `master` */
 
-insert  into `master`(`id`,`name`,`phone`,`experience`,`age`,`sex`,`skill_id`,`skill`,`adress`,`introduction`,`head_img`,`area`) values (1,'文明','15222625587',3,45,0,1,'修电视','萍乡湘东五四村','大家好，才是真的好',NULL,'湘东全乎龙');
+insert  into `master`(`id`,`user`,`name`,`phone`,`experience`,`age`,`sex`,`skill_id`,`skill`,`adress`,`introduction`,`head_img`,`area`) values (3,1,'陈','15844565589',10,10,0,1,'修理电话','萍乡东桥麻山村','大家好，第一次注册，平台还不错',NULL,'萍乡东桥步行街那坨几不远');
 
 /*Table structure for table `news` */
 
@@ -135,17 +137,17 @@ DROP TABLE IF EXISTS `news`;
 CREATE TABLE `news` (
   `id` int(4) NOT NULL AUTO_INCREMENT COMMENT '个人消息id',
   `user` int(4) NOT NULL COMMENT '收到消息的用户',
-  `type` int(4) NOT NULL DEFAULT '0' COMMENT '消息类型0系统1用户2师傅3其他',
+  `type` int(4) NOT NULL DEFAULT '0' COMMENT '消息类型0系统1用户2师傅3收到赞4收到红包',
   `sender` int(4) DEFAULT NULL COMMENT '消息发送人',
-  `status` int(4) DEFAULT NULL COMMENT '消息状态0已经读取，1未读取，2已忽略 3已接受',
+  `status` int(4) DEFAULT NULL COMMENT '消息状态0未读取，1已读取，2已忽略 3已经接受',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '发送时间',
   `content` varchar(200) DEFAULT NULL COMMENT '消息内容',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
 /*Data for the table `news` */
 
-insert  into `news`(`id`,`user`,`type`,`sender`,`status`,`create_time`,`content`) values (1,1,1,2,0,'2016-01-03 15:13:44','感谢关注大四时呀哇'),(2,1,1,2,0,'2016-01-03 15:20:28','咯皮球向您打了招呼'),(3,1,1,2,0,'2016-01-03 15:20:52','您的订单已经被师傅处理了'),(4,1,1,1,0,'2016-01-03 15:28:49','您的交友信息已经发布'),(5,1,1,1,0,'2016-01-03 15:29:15','请及时处理未处理消息'),(6,1,1,1,0,'2016-01-03 15:29:36','卖烧烤的向你打了一个招呼和赞'),(7,2,1,1,0,'2016-01-04 20:19:05',NULL);
+insert  into `news`(`id`,`user`,`type`,`sender`,`status`,`create_time`,`content`) values (1,1,0,2,3,'2016-01-07 19:35:32','感谢关注大四时呀哇'),(2,1,1,2,3,'2016-01-07 19:39:45','咯皮球向您打了招呼'),(3,1,2,2,1,'2016-01-07 19:49:34','您的订单已经被师傅处理了'),(4,1,0,2,1,'2016-01-07 19:49:34','您的交友信息已经发布'),(5,1,0,2,1,'2016-01-07 19:49:34','请及时处理未处理消息'),(6,1,2,2,1,'2016-01-07 19:49:34','卖烧烤的向你打了一个招呼和赞'),(7,1,4,2,1,'2016-01-07 19:49:34','恭喜你抽中了红包'),(8,1,3,2,3,'2016-01-07 19:35:32','收到来咯皮球的赞');
 
 /*Table structure for table `order` */
 
@@ -153,7 +155,6 @@ DROP TABLE IF EXISTS `order`;
 
 CREATE TABLE `order` (
   `id` int(4) NOT NULL AUTO_INCREMENT COMMENT '订单表id',
-  `order_number` int(8) NOT NULL COMMENT '订单id',
   `user` int(4) NOT NULL COMMENT '下单人的id',
   `master` int(4) NOT NULL COMMENT '师傅id',
   `start_time` timestamp NULL DEFAULT NULL COMMENT '订单开始处理的时间',
@@ -169,17 +170,15 @@ CREATE TABLE `order` (
   `review_time` timestamp NULL DEFAULT NULL COMMENT '评论时间',
   `status` int(1) NOT NULL DEFAULT '0' COMMENT '订单状态0为开始1处理中2已完成3已评价4已取消',
   PRIMARY KEY (`id`,`type`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
 
 /*Data for the table `order` */
 
-insert  into `order`(`id`,`order_number`,`user`,`master`,`start_time`,`end_time`,`bookup_time`,`apparatus`,`kind`,`problem`,`used_year`,`type`,`review`,`star`,`review_time`,`status`) values (1,54447,1,1,NULL,NULL,'2016-01-04 21:44:34','冰箱','康佳','有雪花点',3,0,NULL,1,NULL,0);
+/*Table structure for table `relactionship` */
 
-/*Table structure for table `relactionshop` */
+DROP TABLE IF EXISTS `relactionship`;
 
-DROP TABLE IF EXISTS `relactionshop`;
-
-CREATE TABLE `relactionshop` (
+CREATE TABLE `relactionship` (
   `id` int(8) NOT NULL AUTO_INCREMENT COMMENT '关系表id',
   `sender` int(4) NOT NULL COMMENT '发起人id',
   `user` int(4) NOT NULL COMMENT '收到请求人id',
@@ -187,9 +186,11 @@ CREATE TABLE `relactionshop` (
   `message` varchar(20) DEFAULT NULL COMMENT '附带消息',
   `create_time` timestamp NULL DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
-/*Data for the table `relactionshop` */
+/*Data for the table `relactionship` */
+
+insert  into `relactionship`(`id`,`sender`,`user`,`status`,`message`,`create_time`) values (1,2,1,3,'hi',NULL);
 
 /*Table structure for table `signin` */
 
@@ -206,7 +207,7 @@ CREATE TABLE `signin` (
 
 /*Data for the table `signin` */
 
-insert  into `signin`(`id`,`user`,`num`,`update_time`,`create_time`) values (1,1,13,'2016-01-04 21:59:36.3796','2016-01-04 21:59:36');
+insert  into `signin`(`id`,`user`,`num`,`update_time`,`create_time`) values (1,1,16,'2016-01-11 20:23:02.0235','2016-01-11 20:23:02');
 
 /*Table structure for table `skill` */
 
@@ -233,11 +234,11 @@ CREATE TABLE `suggestion` (
   `content` varchar(400) DEFAULT NULL COMMENT '建议内容',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '建议生成的时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
 
 /*Data for the table `suggestion` */
 
-insert  into `suggestion`(`id`,`user`,`connection`,`content`,`create_time`) values (6,1,'undefined','undefined','2016-01-03 16:14:21'),(7,1,'fgdfdfdf','dfdfdfdfdfdf','2016-01-03 16:15:15'),(8,1,'undefined','undefined','2016-01-03 16:15:23'),(9,1,'大幅度反对法','','2016-01-03 16:15:57'),(10,1,'大幅度反对法','','2016-01-03 16:17:19'),(11,1,'怕怕怕怕怕怕','噢噢噢噢','2016-01-03 16:17:34');
+insert  into `suggestion`(`id`,`user`,`connection`,`content`,`create_time`) values (6,1,'undefined','undefined','2016-01-03 16:14:21'),(7,1,'fgdfdfdf','dfdfdfdfdfdf','2016-01-03 16:15:15'),(8,1,'undefined','undefined','2016-01-03 16:15:23'),(9,1,'大幅度反对法','','2016-01-03 16:15:57'),(10,1,'大幅度反对法','','2016-01-03 16:17:19'),(11,1,'怕怕怕怕怕怕','噢噢噢噢','2016-01-03 16:17:34'),(12,1,'大幅答复','可以开通论坛吗','2016-01-07 20:18:54'),(13,1,'22222222','111111','2016-01-11 21:47:53'),(14,1,'undefined','undefined','2016-01-11 21:48:47');
 
 /*Table structure for table `user` */
 
@@ -254,6 +255,7 @@ CREATE TABLE `user` (
   `identification` int(1) DEFAULT '0' COMMENT '0用户1认证用户2认证师傅',
   `chat` varchar(20) DEFAULT NULL COMMENT '微信号',
   `birthplace` varchar(20) DEFAULT NULL COMMENT '出生地',
+  `adress` varchar(50) DEFAULT NULL COMMENT '上门服务地址',
   `liveplace` varchar(20) DEFAULT NULL COMMENT '现居地',
   `profession` varchar(20) DEFAULT NULL COMMENT '职业',
   `speciality` varchar(20) DEFAULT NULL COMMENT '特长',
@@ -271,7 +273,7 @@ CREATE TABLE `user` (
 
 /*Data for the table `user` */
 
-insert  into `user`(`id`,`verify_status`,`varify_err_msg`,`phone`,`nick`,`sex`,`age`,`identification`,`chat`,`birthplace`,`liveplace`,`profession`,`speciality`,`hobby`,`tall`,`weight`,`socialaccount`,`marriageable`,`introduction`,`show_img`,`is_show`,`need_hiddenwx`) values (1,0,NULL,NULL,'又一村',1,20,0,'1354','江西','深圳','设计师','设计','羽毛球',168,51,'254447898',1,'hello 大家好 我是又一村','./publish/upload/images/0.3608497316017747.png',1,NULL),(2,0,NULL,NULL,'卡皮球',0,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,'./publish/upload/images/upload_5a4188265121fcb298efcfd6f58bca69.png',0,NULL);
+insert  into `user`(`id`,`verify_status`,`varify_err_msg`,`phone`,`nick`,`sex`,`age`,`identification`,`chat`,`birthplace`,`adress`,`liveplace`,`profession`,`speciality`,`hobby`,`tall`,`weight`,`socialaccount`,`marriageable`,`introduction`,`show_img`,`is_show`,`need_hiddenwx`) values (1,0,NULL,'15444236985','小豆豆',1,20,0,'大幅答复','江西','步行街','萍乡','大幅答复','大幅答复','大幅答复',154,58,'4545454',1,'1','./publish/upload/images/0.4225649992004037.jpg',1,NULL),(2,0,NULL,NULL,'卡皮球',0,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,'./publish/upload/images/upload_5a4188265121fcb298efcfd6f58bca69.png',0,NULL);
 
 /*Table structure for table `wechat` */
 

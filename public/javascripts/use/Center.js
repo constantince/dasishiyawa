@@ -314,5 +314,31 @@ define(['base'], function(_PRO_) {
 		}
 	});
 
+	//接收到的订单
+	_exprots.TakeOrder = PDW.createClass({
+		name: 'takeOrder',
+		title: '收到的单',
+		route: 'TakeOrder',
+		url: '/center/takeorder',
+		nav: ['Top'],
+		view: {
+			pageEvent: {
+				'tap .J-handle->handleOrder': function(e) {
+					var tar = $(e.target);
+					var orderId = tar.data('orderid');
+					var handleWay = tar.data('way');
+					PDW.ajax({
+						url: '/center/handleorder?orderid='+ orderId + '&action=' + handleWay,
+						success: function(e) {
+							if(e.data.go == 'ok') {
+								console.log('success!');
+							}
+						}
+					})
+				}
+			}
+		}
+	});
+
 	return _exprots;
 });

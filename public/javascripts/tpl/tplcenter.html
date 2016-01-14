@@ -26,6 +26,9 @@
 					<li class="mui-table-view-cell">
 						<a href="#Register" class="mui-navigate-right">注册成为师傅</a>
 					</li>
+					<li class="mui-table-view-cell">
+						<a href="#TakeOrder" class="mui-navigate-right">收到的订单</a>
+					</li>
 				</ul>	
 				<!--订单-->
 				<ul class="mui-table-view mui-table-view-chevron J-checkOrder">
@@ -33,7 +36,7 @@
 						<a href="#MyInformation" class="mui-navigate-right">交友资料</a>
 					</li>
 					<li class="mui-table-view-cell">
-						<a href="#MyOrder" class="mui-navigate-right">我的订单<%if(chat.ordercount > 0){%><span class="mui-badge mui-badge-primary"><%=chat.ordercount%></span><%}%></a>
+						<a href="#MyOrder" class="mui-navigate-right">已提交的订单<%if(chat.ordercount > 0){%><span class="mui-badge mui-badge-primary"><%=chat.ordercount%></span><%}%></a>
 					</li>
 				</ul>	
 				<!--消息和建议入口-->
@@ -403,4 +406,25 @@
 			<p>注册真实可用，注册成功后的用户可用于登录.</p>
 		</div>
 	</div>
+</script>
+<script type="text/template" id="tpltakeOrder">
+	<ul>
+	<%for(var i=0; i<orderList.length; i++){ var order = orderList[i];%>
+		<li class="content">
+			<div class="box">
+				<h3 class="name">订单<%=order.id%></h3>
+		        <p class="name"><em>下单人:<%=order.nick%> 先生</em><em>电话：<%=order.phone%></em></p>
+		        <p><em>设备名称：<%=order.kind || '' %><%=order.apparatus%></em><em>设备年限：<%=order.used_year%>年</em>
+		        <p>上门地址：<%=order.adress%></p>
+		        <p>问题描述：<%=order.problem%></p>
+		        <p>下单时间：<%=order.bookup_time%></p>
+	        </div>
+	        <footer class="btn">
+	        	<button type="button" data-orderid="<%=order.id%>" data-way="1" class="J-handle mui-btn mui-btn-primary" onclick="return false;">接单</button>
+	        	<a type="button" href="tel:<%=order.phone%>" class="J-content mui-btn mui-btn-success" onclick="return false;">拨打电话</a>
+	        	<button type="button" data-orderid="<%=order.id%>" data-way="4" class="J-handle mui-btn mui-btn-danger" onclick="return false;">拒绝</button>
+	        </footer>
+	    </li>
+	<%}%>
+	</ul>
 </script>

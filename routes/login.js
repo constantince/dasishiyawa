@@ -14,19 +14,41 @@ module.exports = function(app) {
 				console.log(err);
 				return;
 			}
-			req.session['user'] = rows[0].id;
-			req.session['user_type'] = rows[0].identification;
-			req.session['name'] = rows[0].nickname;
-			req.session['chat'] = rows[0].wechat_id;
+			var result = rows[0];
+			req.session['user'] = result.id;
+			req.session['user_type'] = result.identification;
+			req.session['name'] = result.nickname;
+			req.session['chat'] = result.wechat_id;
 			req.session['open_id'] = req.query.opendid;
-			res.json({
-				status: 1,
-				data: {
-					nick: rows[0].nickname,
-					sex: rows[0].sex,
-					header: rows[0].headimgurl
-				}
-			});
+			req.session['master_id'] = 0;
+			var masterSql = 'SELECT * FROM master WHERE user = ' + result.id;
+			if(result.identification == 2) {
+				Query(masterSql, function(err, rows, filed) {
+					if (err) {
+						console.log(err);
+						return;
+					}
+					req.session['master_id'] = rows[0].id;
+					res.json({
+						status: 1,
+						data: {
+							nick: result.nickname,
+							sex: result.sex,
+							header: result.headimgurl
+						}
+					});
+				});
+			}else{
+				res.json({
+					status: 1,
+					data: {
+						nick: result.nickname,
+						sex: result.sex,
+						header: result.headimgurl
+					}
+				});
+			}
+			
 			return;
 		})
 	});

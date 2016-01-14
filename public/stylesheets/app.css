@@ -267,6 +267,10 @@
     border-radius: 0;
 	height:inherit;
 }
+#register .veriflycode {
+    width: 100px;
+    float: left;
+}
 #center .mui-scroll {
 	padding-bottom: 50px;
     height: 100%;
@@ -468,4 +472,31 @@
 }
 #signIn p{
     padding: 10px 40px;
+}
+#takeOrder li {
+    padding: 5px 15px;
+    background: #fff;
+    border-bottom: 1px solid #d9d9d9;
+    border-top: 1px solid #d9d9d9;
+    margin-top: 10px;
+}
+#takeOrder li h3 {
+    text-align: center;
+    font-size: 1.8rem;
+}
+#takeOrder li p {
+    margin-bottom: 2px;
+}
+#takeOrder li p em {
+    margin-right: 25px;
+}
+#takeOrder li footer {
+    display: -webkit-box;
+    -webkit-box-pack: center;
+    margin-top: 10px;
+}
+#takeOrder li footer > * {
+    padding: 2px 0px;
+    margin-left: 5px;
+    width: 80px;
 }

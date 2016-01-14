@@ -221,6 +221,44 @@ module.exports = function(app) {
 			});
 		});
 	});
+	//接订单
+	app.get('/center/takeorder', function(req, res, next) {
+		// var user_id = req.session['user'];
+		var master_id = req.session['master_id'];
+		var sql = 'SELECT `user`.id AS user_id, `user`.phone, `user`.nick, `user`.sex, `user`.adress, `order`.* FROM `user` LEFT JOIN `order` ON `order`.user = `user`.id WHERE `order`.master = ' + master_id;
+		Query(sql, function(err, rows, filed) {
+			if (err) {
+				console.log(err);
+				return;
+			}
+			res.json({
+				status: 1,
+				data: {
+					orderList: rows
+				}
+			});
+		});
+	});
+	//开始处理订单
+	app.get('/center/handleorder', function(req, res, next) {
+		// var user_id = req.session['user'];
+		// var master_id = req.session['master_id'];
+		var order_id = req.query.orderid;
+		var way = req.query.action;
+		var sql = 'UPDATE `order` SET status = '+way+' WHERE id = '+ order_id;
+		Query(sql, function(err, rows, filed) {
+			if (err) {
+				console.log(err);
+				return;
+			}
+			res.json({
+				status: 1,
+				data: {
+					go: 'ok'
+				}
+			});
+		});
+	});
 }
 
 // module.exports = router;

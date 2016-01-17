@@ -241,16 +241,27 @@ module.exports = function(app) {
 	});
 	//开始处理订单
 	app.get('/center/handleorder', function(req, res, next) {
-		// var user_id = req.session['user'];
-		// var master_id = req.session['master_id'];
+		var user_id = req.session['user'];
+		//var master_id = req.session['master_id'];
 		var order_id = req.query.orderid;
 		var way = req.query.action;
+		//下单人
+		var userOrder = req.query.userid;
 		var sql = 'UPDATE `order` SET status = '+way+' WHERE id = '+ order_id;
 		Query(sql, function(err, rows, filed) {
 			if (err) {
 				console.log(err);
 				return;
 			}
+			//给下单人发消息
+			updateNewsStatus({
+				user: userOrder,
+				type: 2,
+				sender: user_id,
+				status: 0,
+				handle: 'insert',
+				content: '师傅已经接受您的订单啦！快去我的订单里面看看吧。'
+			})
 			res.json({
 				status: 1,
 				data: {
@@ -260,5 +271,26 @@ module.exports = function(app) {
 		});
 	});
 }
-
+//处理消息状态
+function updateNewsStatus(option) {
+	var filedName = [];
+	var value = [];
+	var sql = '';
+	if(option.handle === 'insert') {
+		delete option.handle;
+		for(var i in option) {
+			filedName.push(i);
+			value.push('"' + option[i]+ '"');
+		}
+		sql = 'INSERT INTO `news` ('+ filedName.join(',') +') VALUES(' + value.join(',') + ')';
+	}else if(option.handle == 'update') {
+		sql = 'UPDATE `news` SET status = ' + option.status + ' WHERE id = ' + option.id;
+	}
+	Query(sql, function(err){
+		if(err) {
+			console.log(err);
+			return;
+		}
+	});
+}
 // module.exports = router;

@@ -480,9 +480,24 @@
     border-top: 1px solid #d9d9d9;
     margin-top: 10px;
 }
-#takeOrder li h3 {
+#takeOrder li header {
     text-align: center;
     font-size: 1.8rem;
+    height: 30px;
+}
+#takeOrder li header span{
+    text-align: center;
+    display: block;
+    float: left;
+    line-height: 30px;
+}
+#takeOrder li header a{
+    text-align: center;
+    font-size: 0.8rem;
+    float: right;
+    padding: 0 5px;
+    line-height: 25px;
+    height: 25px;
 }
 #takeOrder li p {
     margin-bottom: 2px;
@@ -499,4 +514,13 @@
     padding: 2px 0px;
     margin-left: 5px;
     width: 80px;
+}
+#takeOrder li footer > button.untaptable {
+    background-color: #e5e5e5;
+    border: 1px solid #e5e5e5;
+    color: #676060;
+}
+#takeOrder ul {
+    height: 100%;
+    overflow: scroll;
 }

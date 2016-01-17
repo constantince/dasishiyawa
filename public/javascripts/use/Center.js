@@ -300,6 +300,7 @@ define(['base'], function(_PRO_) {
 					//电话
 					var phone = father.find('.phone').val();
 					fd.append('phone', phone);
+
 					$.ajax({
 						url: "/center/register",
 						type: "POST",
@@ -325,13 +326,32 @@ define(['base'], function(_PRO_) {
 			pageEvent: {
 				'tap .J-handle->handleOrder': function(e) {
 					var tar = $(e.target);
+					if(tar.hasClass('untaptable')) return;
 					var orderId = tar.data('orderid');
+					var userId = tar.data('user');
 					var handleWay = tar.data('way');
+					if(handleWay == 4) {
+						var txt = prompt('请填写您的拒绝原因');
+						if(txt === null ) {
+							return;
+						}
+					}
 					PDW.ajax({
-						url: '/center/handleorder?orderid='+ orderId + '&action=' + handleWay,
+						url: '/center/handleorder?userid='+userId+'&orderid='+ orderId + '&action=' + handleWay,
 						success: function(e) {
 							if(e.data.go == 'ok') {
-								console.log('success!');
+								//接受订单
+								if(handleWay == 1) {
+									tar.addClass('untaptable').html('处理中');
+									PB.toast({
+										message: '接单成功！',
+										type: 'success',
+										delay: 2500
+									})
+									//拒绝订单
+								}else {
+									tar.addClass('untaptable').html('已拒绝');
+								}
 							}
 						}
 					})

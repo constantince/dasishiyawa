@@ -29,19 +29,23 @@ module.exports = function(app) {
 			if (err) return;
 			res.json({
 				status: 1,
-				data: 'success'
+				data: {
+					go: 'ok'
+				}
 			});
 		})
 	});
 	//赞
 	app.get('/makefriends/likeIt', function(req, res, next) {
-		var sql = 'INSERT INTO likes (recevoir, send) VALUES(' + req.query.user + ',' + req.query.sender+')';
+		var sql = 'INSERT INTO likes (user, send) VALUES(' + req.query.user + ',' + req.query.sender+')';
 		console.log(sql);
 		Query(sql, function(err, rows, filed) {
 			if (err) return;
 			res.json({
 				status: 1,
-				data: 'success'
+				data: {
+					go: 'ok'
+				}
 			});
 		})
 	});

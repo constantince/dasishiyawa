@@ -29,7 +29,7 @@ module.exports = function(app) {
 	//查看个人消息
 	app.get('/center/checknews', function(req, res, next) {
 		var user_id = req.session['user'];
-		var sql = 'SELECT * FROM news WHERE user = ' + user_id + ' LIMIT ' + req.query.page + ',' + req.query.count;
+		var sql = 'SELECT * FROM news WHERE user = ' + user_id + ' ORDER BY id DESC LIMIT ' + req.query.page + ',' + req.query.count;
 		Query(sql, function(err, rows, filed) {
 			if (err) return;
 			var data = rows;
@@ -101,7 +101,7 @@ module.exports = function(app) {
 	//我的订单
 	app.get('/center/myorder', function(req, res, next) {
 		var user_id = req.session['user'];
-		var sql = 'SELECT * FROM `order` LEFT JOIN `master` ON (order.master = master.id) WHERE order.user = ' + user_id;
+		var sql = 'SELECT * FROM `order` LEFT JOIN `master` ON (order.master = master.id) WHERE order.user = ' + user_id + ' ORDER BY `order`.id DESC';
 		Query(sql, function(err, rows, filed) {
 			if (err) {
 				console.log(err);
@@ -225,7 +225,7 @@ module.exports = function(app) {
 	app.get('/center/takeorder', function(req, res, next) {
 		// var user_id = req.session['user'];
 		var master_id = req.session['master_id'];
-		var sql = 'SELECT `user`.id AS user_id, `user`.phone, `user`.nick, `user`.sex, `user`.adress, `order`.* FROM `user` LEFT JOIN `order` ON `order`.user = `user`.id WHERE `order`.master = ' + master_id;
+		var sql = 'SELECT `user`.id AS user_id, `user`.phone, `user`.nick, `user`.sex, `user`.adress, `order`.* FROM `user` LEFT JOIN `order` ON `order`.user = `user`.id WHERE `order`.master = ' + master_id + ' ORDER BY `order`.id DESC';
 		Query(sql, function(err, rows, filed) {
 			if (err) {
 				console.log(err);
@@ -253,6 +253,7 @@ module.exports = function(app) {
 				console.log(err);
 				return;
 			}
+
 			//给下单人发消息
 			updateNewsStatus({
 				user: userOrder,
@@ -260,7 +261,7 @@ module.exports = function(app) {
 				sender: user_id,
 				status: 0,
 				handle: 'insert',
-				content: '师傅已经接受您的订单啦！快去我的订单里面看看吧。'
+				content: '师傅已经处理了您的订单啦!'
 			})
 			res.json({
 				status: 1,

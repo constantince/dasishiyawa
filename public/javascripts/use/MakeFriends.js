@@ -82,20 +82,36 @@ define(['base'], function(_PRO_) {
 		view: {
 			pageEvent: {
 				'tap .say-hello->sayHello': function(e) {
-					var id = this.model.toJSON().id;
+					var tar = $(e.target);
+					var id = this.model.toJSON().list.id;
 					PDW.ajax({
 						url: '/makefriends/sayHello?user='+id+'&sender=1',
 						success: function(r) {
-							console.log(r);
+							if(r.data.go == 'ok') {
+								tar.addClass('untaptable').html('已打招呼');
+								PB.toast({
+									message: '已发送！',
+									type: 'success',
+									delay: 2500
+								});
+							}
 						}
 					})
 				},
 				'tap .like-it->likeIt': function(e) {
-					var id = this.model.toJSON().id;
+					var tar = $(e.target);
+					var id = this.model.toJSON().list.id;
 					PDW.ajax({
-						url: '/makefriends/likeit?user='+id+'&sender=1',
-						success: function() {
-							
+						url: '/makefriends/likeIt?user='+id+'&sender=1',
+						success: function(r) {
+							if(r.data.go == 'ok') {
+								tar.addClass('untaptable').html('已点赞');
+								PB.toast({
+									message: '点赞成功！',
+									type: 'success',
+									delay: 2500
+								});
+							}
 						}
 					})
 				}

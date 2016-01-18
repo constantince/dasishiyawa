@@ -188,13 +188,13 @@
 
 		%>
 			<li class="mui-table-view-cell  mui-collapse">
-				<a class="mui-navigate-right"><%=tempList.name%>（<%=tempList.end_time || tempList.bookup_time%>）<em><%=text%></em></a>
+				<a class="mui-navigate-right"><%=tempList.name%>（<%=PB.formateTime(tempList.end_time) || PB.formateTime(tempList.bookup_time)%>）<em><%=text%></em></a>
 				<div class="mui-collapse-content">
 					<div class="infoBox">
-						<p><em>订单号：</em><em><%=tempList.order_number%></em></p>
-						<p><em>下单时间：</em><em><%=tempList.bookup_time%></em></p>
-						<%if(tempList.start_time){%><p><em>开始时间：</em><em><%=tempList.start_time%></em></p><%}%>
-						<%if(tempList.end_time){%><p><em>完成时间：</em><em><%=tempList.end_time%></em></p><%}%>
+						<p><em>订单号：</em><em><%=tempList.id%></em></p>
+						<p><em>下单时间：</em><em><%=PB.formateTime(tempList.bookup_time)%></em></p>
+						<%if(tempList.start_time){%><p><em>开始时间：</em><em><%=PB.formateTime(tempList.start_time)%></em></p><%}%>
+						<%if(tempList.end_time){%><p><em>完成时间：</em><em><%=PB.formateTime(tempList.end_time)%></em></p><%}%>
 						<%if(tempList.review){%><p><em>评价：</em><em><%=tempList.review%></em></p><%}%>
 					</div>
 					<%if(tempList.status == 2){%>
@@ -407,6 +407,7 @@
 		</div>
 	</div>
 </script>
+<!-- 收到的订单 -->
 <script type="text/template" id="tpltakeOrder">
 	<ul>
 	<%for(var i=0; i<orderList.length; i++){ var order = orderList[i];%>
@@ -417,13 +418,15 @@
 		        <p><em>设备名称：<%=order.kind || '' %><%=order.apparatus%></em><em>设备年限：<%=order.used_year%>年</em>
 		        <p>上门地址：<%=order.adress%></p>
 		        <p>问题描述：<%=order.problem%></p>
-		        <p>下单时间：<%=order.bookup_time%></p>
+		        <p>下单时间：<%=PB.formateTime(order.bookup_time)%></p>
 	        </div>
 	        <footer class="btn">
 	        	<%if(order.status == 0){%>
 	        		<button type="button" data-orderid="<%=order.id%>" data-user=<%=order.user_id%> data-way="1" class="J-handle mui-btn mui-btn-primary" onclick="return false;">接单</button>
 	        	<%}else if(order.status == 1){%>
-					<button type="button" data-orderid="<%=order.id%>" data-way="1" class="untaptable mui-btn mui-btn-primary" onclick="return false;">处理中</button>
+					<button type="button" data-orderid="<%=order.id%>" data-user=<%=order.user_id%> data-way="2" class="accomplish J-handle mui-btn mui-btn-primary" onclick="return false;">结束订单</button>
+	        	<%}else if(order.status == 2){%>
+					<button type="button" data-orderid="<%=order.id%>" data-way="2" class="untaptable mui-btn mui-btn-danger" onclick="return false;">已完成</button>
 	        	<%}%>
 	        	<%if(order.status == 0){%>
 	        		<button type="button" data-orderid="<%=order.id%>" data-user=<%=order.user_id%> data-way="4" class="J-handle mui-btn mui-btn-danger" onclick="return false;">拒绝</button>

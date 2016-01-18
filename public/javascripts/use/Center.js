@@ -23,26 +23,10 @@ define(['base'], function(_PRO_) {
 				'tap .J-information->myInformation': function(e) {
 					// router.myNavigate('Center', 'MyInformation');
 				},
-				//查看我的订单
-				// 'tap .J-infomation->toPage': function(e) {
-					
-				// },
 				// //信息消息通知
 				'tap .J-infomation->toPage': function(e) {
 					
-				},
-				// //建议和意见
-				// 'tap .J-infomation->toPage': function(e) {
-					
-				// },
-				// //关于我们
-				// 'tap .J-infomation->toPage': function(e) {
-					
-				// },
-				// //退出
-				// 'tap .J-infomation->toPage': function(e) {
-					
-				// },
+				}
 			}
 		},
 		model: {
@@ -65,6 +49,7 @@ define(['base'], function(_PRO_) {
 				//填写交友信息
 				'tap .J-signIn->signIn': function(e) {
 					var tar = $(e.target);
+					if(tar.hasClass('untaptable')) return;
 					PDW.ajax({
 						url: '/center/signin',
 						success: function(r) {
@@ -73,7 +58,8 @@ define(['base'], function(_PRO_) {
 									message: '签到成功！',
 									type: 'success',
 									delay: 2500
-								})
+								});
+								tar.addClass('untaptable').html('签到成功！');
 							}
 						}
 					});
@@ -342,15 +328,22 @@ define(['base'], function(_PRO_) {
 							if(e.data.go == 'ok') {
 								//接受订单
 								if(handleWay == 1) {
-									tar.addClass('untaptable').html('处理中');
+									tar.addClass('accomplish').html('结束订单');
 									PB.toast({
 										message: '接单成功！',
 										type: 'success',
 										delay: 2500
 									})
 									//拒绝订单
-								}else {
+								}else if(handleWay == 4){
 									tar.addClass('untaptable').html('已拒绝');
+								}else if(handleWay == 2){
+									PB.toast({
+										message: '完成订单！',
+										type: 'success',
+										delay: 2500
+									})
+									tar.addClass('untaptable').html('已完成');
 								}
 							}
 						}

@@ -64,7 +64,7 @@
                 <li>
                     <div class="left">
                         <span><em>订单</em><%=orderList[i].order_number%></span>
-                        <span><em>提交于</em><%=orderList[i].bookup_time%></span>
+                        <span><em>提交于</em><%=PB.formateTime(orderList[i].bookup_time)%></span>
                     </div>
                     <button type="button" class="mui-btn <%=cls%>"><%=txt%></button>
                 </li>

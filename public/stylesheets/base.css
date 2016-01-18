@@ -223,6 +223,11 @@ body .am-toast-text {
     opacity: .8;
     text-align: center;
 }
+button.untaptable {
+    background-color: #e5e5e5;
+    border: 1px solid #e5e5e5;
+    color: #676060;
+}
 
 /**
  *

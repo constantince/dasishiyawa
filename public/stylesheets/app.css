@@ -515,11 +515,6 @@
     margin-left: 5px;
     width: 80px;
 }
-#takeOrder li footer > button.untaptable {
-    background-color: #e5e5e5;
-    border: 1px solid #e5e5e5;
-    color: #676060;
-}
 #takeOrder ul {
     height: 100%;
     overflow: scroll;

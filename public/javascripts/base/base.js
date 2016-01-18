@@ -698,6 +698,10 @@ function(C, _, Backbone) {
 			},
 			paramObj.delay)
 		}
+		exports.formateTime = function(string) {
+			if(Object.prototype.toString.call(string) !== '[object String]' ) return;
+			return string.replace(/T/,' ').replace(/[A-Z]|\.\d*/gi, '');
+		}
 		//插件，toast提示
         exports.toast = function(opt, show) {
             //强行停止加载toast

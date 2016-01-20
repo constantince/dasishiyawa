@@ -35,7 +35,7 @@ module.exports = function(app) {
 					}
 					//个人信息
 					var judeList = rows;
-					Query('SELECT * FROM `order` WHERE `master` = ' + master + ' LIMIT 3', function(err, rows, filed) {
+					Query('SELECT * FROM `order` WHERE `master` = ' + master + ' ORDER BY id DESC LIMIT 3', function(err, rows, filed) {
 						if (err) {
 							console.log(err);
 							return;
@@ -46,8 +46,7 @@ module.exports = function(app) {
 							status: 1,
 							data: {
 								information: infomation,
-								orderList: orderList,
-								judeList: judeList
+								orderList: orderList
 							}
 						});
 					})

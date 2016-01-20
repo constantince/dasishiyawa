@@ -120,15 +120,32 @@ define(['base'], function(_PRO_) {
 					var star = form.find('select').val();
 					var content = form.find('.judeContent').val();
 					var liBox = tar.parents('li.mui-collapse').eq(0);
+					var user = tar.parent().data('user');
 					liBox.removeClass('mui-active');
 					liBox.find('.mui-navigate-right em').html('已评价');
-					var html = '<p><em>评价：</em><em>'+content+'</em></p>';
-					liBox.find('.infoBox').append(html);
-					form.remove();
+					var submitData = {
+						orderId: orderId,
+						star: star,
+						user: user,
+						content: content,
+						submitTime: PB.now()
+					}
+					PDW.ajax({
+						url: '/center/submitComment',
+						type: 'POST',
+						data: submitData,
+						success: function(r) {
+							if(r.data.go === 'ok') {
+								var html = '<p><em>评价：</em><em>'+content+'</em></p>';
+								liBox.find('.infoBox').append(html);
+								form.remove();
+							}
+						}
+					});
 				},
 				'tap .J-callagain->callagain': function(e) {
 					var i = $(e.target).parent().data('i');
-					var json = this.model.toJSON().list[i];
+					var json = this.model.toJSON().orderList[i];
 					router.myNavigate('Home', 'FillOrder', function(){
 						this.addDataToModel({
 							masterInformation: {
@@ -149,7 +166,7 @@ define(['base'], function(_PRO_) {
 		title: '我的消息',
 		route: 'News',
 		nav: ['Top'],
-		url: '/center/checknews?page=1&count=15',
+		url: '/center/checknews?page=0&count=15',
 		view: {
 			pageEvent: {
 				//查看向我打招呼的人

@@ -193,6 +193,7 @@
 					<div class="infoBox">
 						<p><em>订单号：</em><em><%=tempList.id%></em></p>
 						<p><em>下单时间：</em><em><%=PB.formateTime(tempList.bookup_time)%></em></p>
+						<p class="mui-ellipsis"><em>摘要：</em><em><%= tempList.kind + tempList.apparatus + '&' + tempList.problem%></em></p>	
 						<%if(tempList.start_time){%><p><em>开始时间：</em><em><%=PB.formateTime(tempList.start_time)%></em></p><%}%>
 						<%if(tempList.end_time){%><p><em>完成时间：</em><em><%=PB.formateTime(tempList.end_time)%></em></p><%}%>
 						<%if(tempList.review){%><p><em>评价：</em><em><%=tempList.review%></em></p><%}%>
@@ -213,7 +214,7 @@
 								<label>评价</label>
 								<input type="text" class="mui-input-clear judeContent" placeholder="请输入您的评价100字以内" data-input-clear="3"><span class="mui-icon mui-icon-clear mui-hidden"></span>
 							</div>
-							<div class="mui-button-row" data-orderid=<%=tempList.id%> data-i=<%=i%>>
+							<div class="mui-button-row" data-orderid=<%=tempList.id%> data-i=<%=i%> data-user=<%=tempList.user%>>
 								<button class="mui-btn mui-btn-primary J-submit" type="button" onclick="return false;">确认</button>&nbsp;&nbsp;
 								<button class="mui-btn mui-btn-primary J-callagain" type="button" onclick="return false;">再喊一次</button>
 							</div>

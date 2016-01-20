@@ -101,7 +101,7 @@ module.exports = function(app) {
 	//我的订单
 	app.get('/center/myorder', function(req, res, next) {
 		var user_id = req.session['user'];
-		var sql = 'SELECT * FROM `order` LEFT JOIN `master` ON (order.master = master.id) WHERE order.user = ' + user_id + ' ORDER BY `order`.id DESC';
+		var sql = 'SELECT `master`.id AS master_id, `master`.name, `order`.* FROM `order` LEFT JOIN `master` ON (order.master = master.id) WHERE order.user = ' + user_id + ' ORDER BY `order`.id DESC';
 		Query(sql, function(err, rows, filed) {
 			if (err) {
 				console.log(err);
@@ -271,7 +271,35 @@ module.exports = function(app) {
 			});
 		});
 	});
+
+	// 提交评论
+	app.post('/center/submitComment', function(req, res, next){
+		var user_id = req.session['user'];
+		var sql = 'UPDATE `order` SET review = "' + req.body.content+ '", star = ' + req.body.star + ', review_time = "' + req.body.submitTime + '", status = 3 WHERE `order`.id = ' + req.body.orderId;
+		Query(sql, function(err){
+			if(err) {
+				console.log(err);
+				return;
+			}
+			updateNewsStatus({
+				user: req.body.user,
+				type: 0,
+				sender: user_id,
+				status: 0,
+				handle: 'insert',
+				content: '您的订单已经被评价了'
+			});
+			res.json({
+				status: 1,
+				data: {
+					go: 'ok'
+				}
+			});
+		});
+	});
 }
+
+
 //处理消息状态
 function updateNewsStatus(option) {
 	var filedName = [];

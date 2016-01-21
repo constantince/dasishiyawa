@@ -26,7 +26,7 @@ define(['base'], function(_PRO_) {
 		view: {
 			//渲染界面后的回掉
 			afterRender: function() {
-				//console.log('page html elements has reloaded!');
+				this.index = 0;
 			},
 			//渲染之前的回调函数
 			beforeRender: function() {
@@ -41,17 +41,27 @@ define(['base'], function(_PRO_) {
 						tar = tar.hasClass('cell') ? tar : tar.parents('.cell').eq(0);
 						var id = tar.data('id');
 						router.myNavigate('Home', 'Information/' + id);
+					},
+					'tap .J-loadmore->loadData': function(e) {
+						var index = ++this.index;
+						index = index * 15;
+						var _self = this;
+						PDW.ajax({
+							url: '/home/index?page='+index+'&count=15',
+							success: function(r) {
+								if(r.data.infoList.length > 0) {
+									var html = _.template($('#tplhometemplate').html())(r.data);
+									_self.$el.find('.list > li').last().after(html);
+								}else{
+									PB.tip({
+										tipTxt: '没有更多数据了.....'
+									});
+									_self.index--;
+								}
+						
+							}
+						}) 
 					}
-					// 'tap .J-refresh->refreshPage': function() {
-					// 	_exprots.A.refresh('testname', {
-					// 		List: 'a ha, good afternoon'
-					// 	});
-					// },
-					// 'tap .J-changeNav->changeNavA': function() {
-					// 	PDW.getModule('Nav').Bottom.reloadView({
-					// 		defaultPage: 0
-					// 	});
-					// }
 			}
 		}
 	});

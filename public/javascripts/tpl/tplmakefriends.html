@@ -21,21 +21,50 @@
             </a>
         </li>
         <%}%>
+        <%if(list.length == 15){%>
+            <div class="mui-content-padded">
+                <ul class="mui-pager">
+                    <li>
+                        <a class="J-loadmore">
+                            加载更多...
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        <%}%>
     </ul>
-    <div class="mui-content-padded">
-        <ul class="mui-pager">
-            <li>
-                <a>
-                    加载更多...
-                </a>
-            </li>
-        </ul>
-    </div>
+</script>
+<script type="text/template" id="tplmakeFriendsTemplate">
+    <%for(var i=0; i<list.length; i++){%>
+    <li class="list" data-i=<%=i%>>
+        <a class="imgbox">
+            <img class="mui-media-object" src="<%=list[i].show_img%>">
+            <div class="content">
+                <div class="box1">
+                    <span class="mui-ellipsis"><em>昵称：</em><%=list[i].nick%></span>
+                    <span class="mui-ellipsis"><em>年龄：</em><%=list[i].age%></span>
+                </div>
+                <div class="box1">
+                    <span class="mui-ellipsis"><em>性别：</em><%= list[i].sex == 0 ? '男' : '女'%></span>
+                    <span class="mui-ellipsis"><em>现居：</em><%=list[i].liveplace%></span>
+                </div>
+                <p class="box2 mui-ellipsis">
+                   交友宣言：<%=list[i].introduction%>
+                </p>
+            </div>  
+        </a>
+    </li>
+    <%}%>
 </script>
 <!-- 个人信息 -->
 <script type="text/template" id="tplpersonel">
 <!-- 通过有无微信好 判断时候填写交友嘻嘻你 -->
 <%if(list.chat){%>
+<%
+    function needShowEl(value) {
+        return value ? '': 'g-d-n';
+    }
+%>
     <div class="scrollBox">
         <div class="banner">
             <img class="mui-media-object" src="<%=list.show_img%>">
@@ -43,20 +72,20 @@
         <div class="content">
             <p class=""><em class="name">姓名：</em><em class="value"><%=list.nick||'暂未填写'%></em></p>
             <p class=""><em class="name">性别：</em><em class="value"><%= (list.sex == 0 ? '男': '女')%></em></p>
-            <p class=""><em class="name">年龄：</em><em class="value"><%=list.age||'暂未填写'%></em></p>
-            <p class=""><em class="name">身高：</em><em class="value"><%=list.tall||'暂未填写'%></em></p>
-            <p class=""><em class="name">体重：</em><em class="value"><%=list.weight||'暂未填写'%></em></p>
-            <p class=""><em class="name">现居地：</em><em class="value"><%=list.liveplace||'暂未填写'%></em></p>
-            <p class=""><em class="name">家乡：</em><em class="value"><%=list.birthplace||'暂未填写'%></em></p>
-            <p class=""><em class="name">婚姻状态：</em><em class="value"><%=list.marriageable||'暂未填写'%></em></p>
-            <p class=""><em class="name">爱好：</em><em class="value"><%=list.hobby||'暂未填写'%></em></p>
-            <p class=""><em class="name">职业：</em><em class="value"><%=list.profession||'暂未填写'%></em></p>
+            <p class="<%=needShowEl(list.age)%>"><em class="name">年龄：</em><em class="value"><%=list.age||'暂未填写'%></em></p>
+            <p class="<%=needShowEl(list.tall)%>"><em class="name">身高：</em><em class="value"><%=list.tall||'暂未填写'%></em></p>
+            <p class="<%=needShowEl(list.weight)%>"><em class="name">体重：</em><em class="value"><%=list.weight||'暂未填写'%></em></p>
+            <p class="<%=needShowEl(list.liveplace)%>"><em class="name">现居地：</em><em class="value"><%=list.liveplace||'暂未填写'%></em></p>
+            <p class="<%=needShowEl(list.birthplace)%>"><em class="name">家乡：</em><em class="value"><%=list.birthplace||'暂未填写'%></em></p>
+            <p class="<%=needShowEl(list.marriageable)%>"><em class="name">婚姻状态：</em><em class="value"><%=list.marriageable||'暂未填写'%></em></p>
+            <p class="<%=needShowEl(list.hobby)%>"><em class="name">爱好：</em><em class="value"><%=list.hobby||'暂未填写'%></em></p>
+            <p class="<%=needShowEl(list.profession)%>"><em class="name">职业：</em><em class="value"><%=list.profession||'暂未填写'%></em></p>
             <p class=""><em class="name">微信号：</em><em class="value">***** TA设置为打招呼后显示</em></p>
-            <p class=""><em class="name">交友宣言：</em><em class="value"><%=list.introduction||'暂未填写'%></em></p>
+            <p class="<%=needShowEl(list.value)%>"><em class="name">交友宣言：</em><em class="value"><%=list.introduction||'暂未填写'%></em></p>
         </div>
         <footer>
-            <button type="button" class="mui-btn mui-btn-primary mui-btn-block say-hello">打个招呼</button>
-            <button type="button" class="mui-btn mui-btn-success mui-btn-block like-it">给TA个赞</button>
+            <button type="button" class="mui-btn mui-btn-primary mui-btn-block say-hello <%if(!clickable){%>cannotclick<%}%>">打个招呼</button>
+            <button type="button" class="mui-btn mui-btn-success mui-btn-block like-it <%if(!clickable){%>cannotclick<%}%>">给TA个赞</button>
         </footer>
     </div>
 <%}else{%>

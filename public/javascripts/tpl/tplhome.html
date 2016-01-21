@@ -13,8 +13,34 @@
             	
             </div>
         </li>
+        <%if(infoList.length == 15){%>
+            <div class="mui-content-padded">
+                <ul class="mui-pager">
+                    <li>
+                        <a class="J-loadmore">
+                            加载更多...
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        <%}%>
     <%}%>
     </ul>
+</script>
+<script type="text/template" id="tplhometemplate">
+    <%for(var i=0, l=infoList.length; i<l; i++){%>
+        <li class="cell" data-id="<%=infoList[i].id%>">
+            <div class="leftimg"><img src="<%=infoList[i].head_img%>" class="headimg"></div>
+            <div class="middleinfo">
+                <h4 class="mui-ellipsis"><%=infoList[i].name%><em class="title">师傅</em></h4>
+                <h5><span class="oa-contact-email mui-h6"><em>服务范围</em>-<%=infoList[i].area%></span></h5>
+                <p class="mui-ellipsis oa-contact-email mui-h6"><%=infoList[i].introduction%></p>
+            </div>
+            <div class="rightother">
+                
+            </div>
+        </li>
+    <%}%>
 </script>
 <!-- 详情界面 -->
 <script type="text/template" id="tplinformation">
@@ -61,6 +87,9 @@
                 }else if(orderList[i].status ==4) {
                     cls = 'mui-btn-danger';
                     txt = '已取消'
+                }else if(orderList[i].status ==3) {
+                    cls = 'mui-btn-primary';
+                    txt = '已评价'
                 }
 
             %>

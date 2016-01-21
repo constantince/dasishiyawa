@@ -24,7 +24,8 @@ module.exports = function(app) {
 	});
 	//打招呼
 	app.get('/makefriends/sayHello', function(req, res, next) {
-		var sql = 'INSERT INTO news (user, type, sender, status) VALUES(' + req.query.user + ',1,' + req.query.sender+',0)';
+		var user_id = req.session['user'];
+		var sql = 'INSERT INTO news (user, type, sender, status, content) VALUES(' + req.query.user + ',1,' + user_id +',0, "您收到了新的招呼")';
 		Query(sql, function(err, rows, filed) {
 			if (err) return;
 			res.json({
@@ -37,10 +38,18 @@ module.exports = function(app) {
 	});
 	//赞
 	app.get('/makefriends/likeIt', function(req, res, next) {
-		var sql = 'INSERT INTO likes (user, send) VALUES(' + req.query.user + ',' + req.query.sender+')';
-		console.log(sql);
+		var user_id = req.session['user'];
+		var sql = 'INSERT INTO likes (user, send) VALUES(' + req.query.user + ',' + user_id+')';
 		Query(sql, function(err, rows, filed) {
 			if (err) return;
+			updateNewsStatus({
+				user: req.query.user,
+				type: 0,
+				sender: user_id,
+				status: 0,
+				handle: 'insert',
+				content: '您收到了别人的赞哦'
+			});
 			res.json({
 				status: 1,
 				data: {
@@ -114,7 +123,9 @@ module.exports = function(app) {
 	});
 	//查看别人资料
 	app.get('/makefriends/personel', function(req, res, next) {
+		var user_id = req.session['user'];
 		var personel = req.query.personel;
+		var clickable = (user_id != personel);
 		if(!personel) {
 			res.json({
 				status: 1,
@@ -129,11 +140,33 @@ module.exports = function(app) {
 			res.json({
 				status: 1,
 				data: {
-					list: rows[0]
+					list: rows[0],
+					clickable: clickable
 				}
 			});
 		})
 	});
 }
-
+//处理消息状态
+function updateNewsStatus(option) {
+	var filedName = [];
+	var value = [];
+	var sql = '';
+	if(option.handle === 'insert') {
+		delete option.handle;
+		for(var i in option) {
+			filedName.push(i);
+			value.push('"' + option[i]+ '"');
+		}
+		sql = 'INSERT INTO `news` ('+ filedName.join(',') +') VALUES(' + value.join(',') + ')';
+	}else if(option.handle == 'update') {
+		sql = 'UPDATE `news` SET status = ' + option.status + ' WHERE id = ' + option.id;
+	}
+	Query(sql, function(err){
+		if(err) {
+			console.log(err);
+			return;
+		}
+	});
+}
 // module.exports = router;

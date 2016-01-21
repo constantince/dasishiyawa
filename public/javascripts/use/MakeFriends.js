@@ -1,4 +1,4 @@
-define(['base'], function(_PRO_) {
+define(['base', 'core/underscore'], function(_PRO_, _) {
 	//全局依赖变量pdw:创建项目界面模块 e: 公共事件函数 router:路由模块
 	var PDW = _PRO_.PDW,
 		eve = _PRO_.Event,
@@ -33,13 +33,13 @@ define(['base'], function(_PRO_) {
 		//路由名称 +无需赘述，如果没有配置路由名称，则该界面没有加入路由规则当中去。一般是弹出界面无需配置此项
 		route: 'MakeFriends',
 		//界面的异步加载数据地址
-		url: '/makefriends/index?index=0&count=20',
+		url: '/makefriends/index?index=0&count=15',
 		//该界面需要显示出来的导航
 		nav: ['Bottom', 'Top'],
 		view: {
 			//渲染界面后的回掉
 			afterRender: function() {
-				//console.log('page html elements has reloaded!');
+				this.index = 0;
 			},
 			//渲染之前的回调函数
 			beforeRender: function() {
@@ -57,17 +57,27 @@ define(['base'], function(_PRO_) {
 						router.myNavigate('MakeFriends', 'Personel/'+json.id, function(){
 							//this.addDataToModel(json);
 						});
+					},
+					'tap .J-loadmore->loadData': function(e) {
+						var index = ++this.index;
+						index = index * 15;
+						var _self = this;
+						PDW.ajax({
+							url: '/makefriends/index?index='+index+'&count=15',
+							success: function(r) {
+								if(r.data.list.length > 0) {
+									var html = _.template($('#tplmakeFriendsTemplate').html())(r.data);
+									_self.$el.find('.my-css-cbox > li').last().after(html);
+								}else{
+									PB.tip({
+										tipTxt: '没有更多数据了.....'
+									});
+									_self.index--;
+								}
+						
+							}
+						}) 
 					}
-					// 'tap .J-refresh->refreshPage': function() {
-					// 	_exprots.A.refresh('testname', {
-					// 		List: 'a ha, good afternoon'
-					// 	});
-					// },
-					// 'tap .J-changeNav->changeNavA': function() {
-					// 	PDW.getModule('Nav').Bottom.reloadView({
-					// 		defaultPage: 0
-					// 	});
-					// }
 			}
 		}
 	});
@@ -83,9 +93,12 @@ define(['base'], function(_PRO_) {
 			pageEvent: {
 				'tap .say-hello->sayHello': function(e) {
 					var tar = $(e.target);
+					if(tar.hasClass('cannotclick')) {
+						return alert('不可以给自己打招呼！');
+					}
 					var id = this.model.toJSON().list.id;
 					PDW.ajax({
-						url: '/makefriends/sayHello?user='+id+'&sender=1',
+						url: '/makefriends/sayHello?user='+id,
 						success: function(r) {
 							if(r.data.go == 'ok') {
 								tar.addClass('untaptable').html('已打招呼');
@@ -100,9 +113,12 @@ define(['base'], function(_PRO_) {
 				},
 				'tap .like-it->likeIt': function(e) {
 					var tar = $(e.target);
+					if(tar.hasClass('cannotclick')) {
+						return alert('不可以给自己点赞！');
+					}
 					var id = this.model.toJSON().list.id;
 					PDW.ajax({
-						url: '/makefriends/likeIt?user='+id+'&sender=1',
+						url: '/makefriends/likeIt?user='+id,
 						success: function(r) {
 							if(r.data.go == 'ok') {
 								tar.addClass('untaptable').html('已点赞');

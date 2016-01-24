@@ -159,14 +159,32 @@ module.exports = function(app) {
 	});
 	//接受别人的招呼
 	app.get('/center/accpect', function(req, res, next) {
-		// var user_id = req.session['user'];
+		//接受者
+		var user_id = req.session['user'];
+		//发送者
+		var sender = req.query.sender;
 		var id = req.query.id;
-		var sql = 'UPDATE news SET status = 3 WHERE id = ' + id;
+		var sql = 'UPDATE `relactionship` SET status = 2 WHERE user = ' + user_id + ' AND sender = ' + sender;
 		Query(sql, function(err, rows, filed) {
 			if (err) {
 				console.log(err);
 				return;
 			}
+			//重置消息状态
+			updateNewsStatus({
+				id: id,
+				handle: 'update',
+				status: 3
+			});
+			//发送回执消息
+			updateNewsStatus({
+				user: sender,
+				type: 1,
+				sender: user_id,
+				status: 3,
+				handle: 'insert',
+				content: '你的招呼得到了回应。可以查看TA的微信号了！'
+			})
 			res.json({
 				status: 1,
 				data: {
@@ -297,7 +315,27 @@ module.exports = function(app) {
 			});
 		});
 	});
+
+	// 功能导航
+	app.get('/navigate/index', function(req, res, next){
+		var user_id = req.session['user'];
+		var sql = 'SELECT * FROM `function`';
+		Query(sql, function(err, rows){
+			if(err) {
+				console.log(err);
+				return;
+			}
+			res.json({
+				status: 1,
+				data: {
+					functionList: rows
+				}
+			});
+		});
+	});
 }
+
+
 
 
 //处理消息状态

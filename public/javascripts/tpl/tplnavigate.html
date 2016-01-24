@@ -1,0 +1,15 @@
+<!-- 更多功能 -->
+<script type="text/template" id="tplnavigate">
+	<div class="mui-content">
+		<ul class="mui-table-view mui-grid-view mui-grid-9">
+		<%for(var i=0; i<functionList.length; i++) {%>
+		    <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
+		    	<a data-route="<%=functionList[i].router%>" data-module="<%=functionList[i].module%>" data-status="<%=functionList[i].status%>">
+		            <span class="mui-icon mui-icon-<%=functionList[i].icon%>"></span>
+		            <div class="mui-media-body"><%=functionList[i].name%></div>
+	            </a>
+		    </li>
+		 <%}%>
+		</ul> 
+	</div>
+</script>

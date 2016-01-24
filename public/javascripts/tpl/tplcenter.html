@@ -239,7 +239,7 @@
 					<button class="mui-btn mui-btn-primary mybtn J-checksomebody" data-sender="<%=newslist[i].sender%>">查看</button>
 					<!-- 未接受状态 -->
 					<%if(newslist[i].status != 3){%>
-						<button class="mui-btn mui-btn-success mybtn J-accpect" data-id="<%=newslist[i].id%>">接受</button>
+						<button class="mui-btn mui-btn-success mybtn J-accpect" data-id="<%=newslist[i].id%>" data-sender="<%=newslist[i].sender%>">接受</button>
 					<%}else{%>
 					<%}%>
 					<!-- <button class="mui-btn mui-btn-danger mybtn J-forget" data-id="<%=newslist[i].sender%>">忽略</button> -->
@@ -251,6 +251,10 @@
 				<!-- 处理红包 -->
 				<%if(newslist[i].type == 4){%>
 					<button class="mui-btn mybtn J-red">收红包</button>
+				<%}%>
+				<!-- 点赞 -->
+				<%if(newslist[i].type == 3){%>
+					<button class="mui-btn mui-btn-primary mybtn J-checksomebody" data-sender="<%=newslist[i].sender%>">查看</button>
 				<%}%>
 			</div>
 		</li>

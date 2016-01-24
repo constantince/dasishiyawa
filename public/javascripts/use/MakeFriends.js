@@ -96,9 +96,10 @@ define(['base', 'core/underscore'], function(_PRO_, _) {
 					if(tar.hasClass('cannotclick')) {
 						return alert('不可以给自己打招呼！');
 					}
-					var id = this.model.toJSON().list.id;
+					// var id = this.model.toJSON().list.id;
+					var user_id = this.model.toJSON().list.user;
 					PDW.ajax({
-						url: '/makefriends/sayHello?user='+id,
+						url: '/makefriends/sayHello?user=' + user_id,
 						success: function(r) {
 							if(r.data.go == 'ok') {
 								tar.addClass('untaptable').html('已打招呼');

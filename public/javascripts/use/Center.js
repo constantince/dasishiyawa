@@ -178,10 +178,11 @@ define(['base'], function(_PRO_) {
 				//接受打招呼
 				'tap .J-accpect->accpect': function(e) {
 					var tar = $(e.target);
+					var sender = tar.data('sender');
 					var id = tar.data('id');
 					if(confirm('接受后对方可以查看您的微信号')) {
 						PDW.ajax({
-							url: '/center/accpect?id=' + id,
+							url: '/center/accpect?sender=' + sender + '&id=' + id,
 							success: function(r) {
 								if(r.data.go == 'ok') {
 									PB.toast({

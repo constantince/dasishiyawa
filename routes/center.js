@@ -11,17 +11,18 @@ module.exports = function(app) {
 	app.get('/center/index', function(req, res, next) {
 		var user_id = req.session['user'];
 		var chat_id = req.session['chat'];
+		var user_type = req.session['user_type'];
 		var sql = 'SELECT wechat.headimgurl, wechat.nickname, (SELECT COUNT(*) FROM `news` WHERE  news.`user` = ' + user_id + ' AND news.status = 0) AS ncount,(SELECT COUNT(*) FROM `order` WHERE `user` = ' + user_id + ' AND status = 0) AS ordercount FROM `wechat` WHERE id = ' + chat_id;
 		Query(sql, function(err, rows, filed) {
 			if (err) {
-				console.log(sql);
 				console.log(err);
 				return;
 			}
 			res.json({
 				status: 1,
 				data: {
-					chat: rows[0]
+					chat: rows[0],
+					userType: user_type
 				}
 			});
 		})
@@ -232,6 +233,11 @@ module.exports = function(app) {
 					console.log(err);
 					return;
 				}
+				//更新用户的类别身份
+				var sql = 'UPDATE `user` SET identification = 2 WHERE id = ' + user_id;
+				Query(sql, function(){
+					req.session['user_type'] = 2;
+				});
 				res.json({
 					status: 1,
 					data: {go: 'ok'}

@@ -20,20 +20,19 @@ define(['base'], function(_PRO_) {
 		view: {
 			pageEvent: {
 				//查看个人详细信息
-				'tap .J-information->myInformation': function(e) {
-					// router.myNavigate('Center', 'MyInformation');
+				'tap .J-tobeMaster->tobeMaster': function(e) {
+					var json = this.model.toJSON();
+					router.myNavigate('Center', 'Register', function(){
+						this.addDataToModel({
+							type: json.userType
+						});
+					});
+
 				},
 				// //信息消息通知
 				'tap .J-infomation->toPage': function(e) {
 					
 				}
-			}
-		},
-		model: {
-			defaults: {
-				say: 'hello',
-				name: 'C',
-				other: 'ccccccc'
 			}
 		}
 	});
@@ -310,7 +309,16 @@ define(['base'], function(_PRO_) {
 						type: "POST",
 						data: fd,
 						processData: false, // 告诉zepto不要去处理发送的数据
-						contentType: false // 告诉zepto不要去设置Content-Type请求头
+						contentType: false, // 告诉zepto不要去设置Content-Type请求头
+						success: function(r) {
+							if(r.data.go == 'ok') {
+								PB.toast({
+									message:'注册成功！',
+									type: 'success'
+								});
+								history.go(-1);
+							}
+						}
 					});
 
 					//router.myNavigate('Home','SubmitSuccess');

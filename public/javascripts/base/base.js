@@ -6,6 +6,8 @@ define(['config', 'core/underscore', 'core/backbone'],
 				BackboneDataOnPage = {},
 				books = -1,
 				viewOrder = [],
+				//界面之间的前后顺序，按照书写代码顺序排序
+				PAGEORDER = 0,
 				needShow = true,
 				NavPage = [],
 				BackboneViewStorage = {},
@@ -251,7 +253,7 @@ define(['config', 'core/underscore', 'core/backbone'],
 				animation = function(obj) {
 					var defaults = $.extend({}, {
 							el: '',
-							direction: 'right->100%',
+							direction: 'left->100%',
 							callback: function() {},
 							delay: 0.3
 						},
@@ -262,25 +264,25 @@ define(['config', 'core/underscore', 'core/backbone'],
 					var translate = '';
 					switch (direction) {
 						case 'left':
-							el[0].style.cssText = 'transform: translateX(100%);';
+							el[0].style.cssText = '-webkit-transform: translateX(100%);';
 							translate = 'translateX(-' + remote + ')';
 							break;
 						case 'right':
-							el[0].style.cssText = 'transform: translateX(-100%);';
+							el[0].style.cssText = '-webkit-transform: translateX(-100%);';
 							translate = 'translateX(' + remote + ')';
 							break;
 						case 'top':
-							el[0].style.cssText = 'transform: translateY(100%);';
+							el[0].style.cssText = '-webkit-transform: translateY(100%);';
 							translate = 'translateY(-' + remote + ')';
 							break;
 						case 'bottom':
-							el[0].style.cssText = 'transform: translateY(-100%);';
+							el[0].style.cssText = '-webkit-transform: translateY(-100%);';
 							translate = 'translateY(' + remote + ')';
 							break
 					}
 					el.addClass('page_show');
 					setTimeout(function() {
-							var css = 'transition:transform ' + defaults.delay + 's;transform: ' + translate + '; z-index:900;';
+							var css = '-webkit-transition:all ' + defaults.delay + 's;-webkit-transform: ' + translate + '; z-index:900;';
 							el[0].style.cssText = css
 						},
 						17);
@@ -332,9 +334,11 @@ define(['config', 'core/underscore', 'core/backbone'],
 						ActiveRoute = n;
 						$('#pageWindow+.background').addClass('g-d-n');
 						$('#pageWindow>.mask').hide().removeClass('move');
+						//界面跳转的方向
+						var direction = _orderChange(n, PDW.getPreView());
 						animation({
 							el: $('#' + n),
-							direction: 'top->0px',
+							direction: direction + '->0px',
 							delay: 0.3,
 							callback: function() {
 								$('#pageWindow>.page_show').filter(function() {
@@ -370,19 +374,20 @@ define(['config', 'core/underscore', 'core/backbone'],
 						$('#cssloading').show()
 					}
 				},
+				//界面加载的顺序，从左到右？从右到左？
 				_orderChange = function(n, p) {
-					var m = [];
-					var go = 'slideleftin'
-					if (m.indexOf(n) >= m.indexOf(p)) {
-						go = 'sliderightin'
+					// var curModule = curModule.callback();
+					var go = 'left';
+					if (_getActiveRoute(n).options.order < _getActiveRoute(p).options.order) {
+						go = 'right';
 					}
 					return go
 				},
 				_getModule = function(n) {
 					return _observer.aply(n)
 				},
-				_getActiveRoute = function() {
-					return _observer.pageModule(ActiveRoute)
+				_getActiveRoute = function(p) {
+					return _observer.pageModule(p || ActiveRoute)
 				},
 				_baseClass = {
 					_init: function(obj) {
@@ -393,7 +398,8 @@ define(['config', 'core/underscore', 'core/backbone'],
 								model: {},
 								view: {},
 								nav: [],
-								title: ''
+								title: '',
+								order: ++PAGEORDER
 							},
 							obj);
 						this._createdom.call(this);

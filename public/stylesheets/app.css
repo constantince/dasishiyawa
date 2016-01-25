@@ -128,11 +128,11 @@
 	padding-bottom: 50px;
     overflow-y: scroll;
 }
-#fillOrder > header {
+#fillOrder  header {
 	margin: 15px 0;
 	font-size:1.4rem;
 }
-#fillOrder > header .myli {
+#fillOrder  header .myli {
 	padding-right:0;
 }
 #fillOrder .mname {
@@ -326,7 +326,7 @@
     -webkit-box-align: center;
 }
 #makeFriends li.list .content {
-	    padding: 5px;
+	padding: 10px 5px 0px 5px;
     -webkit-box-flex: 1;
 }
 #makeFriends li.list a .box1{

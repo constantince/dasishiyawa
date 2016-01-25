@@ -72,9 +72,10 @@ module.exports = function(app) {
 		});
 		//发布个人信息接口
 		app.post('/makefriends/publish', function(req, res, next) {
+			var user_id = req.session['user'];
 			var form = new formidable.IncomingForm();
 			form.encoding = 'utf-8'; //设置编辑
-			form.uploadDir = './public/publish/upload/images/'; //设置上传目录
+			form.uploadDir = './publish/upload/images/'; //设置上传目录
 			form.keepExtensions = true; //保留后缀
 			form.maxFieldsSize = 2 * 1024 * 1024; //文件大小
 			//处理图片
@@ -111,9 +112,7 @@ module.exports = function(app) {
 					});
 					return;
 				}
-
-				var avatarName = Math.random() + '.' + extName;
-				var newPath = './publish/upload/images/' + avatarName;
+				var newPath = './' + files.show_img.path.replace(/\\/gi, '/');
 				var filesName = ['show_img="' + newPath + '"', 'is_show=1'];
 				for (var i in fields) {
 					if (typeof fields[i] !== 'object') {
@@ -121,7 +120,7 @@ module.exports = function(app) {
 					}
 
 				}
-				var sql = 'UPDATE user SET ' + filesName.join(',') + ' WHERE id = 1';
+				var sql = 'UPDATE user SET ' + filesName.join(',') + ' WHERE id = ' + user_id;
 				Query(sql, function(err, rows, filed) {
 					if (err) {
 						console.log(err);
@@ -129,7 +128,7 @@ module.exports = function(app) {
 					}
 					res.json({
 						status: 1,
-						data: {}
+						data: {go: 'ok'}
 					});
 				});
 			});

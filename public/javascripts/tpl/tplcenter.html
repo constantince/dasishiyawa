@@ -24,11 +24,16 @@
 				<!--注册成为师傅-->
 				<ul class="mui-table-view mui-table-view-chevron J-checkOrder">
 					<li class="mui-table-view-cell">
-						<a href="#Register" class="mui-navigate-right">注册成为师傅</a>
+						<a class="mui-navigate-right J-tobeMaster">
+							<%if(userType != 2){%>注册成为师傅<%}else{%>修改师傅资料<%}%>
+						</a>
 					</li>
-					<li class="mui-table-view-cell">
-						<a href="#TakeOrder" class="mui-navigate-right">收到的订单</a>
-					</li>
+					<!--作为师傅显示此处-->
+					<%if(userType == 2){%>
+						<li class="mui-table-view-cell">
+							<a href="#TakeOrder" class="mui-navigate-right">收到的订单</a>
+						</li>
+					<%}%>
 				</ul>	
 				<!--订单-->
 				<ul class="mui-table-view mui-table-view-chevron J-checkOrder">
@@ -405,7 +410,11 @@
 			</div>
 		</form>
 		<div class="mui-content-padded">
-			<button class="mui-btn mui-btn-block mui-btn-primary J-submit">注册</button>
+			<%if(type == 2){%>
+				<button class="mui-btn mui-btn-block mui-btn-danger J-editer">修改</button>
+			<%}else{%>
+				<button class="mui-btn mui-btn-block mui-btn-primary J-submit">注册</button>
+			<%}%>
 		</div>
 		<div class="mui-content-padded">
 			<p>注册真实可用，注册成功后的用户可用于登录.</p>

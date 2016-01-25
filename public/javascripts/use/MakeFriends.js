@@ -208,7 +208,17 @@ define(['base', 'core/underscore'], function(_PRO_, _) {
 						type: "POST",
 						data: fd,
 						processData: false, // 告诉zepto不要去处理发送的数据
-						contentType: false // 告诉zepto不要去设置Content-Type请求头
+						contentType: false, // 告诉zepto不要去设置Content-Type请求头
+						success: function(r) {
+							if(r.data.go == 'ok') {
+								PB.toast({
+									message:'注册成功！',
+									type: 'success'
+								});
+								history.go(-1);
+							}
+						}
+
 					});
 
 
@@ -272,19 +282,5 @@ define(['base', 'core/underscore'], function(_PRO_, _) {
 			}
 		}
 	});
-	// ////订单提交成功
-	// _exprots.SubmitSuccess = PDW.createClass({
-	// 	name : 'submitSuccess',
-	// 	route: 'SubmitSuccess',
-	// 	title: '提交成功',
-	// 	nav: ['Top'],
-	// 	view: {
-	// 		pageEvent: {
-	// 			'tap .J-center->toCenter': function(e) {
-	// 				router.myNavigate('Center','Center');
-	// 			}
-	// 		}
-	// 	}
-	// });
 	return _exprots;
 });

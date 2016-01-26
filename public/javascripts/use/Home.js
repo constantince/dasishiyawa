@@ -36,32 +36,32 @@ define(['base'], function(_PRO_) {
 			pageEvent: {
 				//查看师傅信息
 				'tap li.cell->toInfo': function(e) {
-						//params1:模块名称(B), params2:路由名称(B), params3: function.....:回掉函数。this上下文指向文件模块B
-						var tar = $(e.target);
-						tar = tar.hasClass('cell') ? tar : tar.parents('.cell').eq(0);
-						var id = tar.data('id');
-						router.myNavigate('Home', 'Information/' + id);
-					},
-					'tap .J-loadmore->loadData': function(e) {
-						var index = ++this.index;
-						index = index * 15;
-						var _self = this;
-						PDW.ajax({
-							url: '/home/index?page='+index+'&count=15',
-							success: function(r) {
-								if(r.data.infoList.length > 0) {
-									var html = _.template($('#tplhometemplate').html())(r.data);
-									_self.$el.find('.list > li').last().after(html);
-								}else{
-									PB.tip({
-										tipTxt: '没有更多数据了.....'
-									});
-									_self.index--;
-								}
-						
+					//params1:模块名称(B), params2:路由名称(B), params3: function.....:回掉函数。this上下文指向文件模块B
+					var tar = $(e.target);
+					tar = tar.hasClass('cell') ? tar : tar.parents('.cell').eq(0);
+					var id = tar.data('id');
+					router.myNavigate('Home', 'Information/' + id);
+				},
+				'tap .J-loadmore->loadData': function(e) {
+					var index = ++this.index;
+					index = index * 15;
+					var _self = this;
+					PDW.ajax({
+						url: '/home/index?page=' + index + '&count=15',
+						success: function(r) {
+							if (r.data.infoList.length > 0) {
+								var html = _.template($('#tplhometemplate').html())(r.data);
+								_self.$el.find('.list > li').last().after(html);
+							} else {
+								PB.tip({
+									tipTxt: '没有更多数据了.....'
+								});
+								_self.index--;
 							}
-						}) 
-					}
+
+						}
+					})
+				}
 			}
 		}
 	});
@@ -77,15 +77,36 @@ define(['base'], function(_PRO_) {
 			pageEvent: {
 				'tap .J-bookup->callMaster': function(e) {
 					var json = this.model.toJSON().information;
-					router.myNavigate('Home', 'FillOrder', function() {
-						this.addDataToModel({
-							masterInformation: {
-								masterId: json.id,
-								masterName: json.name,
-								masterTel: json.phone
-							}
+					PDW.ajax({
+						url: '/login/verify',
+						success: function(r) {
+							if (r.data.identificate.user_type == 0) {
+								router.myNavigate('Login', 'Login', function() {
+									this.addDataToModel({
+										module: 'Home',
+										router: 'FillOrder',
+										conveyData: {
+											masterInformation: {
+												masterId: json.id,
+												masterName: json.name,
+												masterTel: json.phone
+											}
+										}
+									});
+								});
+							} else {
+								router.myNavigate('Home', 'FillOrder', function() {
+									this.addDataToModel({
+										masterInformation: {
+											masterId: json.id,
+											masterName: json.name,
+											masterTel: json.phone
+										}
 
-						});
+									});
+								})
+							}
+						}
 					});
 				},
 				'tap .J-tab->tabChange': function(e) {
@@ -132,13 +153,13 @@ define(['base'], function(_PRO_) {
 						return alert('请填联系地址');
 					}
 					var submitData = {
-						kind: machinePlate,
-						apparatus: machineName,
-						used_year: machineYear,
-						master: json.masterInformation.masterId,
-						bookup_time: date + ' ' + time,
-						problem: content
-					}
+							kind: machinePlate,
+							apparatus: machineName,
+							used_year: machineYear,
+							master: json.masterInformation.masterId,
+							bookup_time: date + ' ' + time,
+							problem: content
+						}
 						//是否有地址存在
 					if (fatherEl.find('.adress').val() != '') {
 						submitData.adress = adress;

@@ -270,6 +270,9 @@
     border-radius: 0;
     height: inherit;
 }
+#login .login-form {
+    margin-top: 20px;
+}
 #register .veriflycode {
     width: 100px;
     float: left;

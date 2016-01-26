@@ -80,7 +80,7 @@
             <p class="<%=needShowEl(list.marriageable)%>"><em class="name">婚姻状态：</em><em class="value"><%=list.marriageable||'暂未填写'%></em></p>
             <p class="<%=needShowEl(list.hobby)%>"><em class="name">爱好：</em><em class="value"><%=list.hobby||'暂未填写'%></em></p>
             <p class="<%=needShowEl(list.profession)%>"><em class="name">职业：</em><em class="value"><%=list.profession||'暂未填写'%></em></p>
-            <p class=""><em class="name">微信号：</em><em class="value"><%if(relaction != 1 && list.need_hiddenwx == 1){%>***** TA设置为打招呼后显示<%}else{%><strong><%=list.chat%><%}%></strong></em></p>
+            <p class=""><em class="name">微信号：</em><em class="value"><%if(list.need_hiddenwx == 1 || relaction != 1){%>***** TA设置为打招呼后显示<%}else{%><strong><%=list.chat%><%}%></strong></em></p>
             <p class="<%=needShowEl(list.value)%>"><em class="name">交友宣言：</em><em class="value"><%=list.introduction||'暂未填写'%></em></p>
         </div>
         <footer>
@@ -131,7 +131,7 @@
                  <div class="left mui-ellipsis">上传一张个人头像(非必填)</div>
             </div>
         </div>
-        <p class="mui-checkbox">年龄：<em class="keepsecret">保密<input class="need" name="checkbox" value="Item 2" type="checkbox"></em></p>
+        <p class="mui-checkbox">年龄：</p>
         <div class="mui-input-row">
             <select class="age">
                 <%for(var i=10; i<81; i++){%>
@@ -147,7 +147,7 @@
         <div class="mui-input-row">
             <input  type="text" class="mui-input-clear liveplace" placeholder="(选填,方便我们联系你 )" data-input-clear="1">
         </div>
-        <p class="mui-checkbox">职业：<em class="keepsecret">保密<input class="need" name="checkbox" value="Item 2" type="checkbox"></em></p>
+        <p class="mui-checkbox">职业：</p>
         <div class="mui-input-row">
             <input  type="text" class="mui-input-clear profession" placeholder="设计狮、程序猿" data-input-clear="1">
         </div>
@@ -159,15 +159,15 @@
         <div class="mui-input-row">
             <input  type="text" class="mui-input-clear hobby" placeholder="涉猎的那些领域" data-input-clear="1">
         </div>
-        <p class="mui-checkbox">身高：<em class="keepsecret">保密<input class="need" name="checkbox" value="Item 2" type="checkbox"></em></p>
+        <p class="mui-checkbox">身高：</p>
         <div class="mui-input-row">
             <input  type="text" class="mui-input-clear tall" placeholder="单位公分（cm）如（填写175即可）" data-input-clear="1">
         </div>
-        <p class="mui-checkbox">体重：<em class="keepsecret">保密<input class="need" name="checkbox" value="Item 2" type="checkbox"></em></p>
+        <p class="mui-checkbox">体重：</p>
         <div class="mui-input-row">
             <input  type="text" class="mui-input-clear weight" placeholder="单位公斤（KG）如（填写55即可）" data-input-clear="1">
         </div>
-        <p class="mui-checkbox">其他社交账号：<em class="keepsecret">保密<input class="need" name="checkbox" value="Item 2" type="checkbox"></em></p>
+        <p class="mui-checkbox">其他社交账号：</p>
         <div class="mui-input-row">
             <input  type="text" class="mui-input-clear contact" placeholder="QQ, fackbook，line，in, whatApp都可以" data-input-clear="1">
         </div>

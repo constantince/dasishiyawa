@@ -166,7 +166,7 @@ module.exports = function(app) {
 		//发送者
 		var sender = req.query.sender;
 		var id = req.query.id;
-		var sql = 'UPDATE `relactionship` SET status = 2 WHERE user = ' + user_id + ' AND sender = ' + sender;
+		var sql = 'UPDATE `relactionship` SET status = 1 WHERE user = ' + user_id + ' AND sender = ' + sender;
 		Query(sql, function(err, rows, filed) {
 			if (err) {
 				console.log(err);

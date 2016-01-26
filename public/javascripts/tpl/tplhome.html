@@ -45,7 +45,7 @@
 <!-- 详情界面 -->
 <script type="text/template" id="tplinformation">
     <header>
-        <img src="" class="imgHeader">
+        <img src="<%=information.head_img%>" class="imgHeader">
         <div class="info">
             <p class="mui-ellipsis">
                 <span><em class="name">姓名：</em><em class="value"><%=information.name%></em></span>
@@ -205,7 +205,7 @@
         <p>备注：<%=content%></p>
         <p>下单时间：<%=orderDate%></p>
     </div>
-    <p class="tip">提示：在个人中心可以查看、修改以及删除订单。</p>
+    <p class="tip">提示：在个人中心可以查看、修改以及删除订单。上门时间以师傅电话联系您的时间为准</p>
     <footer>
        <div class="mui-button-row">
             <button type="button" class="J-center mui-btn mui-btn-primary" onclick="return false;">个人中心</button>&nbsp;&nbsp;

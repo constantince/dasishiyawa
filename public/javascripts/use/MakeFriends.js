@@ -97,7 +97,7 @@ define(['base', 'core/underscore'], function(_PRO_, _) {
 						return alert('不可以给自己打招呼！');
 					}
 					// var id = this.model.toJSON().list.id;
-					var user_id = this.model.toJSON().list.user;
+					var user_id = this.model.toJSON().list.id;
 					PDW.ajax({
 						url: '/makefriends/sayHello?user=' + user_id,
 						success: function(r) {

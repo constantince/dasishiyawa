@@ -75,47 +75,38 @@ module.exports = function(app) {
 			var user_id = req.session['user'];
 			var form = new formidable.IncomingForm();
 			form.encoding = 'utf-8'; //设置编辑
-			form.uploadDir = './publish/upload/images/'; //设置上传目录
+			form.uploadDir = 'c:/tmp/user'; //设置上传目录
 			form.keepExtensions = true; //保留后缀
 			form.maxFieldsSize = 2 * 1024 * 1024; //文件大小
 			//处理图片
 			form.parse(req, function(err, fields, files) {
 				if (err) {
-					res.locals.error = err;
-					res.render(index, {
-						title: TITLE
-					});
+					console.log(err);
 					return;
 				}
-				if (files.show_img === undefined) return;
-				var extName = ''; //后缀名
-				switch (files.show_img.type) {
-					case 'image/pjpeg':
-						extName = 'jpg';
-						break;
-					case 'image/jpeg':
-						extName = 'jpg';
-						break;
-					case 'image/png':
-						extName = 'png';
-						break;
-					case 'image/x-png':
-						extName = 'png';
-						break;
+				var sexImage = fields.sex == 0 ? 'user_man.png' : 'user_feminine.png'
+				newPath = './images/head_default/' + sexImage;
+				if (files.show_img !== undefined){
+					var extName = ''; //后缀名
+					switch (files.show_img.type) {
+						case 'image/pjpeg':
+							extName = 'jpg';
+							break;
+						case 'image/jpeg':
+							extName = 'jpg';
+							break;
+						case 'image/png':
+							extName = 'png';
+							break;
+						case 'image/x-png':
+							extName = 'png';
+							break;
+					}
+					newPath = './' + files.show_img.path.replace(/\\/gi, '/');
 				}
-				if (extName.length == 0) {
-					res.json({
-						status: 1,
-						data: {
-							info: 'jpg, png'
-						}
-					});
-					return;
-				}
-				var newPath = './' + files.show_img.path.replace(/\\/gi, '/');
 				var filesName = ['show_img="' + newPath + '"', 'is_show=1'];
 				for (var i in fields) {
-					if (typeof fields[i] !== 'object') {
+					if (typeof fields[i] !== 'object' && fields[i] !== '' && fields[i] !== 'undefined') {
 						filesName.push(i + '="' + fields[i] + '"');
 					}
 
@@ -128,7 +119,9 @@ module.exports = function(app) {
 					}
 					res.json({
 						status: 1,
-						data: {go: 'ok'}
+						data: {
+							go: 'ok'
+						}
 					});
 				});
 			});
@@ -149,17 +142,17 @@ module.exports = function(app) {
 				return;
 			}
 
-			Query('SELECT * FROM user LEFT JOIN wechat ON user.id = wechat.user WHERE user.id = ' + req.query.personel, function(err, rows, filed) {
+			Query('SELECT wechat.nickname AS wechat_name, wechat.sex AS wechat_sex, wechat.city, wechat.province, wechat.country, wechat.headimgurl, user.* FROM user LEFT JOIN wechat ON user.id = wechat.user WHERE user.id = ' + req.query.personel, function(err, rows, filed) {
 				if (err) return;
 				var sql = 'SELECT * FROM `relactionship` WHERE user = ' + personel + ' AND sender = ' + user_id;
 				var result = rows[0];
 				Query(sql, function(err, rows, filed) {
 					if (err) return;
 					var rela = 4;
-					if(!!rows.length) {
+					if (!!rows.length) {
 						var rela = rows[0].status === undefined ? 4 : rows[0].status;
 					}
-					
+
 					res.json({
 						status: 1,
 						data: {

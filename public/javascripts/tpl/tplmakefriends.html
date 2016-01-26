@@ -11,7 +11,7 @@
                         <span class="mui-ellipsis"><em>年龄：</em><%=list[i].age%></span>
                     </div>
                     <div class="box1">
-                        <span class="mui-ellipsis"><em>性别：</em><%= list[i].sex == 0 ? '男' : '女'%></span>
+                        <span class="mui-ellipsis"><em>性别：</em><%=list[i].sex == 0 ? '男' : '女'%></span>
                         <span class="mui-ellipsis"><em>现居：</em><%=list[i].liveplace%></span>
                     </div>
                     <p class="box2 mui-ellipsis">
@@ -80,7 +80,7 @@
             <p class="<%=needShowEl(list.marriageable)%>"><em class="name">婚姻状态：</em><em class="value"><%=list.marriageable||'暂未填写'%></em></p>
             <p class="<%=needShowEl(list.hobby)%>"><em class="name">爱好：</em><em class="value"><%=list.hobby||'暂未填写'%></em></p>
             <p class="<%=needShowEl(list.profession)%>"><em class="name">职业：</em><em class="value"><%=list.profession||'暂未填写'%></em></p>
-            <p class=""><em class="name">微信号：</em><em class="value"><%if(relaction != 1){%>***** TA设置为打招呼后显示<%}else{%><strong><%=list.chat%><%}%></strong></em></p>
+            <p class=""><em class="name">微信号：</em><em class="value"><%if(relaction != 1 && list.need_hiddenwx == 1){%>***** TA设置为打招呼后显示<%}else{%><strong><%=list.chat%><%}%></strong></em></p>
             <p class="<%=needShowEl(list.value)%>"><em class="name">交友宣言：</em><em class="value"><%=list.introduction||'暂未填写'%></em></p>
         </div>
         <footer>
@@ -113,9 +113,8 @@
         </div>
         <div class="mui-checkbox needagree">
             <div>微信号：</div>
-            <div class="discription">是否需要本人同意后向TA公开</div>
-            <input class="need" name="checkbox" value="Item 2" type="checkbox">
-            <div class="discription">不懂？</div>
+            <div class="discription">是否需要本人同意后公开</div>
+            <input class="need needShowWecaht" name="checkbox" value="Item 2" type="checkbox">
         </div>
         <div class="mui-input-row">
             <input  type="text" class="mui-input-clear wechat" placeholder="微信, （推荐微信）" data-input-clear="1">
@@ -129,6 +128,7 @@
             <div class="image-item space">
                 <div class="image-close">X</div>
                 <input type="file" accept="image/*" class="img">
+                 <div class="left mui-ellipsis">上传一张个人头像(非必填)</div>
             </div>
         </div>
         <p class="mui-checkbox">年龄：<em class="keepsecret">保密<input class="need" name="checkbox" value="Item 2" type="checkbox"></em></p>

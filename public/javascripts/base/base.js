@@ -564,6 +564,92 @@ define(['config', 'core/underscore', 'core/backbone'],
 					list: get
 				}
 			})();
+
+			//策略算法验证
+			var _verifly = function(option) {
+				var reg = $.extend({
+					//文本
+					text: function(v, l) {
+						if (v === '') {
+							return false;
+						}
+					},
+					//最大字符长度
+					maxLength: function(v, l) {
+						if (v.length > l) {
+							return false;
+						}
+					},
+					//最少字符长度
+					minLength: function(v, l) {
+						if (v.length < l) {
+							return false;
+						}
+					},
+					//手机号码
+					phone: function(v) {
+						if (!(/^1[3|8|5][0-9]{9}$/.test(v))) {
+							return false;
+						}
+					},
+					//身高
+					tall: function(v) {
+						if (v && !(/^1\d{2}$/.test(v))) {
+							return false;
+						}
+					},
+					//体重
+					weight: function(v) {
+						if (v && !(/^\d{2}$/.test(v))) {
+							return false;
+						}
+					},
+					//照片大小
+					img: function(img) {
+						if (img && img.size / 1024 / 1024 > 2 && !(/\.jpg|\.png/.test(img.name))) {
+							return false;
+						}
+					}
+				}, option);
+
+				function veriflyReg(v, regs) {
+					var fnType = regs.veriflyType.split(':');
+					return reg[fnType[0]].apply(null, [v, fnType[1]])
+				}
+
+				function publicVerifly(v, regs) {
+					var tof;
+					if ($.isPlainObject(regs)) {
+						var v = veriflyReg.apply(null, [v, regs]);
+						if (v === false) {
+							tof = regs.errorMessgag;
+						}
+
+					} else {
+						for (var i = 0; i < regs.length; i++) {
+							if (veriflyReg.apply(null, [v, regs[i]]) === false) {
+								tof = regs[i].errorMessgag;
+								break;
+							}
+						}
+					}
+					return tof;
+				}
+
+				function otherPublicVerifly(arr) {
+					var message;
+					for (var i = 0; i < arr.length; i++) {
+						var v = arr[i].value;
+						var regs = arr[i].rules;
+						message = publicVerifly(v, regs);
+						if (message !== undefined) {
+							break;
+						}
+					}
+					return message;
+				}
+				return otherPublicVerifly;
+			}
 			return {
 				Extensions: {
 					get: _getClass
@@ -589,7 +675,8 @@ define(['config', 'core/underscore', 'core/backbone'],
 				getActiveRoute: _getActiveRoute,
 				getModule: _getModule,
 				createClass: _Class,
-				getParams: getParams
+				getParams: getParams,
+				verifly: _verifly
 			}
 		})();
 		var Event = (function(UDF) {

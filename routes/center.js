@@ -5,6 +5,7 @@
 var Query = require('../sql/query');
 //引入文件查询
 var fs = require('fs');
+var util = require('util');
 var formidable = require("formidable");
 module.exports = function(app) {
 	//个人资料主界面
@@ -216,33 +217,116 @@ module.exports = function(app) {
 	app.post('/center/register', function(req, res, next) {
 		var form = new formidable.IncomingForm();
 		form.encoding = 'utf-8'; //设置编辑
+		form.uploadDir = 'C:/tmp/master'; //设置上传目录
+		form.keepExtensions = true; //保留后缀
+		form.maxFieldsSize = 2 * 1024 * 1024; //文件大小
 		var user_id = req.session['user'];
 		form.parse(req, function(err, fields, files) {
-			var body = fields;
-			var filedName = ['user'];
-			var valueName = ['"' + user_id + '"'];
-			for (var i in body) {
-				if (typeof body[i] !== 'object') {
-					filedName.push(i);
-					valueName.push('"' + body[i] + '"');
-				}
+			if (err) {
+				res.locals.error = err;
+				res.render(index, {
+					title: TITLE
+				});
+				return;
 			}
-			var sql = 'INSERT INTO master (' + filedName.join(',') + ') VALUES(' + valueName.join(',') + ')';
-			Query(sql, function(err, rows, filed) {
+			var sexImage = fields.sex == 0 ? 'master_man.png' : 'master_feminine.png'
+			newPath = './images/head_default/' + sexImage;
+			if (files.show_img !== undefined){
+				var extName = ''; //后缀名
+				switch (files.show_img.type) {
+					case 'image/pjpeg':
+						extName = 'jpg';
+						break;
+					case 'image/jpeg':
+						extName = 'jpg';
+						break;
+					case 'image/png':
+						extName = 'png';
+						break;
+					case 'image/x-png':
+						extName = 'png';
+						break;
+				}
+				newPath = files.show_img.path.replace(/\\/gi, '/');
+			}
+			
+			var body = fields;
+			//var newPath = files.show_img.path.replace(/\\/gi, '/');
+			// fs.renameSync(files.show_img.path, "./publish/upload/images/master/hkd.png"); 
+			//var newPath = "./publish/upload/images/master/123." + extName;
+			// var readStream = fs.createReadStream(files.show_img.path)
+			// var writeStream = fs.createWriteStream(newPath);
+			// readStream.pipe(writeStream);
+			// readStream.on('end', function(){
+			// 	fs.unlinkSync(files.show_img.path);
+			// });
+			//
+			// util.pipe(readStream, writeStream, function() {
+			//     fs.unlinkSync(files.show_img.path);
+			// });
+
+			//window
+			//fs.renameSync(files.show_img.path, newPath);
+			//加载一次数据判断是修改还是插入
+			var loadDataSql = 'SELECT * FROM master WHERE user = ' + user_id;
+			Query(loadDataSql, function(err, rows, filed) {
 				if (err) {
 					console.log(err);
 					return;
 				}
-				//更新用户的类别身份
-				var sql = 'UPDATE `user` SET identification = 2 WHERE id = ' + user_id;
-				Query(sql, function(){
-					req.session['user_type'] = 2;
-				});
-				res.json({
-					status: 1,
-					data: {go: 'ok'}
-				});
+				//插入数据
+				if (rows[0] === undefined) {
+					var filedName = ['user', 'head_img'];
+					var valueName = ['"' + user_id + '", "' + newPath + '"'];
+					for (var i in body) {
+						if (typeof body[i] !== 'object') {
+							filedName.push(i);
+							valueName.push('"' + body[i] + '"');
+						}
+					}
+					var sql = 'INSERT INTO master (' + filedName.join(',') + ') VALUES(' + valueName.join(',') + ')';
+					Query(sql, function(err, rows, filed) {
+						if (err) {
+							console.log(err);
+							return;
+						}
+						//更新用户的类别身份
+						var sql = 'UPDATE `user` SET identification = 2 WHERE id = ' + user_id;
+						Query(sql, function() {
+							req.session['user_type'] = 2;
+						});
+						res.json({
+							status: 1,
+							data: {
+								go: 'ok'
+							}
+						});
+					});
+					//修改数据
+				} else {
+					var filesName = ['head_img="' + newPath + '"', 'user=' + user_id];
+					for (var i in fields) {
+						if (typeof fields[i] !== 'object' && fields[i] !== '' && fields[i] !== 'undefined') {
+							filesName.push(i + '="' + fields[i] + '"');
+						}
+
+					}
+					var sql = 'UPDATE `master` SET ' + filesName.join(',') + ' WHERE user = ' + user_id;
+					Query(sql, function(err, rows, filed) {
+						if (err) {
+							console.log(err);
+							return;
+						}
+						res.json({
+							status: 1,
+							data: {
+								go: 'ok'
+							}
+						});
+					});
+				}
 			});
+
 		});
 	});
 	//接订单
@@ -271,7 +355,7 @@ module.exports = function(app) {
 		var way = req.query.action;
 		//下单人
 		var userOrder = req.query.userid;
-		var sql = 'UPDATE `order` SET status = '+way+' WHERE id = '+ order_id;
+		var sql = 'UPDATE `order` SET status = ' + way + ' WHERE id = ' + order_id;
 		Query(sql, function(err, rows, filed) {
 			if (err) {
 				console.log(err);
@@ -297,11 +381,11 @@ module.exports = function(app) {
 	});
 
 	// 提交评论
-	app.post('/center/submitComment', function(req, res, next){
+	app.post('/center/submitComment', function(req, res, next) {
 		var user_id = req.session['user'];
-		var sql = 'UPDATE `order` SET review = "' + req.body.content+ '", star = ' + req.body.star + ', review_time = "' + req.body.submitTime + '", status = 3 WHERE `order`.id = ' + req.body.orderId;
-		Query(sql, function(err){
-			if(err) {
+		var sql = 'UPDATE `order` SET review = "' + req.body.content + '", star = ' + req.body.star + ', review_time = "' + req.body.submitTime + '", status = 3 WHERE `order`.id = ' + req.body.orderId;
+		Query(sql, function(err) {
+			if (err) {
 				console.log(err);
 				return;
 			}
@@ -323,11 +407,11 @@ module.exports = function(app) {
 	});
 
 	// 功能导航
-	app.get('/navigate/index', function(req, res, next){
+	app.get('/navigate/index', function(req, res, next) {
 		var user_id = req.session['user'];
 		var sql = 'SELECT * FROM `function`';
-		Query(sql, function(err, rows){
-			if(err) {
+		Query(sql, function(err, rows) {
+			if (err) {
 				console.log(err);
 				return;
 			}
@@ -339,8 +423,28 @@ module.exports = function(app) {
 			});
 		});
 	});
+	// 查看身份
+	app.get('/center/checkIdentity', function(req, res, next) {
+		var user_id = req.session['user'];
+		var sql = 'SELECT * FROM `master` WHERE user = ' + user_id;
+		Query(sql, function(err, rows) {
+			if (err) {
+				console.log(err);
+				return;
+			}
+			var result = rows[0];
+			if (!result) {
+				result = 0;
+			}
+			res.json({
+				status: 1,
+				data: {
+					info: result
+				}
+			});
+		});
+	});
 }
-
 
 
 
@@ -349,18 +453,18 @@ function updateNewsStatus(option) {
 	var filedName = [];
 	var value = [];
 	var sql = '';
-	if(option.handle === 'insert') {
+	if (option.handle === 'insert') {
 		delete option.handle;
-		for(var i in option) {
+		for (var i in option) {
 			filedName.push(i);
-			value.push('"' + option[i]+ '"');
+			value.push('"' + option[i] + '"');
 		}
-		sql = 'INSERT INTO `news` ('+ filedName.join(',') +') VALUES(' + value.join(',') + ')';
-	}else if(option.handle == 'update') {
+		sql = 'INSERT INTO `news` (' + filedName.join(',') + ') VALUES(' + value.join(',') + ')';
+	} else if (option.handle == 'update') {
 		sql = 'UPDATE `news` SET status = ' + option.status + ' WHERE id = ' + option.id;
 	}
-	Query(sql, function(err){
-		if(err) {
+	Query(sql, function(err) {
+		if (err) {
 			console.log(err);
 			return;
 		}

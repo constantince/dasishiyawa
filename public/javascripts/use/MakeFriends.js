@@ -149,59 +149,83 @@ define(['base', 'core/underscore'], function(_PRO_, _) {
 					var fd = new FormData();
 					//昵称
 					var name = father.find('.nickname').val();
-					if (name == '' || name.length > 6) {
-						return alert('昵称为1~6个字符')
-					}
-					fd.append('nick', name);
+					
 					//性别
 					var sex = father.find('[name="radio"]:checked').val();
-					fd.append('sex', sex);
+					
 					//微信号
 					var wechat = father.find('.wechat').val();
-					fd.append('chat', wechat);
-					if (wechat == '') {
-						return alert('请填写微信号');
-					}
+
+					//是否公开微信号
+					var needShowWechat = father.find('.needShowWecaht').prop('checked') ? 1 : 0;
+
 					//照片
 					var img = father.find('.img')[0].files[0];
-					fd.append('show_img', img);
-					if (img && img.size / 1024 / 1024 > 2) {
-						return alert('图片尺寸太大，不符合要求！');
-					}
+
 					//年龄
 					var age = father.find('.age').val();
-					fd.append('age', age);
+					
 					//出生地
 					var birthPlace = father.find('.birthplace').val();
-					fd.append('birthplace', birthPlace);
+					
 					//现居地
 					var livePlace = father.find('.liveplace').val();
-					fd.append('liveplace', livePlace);
+					
 					//职业
 					var profession = father.find('.profession').val();
-					fd.append('profession', profession);
+					
 					//特长
 					var goodAt = father.find('.goodat').val();
-					fd.append('speciality', goodAt);
+					
 					//爱好
 					var hobby = father.find('.hobby').val();
-					fd.append('hobby', hobby);
+					
 					//身高
 					var tall = father.find('.tall').val();
-					if(tall !='' && ! (/^\d{3}$/.test(tall))) return alert('身高为三位数数字！')
-					fd.append('tall', tall);
+					
 					//体重
 					var weight = father.find('.weight').val();
-					if(weight !='' && !(/^\d{2}$/.test(weight))) return alert('体重为两位数数字！')
-					fd.append('weight', weight);
+					
 					//其他社交账号
 					var contact = father.find('.contact').val();
-					fd.append('socialaccount', contact);
+					
 					//婚礼状态
 					var marriageable = father.find('.marriageable')[0].selectedIndex;
-					fd.append('marriageable', marriageable);
+					
 					//交友宣言
 					var question = father.find('.question').val();
+					
+					//开始验证
+					var canPass = PDW.verifly();
+					var message = canPass([
+							{value: name, rules: [{veriflyType: 'text', errorMessgag: '昵称为1~6个字符'},{veriflyType: 'maxLength:6', errorMessgag: '昵称为1~6个字符'}]},
+							{value: wechat, rules: [{veriflyType: 'text', errorMessgag: '请填写微信号'}]},
+							{value: img, rules: [{veriflyType: 'img', errorMessgag: '图片不符合要求, 2M以下的png或者jpg图片'}]},
+							{value: birthPlace, rules: [{veriflyType: 'maxLength:20', errorMessgag: '出生地：20个字符以内'}]},
+							{value: livePlace, rules: [{veriflyType: 'maxLength:20', errorMessgag: '居住地：20个字符以内'}]},
+							{value: tall, rules: [{veriflyType: 'tall', errorMessgag: '请填写有效三位数字，单位cm'}]},
+							{value: weight, rules: [{veriflyType: 'weight', errorMessgag: '请填写有效两位数字，单位kg'}]},
+							{value: question, rules: [{veriflyType: 'maxLength:30', errorMessgag: '交友宣言：30个字符以内'}]},
+						]);
+					if(message!==undefined) {
+					    return alert(message);
+					}
+					//开始装载数据
+					fd.append('nick', name); 
+					fd.append('sex', sex);
+					fd.append('chat', wechat);
+					fd.append('show_img', img);
+					fd.append('age', age);
+					fd.append('birthplace', birthPlace);
+					fd.append('liveplace', livePlace);
+					fd.append('profession', profession);
+					fd.append('speciality', goodAt);
+					fd.append('tall', tall);
+					fd.append('hobby', hobby);
+					fd.append('weight', weight);
+					fd.append('need_hiddenwx', needShowWechat);
+					fd.append('socialaccount', contact);
+					fd.append('marriageable', marriageable);
 					fd.append('introduction', question);
 					$.ajax({
 						url: "/makefriends/publish",
@@ -270,14 +294,11 @@ define(['base', 'core/underscore'], function(_PRO_, _) {
 					// 	});
 					// });
 				},
-				'change .J-adressSelect->changeAdress': function(e) {
+				'change .img->change': function(e) {
 					var tar = $(e.target);
-					var adress = this.$el.find('.adress');
-					if (tar.prop('checked')) {
-						adress.parent().addClass('g-d-n');
-					} else {
-						adress.parent().removeClass('g-d-n');
-					}
+					var src = tar.val();
+					tar.parent().addClass('upload_finish');
+					tar.next().html('路径:' + src);
 				}
 			}
 		}

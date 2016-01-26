@@ -21,12 +21,12 @@ define(['base'], function(_PRO_) {
 			pageEvent: {
 				//查看个人详细信息
 				'tap .J-tobeMaster->tobeMaster': function(e) {
-					var json = this.model.toJSON();
-					router.myNavigate('Center', 'Register', function(){
-						this.addDataToModel({
-							type: json.userType
-						});
-					});
+					// var json = this.model.toJSON();
+					// router.myNavigate('Center', 'Register', function(){
+					// 	this.addDataToModel({
+					// 		type: json.userType
+					// 	});
+					// });
 
 				},
 				// //信息消息通知
@@ -258,13 +258,33 @@ define(['base'], function(_PRO_) {
 		route: 'MoreFunction',
 		nav: ['Top']
 	});
+	//查看师傅身份
+	_exprots.CheckIdentity = PDW.createClass({
+		name: 'checkIdentity',
+		title: '注册身份',
+		route: 'CheckIdentity',
+		url:'/center/checkIdentity',
+		nav: ['Top'],
+		view: {
+			pageEvent: {
+				'tap .J-editor->editor': function(e) {
+					router.myNavigate('Center', 'Register', function(){
+					});
+				},
+				'tap .J-try->try': function(e) {
+					router.myNavigate('Center', 'Register', function(){
+					});
+				}
+			}
+		}
+	});
 	//注册成为师傅
 	_exprots.Register = PDW.createClass({
 		name : 'register',
 		route: 'Register',
 		title: '填写信息',
 		nav: ['Top'],
-		// url: 'http://'+IP+':8800/?way=fillOrder',
+		//url: '/checkidentity/?way=fillOrder',
 		view: {
 			pageEvent: {
 				'tap .J-submit->submitOrder': function(e) {
@@ -272,38 +292,61 @@ define(['base'], function(_PRO_) {
 					var fd = new FormData();
 					//称谓
 					var name = father.find('.appellation').val();
-					if (name == '' || name.length > 6) {
-						return alert('昵称为1~6个字符')
-					}
-					fd.append('name', name);
+					
 					//性别
 					var sex = father.find('.sex').val();
-					fd.append('sex', sex);
+					
 					//行业
 					var occupation = father.find('.occupation').val();
-					fd.append('skill_id', occupation);
+					
 					//年龄
 					var age = father.find('.age').val();
-					fd.append('age', age);
+
+					//照片
+					var img = father.find('.img')[0].files[0];
+					
 					//技能
 					var skill = father.find('.skill').val();
-					fd.append('skill', skill);
+					
 					//经验
 					var experience = father.find('.experience').val();
-					fd.append('experience', experience);
+					
 					//自我介绍
 					var interduce = father.find('.interduce').val();
-					fd.append('introduction', interduce);
+					
 					//服务范围
 					var area = father.find('.area').val();
-					fd.append('area', area);
+					
 					//地址
 					var adress = father.find('.adress').val();
-					fd.append('adress', adress);
+					
 					//电话
 					var phone = father.find('.phone').val();
+					
+					//开始验证
+					var canPass = PDW.verifly();
+					var message = canPass([
+							{value: name, rules: [{veriflyType: 'text', errorMessgag: '请填写姓名！'},{veriflyType: 'maxLength:6', errorMessgag: '最大长度为6'}]},
+							{value: img, rules: [{veriflyType: 'img', errorMessgag: '图片不符合要求, 2M以下的png或者jpg图片'}]},
+							{value: interduce, rules: [{veriflyType: 'maxLength:50', errorMessgag: '最大长度为50个字符'}]},
+							{value: area, rules: [{veriflyType: 'text', errorMessgag: '请填写服务范围！'}, {veriflyType: 'maxLength:30', errorMessgag: '最大长度为30个字符'}]},
+							{value: phone, rules: [{veriflyType: 'phone', errorMessgag: '请输入正确的电话号码'}]},
+						]);
+					if(message!==undefined) {
+					    return alert(message);
+					}
+					//开始装载数据
+					fd.append('name', name); 
+					fd.append('sex', sex);
+					fd.append('show_img', img);
+					fd.append('skill_id', occupation);
+					fd.append('age', age);
+					fd.append('skill', skill);
+					fd.append('experience', experience);
+					fd.append('introduction', interduce);
+					fd.append('area', area);
+					fd.append('adress', adress);
 					fd.append('phone', phone);
-
 					$.ajax({
 						url: "/center/register",
 						type: "POST",
@@ -313,7 +356,7 @@ define(['base'], function(_PRO_) {
 						success: function(r) {
 							if(r.data.go == 'ok') {
 								PB.toast({
-									message:'注册成功！',
+									message:'提交成功！',
 									type: 'success'
 								});
 								history.go(-1);
@@ -322,6 +365,12 @@ define(['base'], function(_PRO_) {
 					});
 
 					//router.myNavigate('Home','SubmitSuccess');
+				},
+				'change .img->change': function(e) {
+					var tar = $(e.target);
+					var src = tar.val();
+					tar.parent().addClass('upload_finish');
+					tar.next().html('路径:' + src);
 				}
 			}
 		}

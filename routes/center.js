@@ -249,7 +249,7 @@ module.exports = function(app) {
 	app.post('/center/register', function(req, res, next) {
 		var form = new formidable.IncomingForm();
 		form.encoding = 'utf-8'; //设置编辑
-		form.uploadDir = 'C:/tmp/master'; //设置上传目录
+		form.uploadDir = './public/publish/upload/images/master'; //设置上传目录
 		form.keepExtensions = true; //保留后缀
 		form.maxFieldsSize = 2 * 1024 * 1024; //文件大小
 		var user_id = req.session['user'];
@@ -279,7 +279,7 @@ module.exports = function(app) {
 						extName = 'png';
 						break;
 				}
-				newPath = files.show_img.path.replace(/\\/gi, '/');
+				newPath = './' + files.show_img.path.replace(/public\\/, '').replace(/\\/gi, '/');
 			}
 			
 			var body = fields;

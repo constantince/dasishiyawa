@@ -4,6 +4,7 @@
 #home ul li .headimg {
     border-radius: 50%;
     height: 60px;
+    width: 60px;
 }
 #home ul li:active {
     background-color: #efeff4;
@@ -23,6 +24,7 @@
     width: 60px;
     display: block;
     border-radius: 50%;
+    overflow: hidden;
 }
 #home li div.middleinfo {
     -webkit-box-flex: 1;
@@ -571,4 +573,14 @@
 #checkIdentity h4 {
     text-align: center;
     margin: 15px 0;
+}
+#version h3{
+    text-align: center;
+}
+#version h4{
+    padding: 10px 0px;
+}
+#version p.end {
+    text-align: right;
+    margin-top: 50px;
 }

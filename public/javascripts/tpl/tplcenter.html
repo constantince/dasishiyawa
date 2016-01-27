@@ -44,6 +44,9 @@
 					<li class="mui-table-view-cell">
 						<a href="#MyOrder" class="mui-navigate-right">我提交的订单<%if(chat.ordercount > 0){%><span class="mui-badge mui-badge-primary"><%=chat.ordercount%></span><%}%></a>
 					</li>
+					<li class="mui-table-view-cell">
+						<a href="#MoreFunction" class="mui-navigate-right J-about">趣味多多</a>
+					</li>
 				</ul>	
 				<!--消息和建议入口-->
 				<ul class="mui-table-view mui-table-view-chevron">
@@ -60,10 +63,7 @@
 						<a href="#AboutUs" class="mui-navigate-right J-about">关于公众号 <i class="mui-pull-right update"></i></a>
 					</li>
 					<li class="mui-table-view-cell">
-						<a href="#MoreFunction" class="mui-navigate-right J-about">趣味多多</a>
-					</li>
-					<li class="mui-table-view-cell">
-						<a href="#Version" class="mui-navigate-right J-about">不完全指南 <i class="mui-pull-right update">V0.0.1</i></a>
+						<a href="#Version" class="mui-navigate-right J-about">不完全指南 <i class="mui-pull-right update"></i></a>
 					</li>
 				</ul>
 				<ul class="mui-table-view">
@@ -101,7 +101,7 @@
 								<a>微信账号<span class="mui-pull-right"><%=info.chat%></span></a>
 							</li>
 							<li class="mui-table-view-cell">
-								<a>性别<span class="mui-pull-right"><%=info.sex%></span></a>
+								<a>性别<span class="mui-pull-right"><%=info.sex == 0 ? '男' : '女'%></span></a>
 							</li>
 						</ul>
 						<ul class="mui-table-view">
@@ -280,7 +280,7 @@
 			<div class="mui-page-content">
 				<p>问题和意见</p>
 				<div class="row mui-input-row">
-						<textarea class="mui-input-clear question" placeholder="一起来建设公众号吧，留下您的意见，一经采取，有大奖哦！"></textarea>
+						<textarea class="mui-input-clear question" placeholder="一起来建设公众号吧，留下您宝贵的意见，一经采取。"></textarea>
 					</div>
 					<p>QQ/电话/邮箱</p>
 					<div class="mui-input-row">
@@ -304,17 +304,19 @@
 </script>
 <!-- 版本说明 -->
 <script type="text/template" id="tplversion">
-	<%for(var i=0; i<versionList.length; i++){%>
-		<div class="mui-content-padded">
-			<h4>版本：<%=versionList[i].version_name%></h4>
-			<p>
-				<%=versionList[i].version_content%>
-			</p>
-			<p>
-				<%=PB.formateTime(versionList[i].submit_time)%>&nbsp;&nbsp;&nbsp;<%=versionList[i].version_man%>
-			</p>
-		</div>
-	<%}%>
+	<div class="mui-content">
+		<%for(var i=0; i<versionList.length; i++){%>
+			<div class="mui-content-padded">
+				<h3>版本：<%=versionList[i].version_name%></h3>
+				<p>
+					<%=versionList[i].version_content%>
+				</p>
+				<p class="end">
+					<%=PB.formateTime(versionList[i].submit_time)%>&nbsp;&nbsp;&nbsp;<%=versionList[i].version_man%>
+				</p>
+			</div>
+		<%}%>
+	</div>
 </script>
 <!-- 更多功能 -->
 <script type="text/template" id="tplmoreFunction">

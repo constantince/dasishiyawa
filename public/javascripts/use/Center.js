@@ -26,13 +26,6 @@ define(['base'], function(_PRO_) {
 			pageEvent: {
 				//查看个人详细信息
 				'tap .J-tobeMaster->tobeMaster': function(e) {
-					// var json = this.model.toJSON();
-					// router.myNavigate('Center', 'Register', function(){
-					// 	this.addDataToModel({
-					// 		type: json.userType
-					// 	});
-					// });
-
 				},
 				// //信息消息通知
 				'tap .J-infomation->toPage': function(e) {
@@ -42,6 +35,7 @@ define(['base'], function(_PRO_) {
 		}
 	});
 	//签到领取红包
+	/*
 	_exprots.SignIn = PDW.createClass({
 		name: 'signIn',
 		title: '签到领红包',
@@ -53,27 +47,11 @@ define(['base'], function(_PRO_) {
 				//填写交友信息
 				'tap .J-signIn->signIn': function(e) {
 					router.myNavigate('Login', 'Login');
-					/*
-					var tar = $(e.target);
-					if(tar.hasClass('untaptable')) return;
-					PDW.ajax({
-						url: '/center/signin',
-						success: function(r) {
-							if(r.data.go === 'ok') {
-								PB.toast({
-									message: '签到成功！',
-									type: 'success',
-									delay: 2500
-								});
-								tar.addClass('untaptable').html('签到成功！');
-							}
-						}
-					});
-					*/
 				}
 			}
 		}
 	});
+	*/
 	//查看个人信息
 	_exprots.MyInformation = PDW.createClass({
 		name: 'myInformation',
@@ -221,6 +199,14 @@ define(['base'], function(_PRO_) {
 						}
 					});
 				},
+				'tap .J-checkorder->checkOrder': function(e) {
+					var tar = $(e.target);
+					var id = tar.data('id');
+					router.myNavigate('Center', 'MyOrder');
+					PDW.ajax({
+						url: '/center/checkout?id=' + id
+					});
+				}
 			}
 		}
 	});

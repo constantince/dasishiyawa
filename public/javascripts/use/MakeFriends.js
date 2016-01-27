@@ -190,7 +190,7 @@ define(['base', 'core/underscore'], function(_PRO_, _) {
 					var contact = father.find('.contact').val();
 					
 					//婚礼状态
-					var marriageable = father.find('.marriageable')[0].selectedIndex;
+					var marriageable = father.find('.marriageable').val();
 					
 					//交友宣言
 					var question = father.find('.question').val();

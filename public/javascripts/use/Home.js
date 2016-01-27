@@ -76,6 +76,10 @@ define(['base'], function(_PRO_) {
 		view: {
 			pageEvent: {
 				'tap .J-bookup->callMaster': function(e) {
+					var tar = $(e.target);
+					if(tar.hasClass('cannotclick')) {
+						return alert('不能给自己下单！');
+					}
 					var json = this.model.toJSON().information;
 					PDW.ajax({
 						url: '/login/verify',
@@ -120,6 +124,15 @@ define(['base'], function(_PRO_) {
 					}
 					this.$el.find('.list ul').addClass('g-d-n');
 					this.$el.find('.list').find('ul.' + listName).removeClass('g-d-n');
+				},
+				//展开查看更多信息
+				'tap .J-more->checkMore': function(e) {
+					var fa = this.$el.find('header');
+					if(fa.hasClass('showmore')) {
+						fa.removeClass('showmore');
+						return;
+					}
+					fa.addClass('showmore');
 				}
 			}
 		}

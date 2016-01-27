@@ -20,14 +20,17 @@ module.exports = function(app) {
 
 		//师傅信息查询
 		app.get('/home/masterinfo', function(req, res, next) {
+			var user_id = req.session['user'];
 			var master = req.query.master;
-			Query('SELECT * FROM `master` WHERE `id` = ' + master, function(err, rows, filed) {
+			Query('SELECT `skill`.skill_name, `master`.* FROM `master` LEFT JOIN `skill` ON `master`.skill_id = `skill`.id WHERE master.`id` = ' + master, function(err, rows, filed) {
 				if (err) {
 					console.log(err);
 					return;
 				}
 				//个人信息
 				var infomation = rows[0];
+				//判断是不是自己喊自己
+				var clickable = user_id == infomation.user ? false: true;
 				Query('SELECT * FROM `comment` WHERE `master` = ' + master + ' LIMIT 3', function(err, rows, filed) {
 					if (err) {
 						console.log(err);
@@ -46,7 +49,8 @@ module.exports = function(app) {
 							status: 1,
 							data: {
 								information: infomation,
-								orderList: orderList
+								orderList: orderList,
+								clickable: clickable
 							}
 						});
 					})
@@ -78,8 +82,8 @@ module.exports = function(app) {
 			var result = req.body;
 			var adress = result.adress;
 			delete result.adress;
-			var nameArr = ['user', 'status'];
-			var valueArr = [user_id, 0];
+			var nameArr = ['user'];
+			var valueArr = [user_id];
 			for(var i in result) {
 				nameArr.push(i);
 				valueArr.push('"' + result[i] + '"');

@@ -13,7 +13,9 @@ module.exports = function(app) {
 		var user_id = req.session['user'];
 		var chat_id = req.session['chat'];
 		var user_type = req.session['user_type'];
-		var sql = 'SELECT wechat.headimgurl, wechat.nickname, (SELECT COUNT(*) FROM `news` WHERE  news.`user` = ' + user_id + ' AND news.status = 0) AS ncount,(SELECT COUNT(*) FROM `order` WHERE `user` = ' + user_id + ' AND status = 0) AS ordercount FROM `wechat` WHERE id = ' + chat_id;
+		var master_id = req.session['master_id'];
+		//对于师傅，显示未开始处理的订单，对于用户，显示未读的订单 和未读的消息
+		var sql = 'SELECT wechat.headimgurl, wechat.nickname, (SELECT COUNT(*) FROM `order` WHERE  `order`.master = ' + master_id + ' AND `order`.status = 0) AS mcount, (SELECT COUNT(*) FROM `news` WHERE  news.`user` = ' + user_id + ' AND news.readed = 0) AS ncount,(SELECT COUNT(*) FROM `order` WHERE `user` = ' + user_id + ' AND readed = 0) AS ordercount FROM `wechat` WHERE id = ' + chat_id;
 		Query(sql, function(err, rows, filed) {
 			if (err) {
 				console.log(err);
@@ -35,7 +37,7 @@ module.exports = function(app) {
 		Query(sql, function(err, rows, filed) {
 			if (err) return;
 			var data = rows;
-			var clearSql = 'UPDATE news SET status = 1 WHERE user = ' + user_id + ' AND status = 0';
+			var clearSql = 'UPDATE news SET readed = 1 WHERE user = ' + user_id;
 			Query(clearSql, function(err, rows, filed) {
 				if (err) return;
 				res.json({
@@ -61,7 +63,7 @@ module.exports = function(app) {
 	});
 	//关于我们
 	app.get('/center/aboutus', function(req, res, next) {
-		var sql = "SELECT * FROM aboutus";
+		var sql = "SELECT * FROM aboutus LEFT JOIN `version` ON `aboutus`.version = `version`.id";
 		Query(sql, function(err, rows, filed) {
 			if (err) {
 				console.log(err);
@@ -71,6 +73,20 @@ module.exports = function(app) {
 			res.json({
 				status: 1,
 				data: rows[0]
+			});
+		});
+	});
+	//版本说明
+	app.get('/center/version', function(req, res, next) {
+		var sql = "SELECT * FROM version";
+		Query(sql, function(err, rows, filed) {
+			if (err) {
+				console.log(err);
+				return;
+			}
+			res.json({
+				status: 1,
+				data: {versionList: rows}
 			});
 		});
 	});
@@ -110,7 +126,7 @@ module.exports = function(app) {
 				return;
 			}
 			var data = rows;
-			var clearSql = 'UPDATE `order` SET status = 1 WHERE user = ' + user_id + ' AND status = 0';
+			var clearSql = 'UPDATE `order` SET readed = 1 WHERE user = ' + user_id;
 			Query(clearSql, function(err, rows, filed) {
 				if (err) {
 					console.log(err);
@@ -176,17 +192,33 @@ module.exports = function(app) {
 			updateNewsStatus({
 				id: id,
 				handle: 'update',
-				status: 3
+				status: 1
 			});
 			//发送回执消息
 			updateNewsStatus({
 				user: sender,
 				type: 1,
 				sender: user_id,
-				status: 3,
+				status: 0,
 				handle: 'insert',
 				content: '你的招呼得到了回应。可以查看TA的微信号了！'
 			})
+			res.json({
+				status: 1,
+				data: {
+					go: 'ok'
+				}
+			});
+		});
+	});
+	app.get('/center/checkout', function(req, res, next) {
+		var id = req.query.id;
+		var sql = 'UPDATE `news` SET status = 1 WHERE id = ' + id;
+		Query(sql, function(err, rows, filed) {
+			if (err) {
+				console.log(err);
+				return;
+			}
 			res.json({
 				status: 1,
 				data: {
@@ -199,7 +231,7 @@ module.exports = function(app) {
 	app.get('/center/forget', function(req, res, next) {
 		// var user_id = req.session['user'];
 		var id = req.query.id;
-		var sql = 'UPDATE news SET status = 2 WHERE type = 1 AND user = ' + id;
+		var sql = 'UPDATE news SET status = 1 WHERE type = 1 AND user = ' + id;
 		Query(sql, function(err, rows, filed) {
 			if (err) {
 				console.log(err);
@@ -350,7 +382,6 @@ module.exports = function(app) {
 	//开始处理订单
 	app.get('/center/handleorder', function(req, res, next) {
 		var user_id = req.session['user'];
-		//var master_id = req.session['master_id'];
 		var order_id = req.query.orderid;
 		var way = req.query.action;
 		//下单人
@@ -470,4 +501,5 @@ function updateNewsStatus(option) {
 		}
 	});
 }
+//设置某个表的阅读状态
 // module.exports = router;

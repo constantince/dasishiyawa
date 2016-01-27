@@ -32,7 +32,6 @@ define(['base'], function(_PRO_) {
 						return;
 					}
 					router.myNavigate(module, route);
-
 				}
 			}
 		}

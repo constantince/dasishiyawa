@@ -40,6 +40,27 @@
 #information header {
     display: -webkit-box;
     padding: 5px 10px 0px;
+    height: 90px;
+    overflow: hidden;
+    -webkit-transition: all 0.3s;
+}
+#information .headerarea {
+    border-bottom: 1px solid #d9d9d9;
+    background-color: #fff;
+}
+#information .headerarea[class~="showmore"] {
+    height: auto;
+}
+#information header .more {
+    float: right;
+}
+#information .hiddenelement {
+    float: left;
+    margin-right: 10px;
+}
+#information .hiddenbox {
+    padding: 5px 10px 0px;
+    height: 80px;
 }
 #information header .imgHeader {
     display: block;
@@ -184,16 +205,9 @@
     height: 100%;
 }
 #news .newsLi[kind="1"] {
-    background-color: #8696FF;
-}
-#news .newsLi[kind="2"] {
-    background-color: #FF8686;
-}
-#news .newsLi[kind="3"] {
-    background-color: #A0BDA8;
-}
-#news .newsLi[kind="4"] {
-    background-color: #dd524d;
+    background-color: #efeff4;
+    box-shadow: 2px 1px 3px #BBB0B0;
+    border: 1px solid #eee;
 }
 #news .newsLi .mybtn {
     margin-left: 5px;
@@ -204,24 +218,24 @@
     border-radius: 0;
 }
 #news .newsLi {
-    margin-top: 10px;
+    margin-top: 5px;
     position: relative;
     display: block;
     padding: 5px 1rem;
-    margin: 1rem 0;
+    margin: 0.5rem 0 0.3rem;
     word-break: break-all;
     word-wrap: break-word;
-    background-color: #C1C1C1;
+    background-color: #98A5E2;
     color: #555;
-    border: 1px solid #eee;
     font-size: 1.4rem;
+    box-shadow: 2px 1px 3px #696666;
 }
 #news .newsLi[class~="message"] {
     background-color: #23abf0;
     color: #fff;
 }
 #news .newsLi p {
-    color: #fff;
+    color: #000;
 }
 #news .newsLi a {
     font-family: bold;
@@ -318,7 +332,15 @@
 }
 #center .nick {
     height: 42px;
-    line-height: 42px;
+}
+#center .nick div {
+    height: 24px;
+    line-height: 21px;
+    font-size: 1.4rem;
+    color: #0062cc;
+}
+#center .nick .name {
+    color: #000;
 }
 #news li .mui-btn {
     margin: 0;
@@ -498,7 +520,7 @@
     font-size: 2.2rem;
 }
 #signIn p {
-    padding: 10px 40px;
+    padding: 10px 10px;
 }
 #takeOrder li {
     padding: 5px 15px;

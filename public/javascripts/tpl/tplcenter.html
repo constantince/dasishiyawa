@@ -13,10 +13,11 @@
 				<!--头像信息栏-->
 				<ul class="mui-table-view mui-table-view-chevron">
 					<li class="mui-table-view-cell mui-media">
-						<a class="mui-navigate-right" href="#SignIn" >
+						<a class="mui-navigate-right" <%if(userType == 0){%>href="#SignIn"<%}%> >
 							<img class="mui-media-object mui-pull-left head-img" id="head-img" src="<%=chat.headimgurl%>">
 							<div class="mui-media-body nick">
-								<p class="mui-ellipsis"><%=chat.nickname%></p>
+								<div class="name"><%=chat.nickname%></div>
+								<div class="type"><%if(userType == 0){%>普通用户<%}else if(userType == 1){%>认证用户<%}else if(userType == 2){%>师傅<%}%></div>
 							</div>
 						</a>
 					</li>
@@ -25,13 +26,13 @@
 				<ul class="mui-table-view mui-table-view-chevron J-checkOrder">
 					<li class="mui-table-view-cell">
 						<a href="#CheckIdentity" class="mui-navigate-right">
-							身份资料
+							服务身份资料
 						</a>
 					</li>
 					<!--作为师傅显示此处-->
 					<%if(userType == 2){%>
 						<li class="mui-table-view-cell">
-							<a href="#TakeOrder" class="mui-navigate-right">收到的订单</a>
+							<a href="#TakeOrder" class="mui-navigate-right">我收到的订单<%if(chat.mcount > 0){%><span class="mui-badge mui-badge-purple"><%=chat.mcount%></span><%}%></a>
 						</li>
 					<%}%>
 				</ul>	
@@ -41,7 +42,7 @@
 						<a href="#MyInformation" class="mui-navigate-right">交友资料</a>
 					</li>
 					<li class="mui-table-view-cell">
-						<a href="#MyOrder" class="mui-navigate-right">已提交的订单<%if(chat.ordercount > 0){%><span class="mui-badge mui-badge-primary"><%=chat.ordercount%></span><%}%></a>
+						<a href="#MyOrder" class="mui-navigate-right">我提交的订单<%if(chat.ordercount > 0){%><span class="mui-badge mui-badge-primary"><%=chat.ordercount%></span><%}%></a>
 					</li>
 				</ul>	
 				<!--消息和建议入口-->
@@ -56,10 +57,13 @@
 				<!--其他入口-->
 				<ul class="mui-table-view mui-table-view-chevron">
 					<li class="mui-table-view-cell">
-						<a href="#AboutUs" class="mui-navigate-right J-about">关于公众号 <i class="mui-pull-right update">V0.0.1</i></a>
+						<a href="#AboutUs" class="mui-navigate-right J-about">关于公众号 <i class="mui-pull-right update"></i></a>
 					</li>
 					<li class="mui-table-view-cell">
 						<a href="#MoreFunction" class="mui-navigate-right J-about">趣味多多</a>
+					</li>
+					<li class="mui-table-view-cell">
+						<a href="#Version" class="mui-navigate-right J-about">不完全指南 <i class="mui-pull-right update">V0.0.1</i></a>
 					</li>
 				</ul>
 				<ul class="mui-table-view">
@@ -172,6 +176,7 @@
 </script>
 <!-- 个人订单 -->
 <script type="text/template" id="tplmyOrder">
+<div class="mui-content">
 	<ul class="mui-table-view">
 		<%for(var i=0; i<orderList.length; i++){
 			var tempList = orderList[i];
@@ -193,12 +198,13 @@
 
 		%>
 			<li class="mui-table-view-cell  mui-collapse">
-				<a class="mui-navigate-right"><%=tempList.name%>（<%=PB.formateTime(tempList.end_time) || PB.formateTime(tempList.bookup_time)%>）<em><%=text%></em></a>
+				<a class="mui-navigate-right"><%=tempList.name%>（<%=PB.formateTime(tempList.end_time) || PB.formateTime(tempList.bookup_time)%></a>
 				<div class="mui-collapse-content">
 					<div class="infoBox">
 						<p><em>订单号：</em><em><%=tempList.id%></em></p>
 						<p><em>下单时间：</em><em><%=PB.formateTime(tempList.bookup_time)%></em></p>
-						<p class="mui-ellipsis"><em>摘要：</em><em><%= tempList.kind + tempList.apparatus + '&' + tempList.problem%></em></p>	
+						<p class="mui-ellipsis"><em>摘要：</em><em><%= tempList.kind + tempList.apparatus + '&' + tempList.problem%></em></p>
+						<p>最新状态：<%=text%></p>	
 						<%if(tempList.start_time){%><p><em>开始时间：</em><em><%=PB.formateTime(tempList.start_time)%></em></p><%}%>
 						<%if(tempList.end_time){%><p><em>完成时间：</em><em><%=PB.formateTime(tempList.end_time)%></em></p><%}%>
 						<%if(tempList.review){%><p><em>评价：</em><em><%=tempList.review%></em></p><%}%>
@@ -230,18 +236,18 @@
 			
 		<%}%>
 	</ul>
+</div>
 </script>
 <!-- 新消息 -->
 <script type="text/template" id="tplnews">
 	<ul class="newsUl">
 	<%for(var i=0, l=newslist.length; i<l; i++){ if(newslist[i].type== 1 && newslist[i].status == 2){continue;}%>
-		<li class="newsLi" kind="<%=newslist[i].type%>">
+		<li class="newsLi" kind="<%=newslist[i].status%>">
 			<div class="message">
 				<p class="content"><%=newslist[i].content%></p>
-				<em class="time"><%=newslist[i].create_time.replace(/T/, ' ').replace(/\..+/, '')%></em>
-				<!-- 打招呼 -->
+				<!-- 打招呼消息 -->
 				<%if(newslist[i].type == 1){%>
-					<button class="mui-btn mui-btn-primary mybtn J-checksomebody" data-sender="<%=newslist[i].sender%>">查看</button>
+					<button class="mui-btn mui-btn-primary mybtn J-checksomebody" data-id="<%=newslist[i].id%>" data-sender="<%=newslist[i].sender%>">查看</button>
 					<!-- 未接受状态 -->
 					<%if(newslist[i].status != 3){%>
 						<button class="mui-btn mui-btn-success mybtn J-accpect" data-id="<%=newslist[i].id%>" data-sender="<%=newslist[i].sender%>">接受</button>
@@ -249,20 +255,21 @@
 					<%}%>
 					<!-- <button class="mui-btn mui-btn-danger mybtn J-forget" data-id="<%=newslist[i].sender%>">忽略</button> -->
 				<%}%>
-				<!-- 订单类 -->
+				<!-- 订单类消息 -->
 				<%if(newslist[i].type == 2){%>
-					<button class="mui-btn mui-btn-primary mybtn J-checkorder">查看</button>
+					<button data-id="<%=newslist[i].id%>" class="mui-btn mui-btn-primary mybtn J-checkorder">查看</button>
 				<%}%>
 				<!-- 处理红包 -->
 				<%if(newslist[i].type == 4){%>
 					<button class="mui-btn mybtn J-red">收红包</button>
 				<%}%>
-				<!-- 点赞 -->
+				<!-- 点赞消息 -->
 				<%if(newslist[i].type == 3){%>
-					<button class="mui-btn mui-btn-primary mybtn J-checksomebody" data-sender="<%=newslist[i].sender%>">查看</button>
+					<button class="mui-btn mui-btn-primary mybtn J-checksomebody" data-id="<%=newslist[i].id%>" data-sender="<%=newslist[i].sender%>">查看</button>
 				<%}%>
 			</div>
 		</li>
+		<em class="time"><%=newslist[i].create_time.replace(/T/, ' ').replace(/\..+/, '')%></em>
 	<%}%>
 	</ul>
 </script>
@@ -287,62 +294,47 @@
 <!-- 关于我们 -->
 <script type="text/template" id="tplaboutUs">
 	<div class="mui-content-padded">
-		<h3><%=version%></h3>
 		<p>
-			<%=discription%>
+			介绍说明
 		</p>
 		<p>
-			<%=create_time%>
+			2015-25-26 11:22:33
 		</p>
 	</div>
+</script>
+<!-- 版本说明 -->
+<script type="text/template" id="tplversion">
+	<%for(var i=0; i<versionList.length; i++){%>
+		<div class="mui-content-padded">
+			<h4>版本：<%=versionList[i].version_name%></h4>
+			<p>
+				<%=versionList[i].version_content%>
+			</p>
+			<p>
+				<%=PB.formateTime(versionList[i].submit_time)%>&nbsp;&nbsp;&nbsp;<%=versionList[i].version_man%>
+			</p>
+		</div>
+	<%}%>
 </script>
 <!-- 更多功能 -->
 <script type="text/template" id="tplmoreFunction">
 	<div class="mui-content">
 		<ul class="mui-table-view mui-grid-view mui-grid-9">
-		    <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3"><a href="#">
-		            <span class="mui-icon mui-icon-home"></span>
-		            <div class="mui-media-body">待开通...</div></a>
+		<%for(var i=0; i<functionList.length; i++) {%>
+		    <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
+		    	<a data-route="<%=functionList[i].router%>" data-module="<%=functionList[i].module%>" data-status="<%=functionList[i].status%>">
+		            <span class="mui-icon mui-icon-<%=functionList[i].icon%>"></span>
+		            <div class="mui-media-body"><%=functionList[i].name%></div>
+	            </a>
 		    </li>
-		    <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3"><a href="#">
-		            <span class="mui-icon mui-icon-email"><span class="mui-badge">5</span></span>
-		            <div class="mui-media-body">待开通...</div></a>
-		    </li>
-		    <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3"><a href="#">
-		            <span class="mui-icon mui-icon-chatbubble"></span>
-		            <div class="mui-media-body">待开通...</div></a>
-		    </li>
-		    <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3"><a href="#">
-		            <span class="mui-icon mui-icon-location"></span>
-		            <div class="mui-media-body">待开通...</div></a>
-		    </li>
-		    <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3"><a href="#">
-		            <span class="mui-icon mui-icon-search"></span>
-		            <div class="mui-media-body">待开通...</div></a>
-		    </li>
-		    <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3"><a href="#">
-		            <span class="mui-icon mui-icon-phone"></span>
-		            <div class="mui-media-body">待开通...</div></a>
-		    </li>
-		    <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3"><a href="#">
-		            <span class="mui-icon mui-icon-gear"></span>
-		            <div class="mui-media-body">待开通...</div></a>
-		    </li>
-		    <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3"><a href="#">
-		            <span class="mui-icon mui-icon-info"></span>
-		            <div class="mui-media-body">待开通...</div></a>
-		            </li>
-		   <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3"><a href="#">
-		            <span class="mui-icon mui-icon-more"></span>
-		            <div class="mui-media-body">待开通...</div></a>
-		    </li>
+		 <%}%>
 		</ul> 
 	</div>
 </script>
 <!-- 签到领取红包 -->
 <script type="text/template" id="tplsignIn">
-	<p>每日签到，我们会抽取一位幸运用户发送一个红包。签到后请个人中心的留意消息通知</p>
-	<button type="button" class="mui-btn mui-btn-success mybtn mui-btn-block J-signIn">签到</button>
+	<p>认证用户是指绑定过手机的用户，可以享受现有以及后续开发出来的便民服务。手机认证对于互联网的身份验证来说非常重要。当然，即使不认证也依然可以享受交友和论坛聊天的功能。</p>
+	<button type="button" class="mui-btn mui-btn-success mybtn mui-btn-block J-signIn">申请认证</button>
 </script>
 <!-- 师傅注册界面 -->
 <script type="text/template" id="tplregister">
@@ -497,12 +489,12 @@
 	        	<%if(order.status == 0){%>
 	        		<button type="button" data-orderid="<%=order.id%>" data-user=<%=order.user_id%> data-way="1" class="J-handle mui-btn mui-btn-primary" onclick="return false;">接单</button>
 	        	<%}else if(order.status == 1){%>
-					<button type="button" data-orderid="<%=order.id%>" data-user=<%=order.user_id%> data-way="2" class="accomplish J-handle mui-btn mui-btn-primary" onclick="return false;">结束订单</button>
+					<button type="button" data-orderid="<%=order.id%>" data-user=<%=order.user_id%> data-way="2" class="accomplish J-handle mui-btn mui-btn-primary" onclick="return false;">完成订单</button>
 	        	<%}else if(order.status == 2){%>
-					<button type="button" data-orderid="<%=order.id%>" data-way="2" class="untaptable mui-btn mui-btn-danger" onclick="return false;">已完成</button>
+					<button type="button" data-orderid="<%=order.id%>" data-way="2" class="untaptable mui-btn mui-btn-danger" onclick="return false;">已经完成</button>
 	        	<%}%>
 	        	<%if(order.status == 0){%>
-	        		<button type="button" data-orderid="<%=order.id%>" data-user=<%=order.user_id%> data-way="4" class="J-handle mui-btn mui-btn-danger" onclick="return false;">拒绝</button>
+	        		<button type="button" data-orderid="<%=order.id%>" data-user=<%=order.user_id%> data-way="4" class="J-handle mui-btn mui-btn-danger" onclick="return false;">拒绝订单</button>
 	        	<%}else if(order.status == 4){%>
 	        		<button type="button" data-orderid="<%=order.id%>" data-way="4" class="untaptable mui-btn mui-btn-danger" onclick="return false;">已拒绝</button>
 	        	<%}%>

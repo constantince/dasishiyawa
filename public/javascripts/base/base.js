@@ -305,7 +305,7 @@ define(['config', 'core/underscore', 'core/backbone'],
 						} else if (r.status == 3) {
 							Router.myNavigate('Login', 'Login', true)
 						} else {
-							tempSuccess(r)
+							tempSuccess && tempSuccess(r)
 						}
 					}
 					var tempComplete = o.complete;

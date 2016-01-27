@@ -27,6 +27,7 @@
     <%}%>
     </ul>
 </script>
+<!-- 主界面模板 -->
 <script type="text/template" id="tplhometemplate">
     <%for(var i=0, l=infoList.length; i<l; i++){%>
         <li class="cell" data-id="<%=infoList[i].id%>">
@@ -44,6 +45,7 @@
 </script>
 <!-- 详情界面 -->
 <script type="text/template" id="tplinformation">
+<div class="headerarea">
     <header>
         <img src="<%=information.head_img%>" class="imgHeader">
         <div class="info">
@@ -52,19 +54,40 @@
                 <span><em class="name">性别：</em><em class="value"><%= information.sex == 0 ? '男' : '女'%></em></span>
             </p class="mui-ellipsis">
             <p class="mui-ellipsis">
+                <span><em class="name">年龄：</em><em class="value"><%=information.age%>年</em></span>
                 <span><em class="name">经验：</em><em class="value"><%=information.experience%>年</em></span>
-                <span><em class="name">地址：</em><em class="value"><%=information.adress%></em></span>
             </p>
             <p class="mui-ellipsis">
-                <span><em class="name">个人评价：</em><em class="value"><%=information.introduction%></em></span>
+                <span><em class="name">所属行业：</em><em class="value"><%=information.skill_name%></em></span>
             </p>
         </div>
     </header>
-    <div class="servicearea">
+    <div class="hiddenbox">
+        <!-- 服务范围 -->
+        <p class="mui-ellipsis hiddenelement">
+            <span><em class="name">服务范围：</em><em class="value"><%=information.area%></em></span>
+        </p>
+        <!-- 专业技能 -->
+        <p class="mui-ellipsis hiddenelement">
+            <span><em class="name">专业技能：</em><em class="value"><%=information.skill%></em></span>
+        </p>
+        <!-- 自我介绍 -->
+        <p class="mui-ellipsis hiddenelement">
+            <span><em class="name">自我评价：</em><em class="value"><%=information.introduction%></em></span>
+        </p>
+        <!-- 地址 -->
+        <%if(information.adress){%>
+            <p class="mui-ellipsis hiddenelement">
+                <span><em class="name">联系地址：</em><em class="value"><%=information.adress%></em></span>
+            </p>
+        <%}%>
+    </div>
+</div>
+<!--     <div class="servicearea">
         <p class="mui-ellipsis">
             <span><em class="name">服务范围：</em><em class="value"><%=information.area%></em></span>
         </p> 
-    </div>
+    </div> -->
     <div class="content">
         <div id="segmentedControl" class="mui-segmented-control mui-segmented-control-inverted mui-segmented-control-primary">
             <a class="mui-control-item mui-active J-tab" data-list="order"> 进行中的单（<%=orderList.length%>）</a>
@@ -119,7 +142,7 @@
             <%}%>
         </ul>
     </div>
-    <button type="button" class="mui-btn mui-btn-primary mui-btn-block J-bookup mybtn">喊师傅</button>
+    <button type="button" class="mui-btn mui-btn-primary mui-btn-block J-bookup mybtn <%if(!clickable){%>cannotclick<%}%>">喊师傅</button>
 </script>
 <!-- 填写预约信息 -->
 <script type="text/template" id="tplfillOrder">

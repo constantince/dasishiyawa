@@ -12,8 +12,7 @@ module.exports = function(app) {
 		//如果中间件为最后一个执行，next可以不需要执行
 		//主页查询接口
 		app.get('/makefriends/index', function(req, res, next) {
-			Query('SELECT * FROM `socialinfo` WHERE passed = 1  ORDER BY update_time DESC LIMIT ' + req.query.index + ',' + req.query.count, function(err, rows, filed) {
-				if (err) return;
+			Query.call(res, 'SELECT * FROM `socialinfo` WHERE passed = 1  ORDER BY update_time DESC LIMIT ' + req.query.index + ',' + req.query.count, function(err, rows, filed) {
 				res.json({
 					status: 1,
 					data: {
@@ -27,12 +26,8 @@ module.exports = function(app) {
 			var user_id = req.session['user'];
 			var who = req.query.user;
 			var sql = 'INSERT INTO `relactionship` (user, sender, status) VALUES(' + who + ', ' + user_id + ', 0)';
-			Query(sql, function(err, rows, filed) {
-				if (err) {
-					console.log(err);
-					return;
-				}
-				updateNewsStatus({
+			Query.call(res, sql, function(err, rows, filed) {
+				updateNewsStatus(res, {
 					user: who,
 					type: 1,
 					sender: user_id,
@@ -52,9 +47,8 @@ module.exports = function(app) {
 		app.get('/makefriends/likeIt', function(req, res, next) {
 			var user_id = req.session['user'];
 			var sql = 'INSERT INTO likes (user, send) VALUES(' + req.query.user + ',' + user_id + ')';
-			Query(sql, function(err, rows, filed) {
-				if (err) return;
-				updateNewsStatus({
+			Query.call(res, sql, function(err, rows, filed) {
+				updateNewsStatus(res, {
 					user: req.query.user,
 					type: 3,
 					sender: user_id,
@@ -106,7 +100,7 @@ module.exports = function(app) {
 				}
 				//查询数据让后判断是修改还是增加交友信息
 				var selectSql = 'SELECT * FROM `socialinfo` WHERE user = ' + user_id;
-				Query(selectSql, function(err, rows, filed) {
+				Query.call(res, selectSql, function(err, rows, filed) {
 					//没查到数据，插入信息
 					if (!rows.length) {
 						var filesName = ['show_img', 'user'];
@@ -130,11 +124,7 @@ module.exports = function(app) {
 						var sql = 'UPDATE `socialinfo` SET ' + filesName.join(',') + ' WHERE user = ' + user_id;
 					}
 
-					Query(sql, function(err, rows, filed) {
-						if (err) {
-							console.log(err);
-							return;
-						}
+					Query.call(res, sql, function(err, rows, filed) {
 						res.json({
 							status: 1,
 							data: {
@@ -161,12 +151,10 @@ module.exports = function(app) {
 				return;
 			}
 			var selectWAndSSql = 'SELECT wechat.nickname AS wechat_name, wechat.sex AS wechat_sex, wechat.city, wechat.province, wechat.country, wechat.headimgurl, `socialinfo`.* FROM `socialinfo` LEFT JOIN wechat ON `socialinfo`.user = wechat.user WHERE `socialinfo`.user = ' + req.query.personel
-			Query(selectWAndSSql, function(err, rows, filed) {
-				if (err) return;
+			Query.call(res, selectWAndSSql, function(err, rows, filed) {
 				var sql = 'SELECT * FROM `relactionship` WHERE user = ' + personel + ' AND sender = ' + user_id;
 				var result = rows[0];
-				Query(sql, function(err, rows, filed) {
-					if (err) return;
+				Query.call(res, sql, function(err, rows, filed) {
 					//用户之间的关系，0 带处理 1好友 2拒绝 4未建立关系
 					var rela = 4;
 					var needSayHelloButton = true;
@@ -211,12 +199,7 @@ function updateNewsStatus(option) {
 	} else if (option.handle == 'update') {
 		sql = 'UPDATE `news` SET status = ' + option.status + ' WHERE id = ' + option.id;
 	}
-	Query(sql, function(err) {
-		if (err) {
-			console.log(err);
-			return;
-		}
-	});
+	Query.call(res, sql, function(err) {});
 }
 //获取当前时间
 function now() {

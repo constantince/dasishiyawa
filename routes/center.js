@@ -16,11 +16,7 @@ module.exports = function(app) {
 		var master_id = req.session['master_id'];
 		//对于师傅，显示未开始处理的订单，对于用户，显示未读的订单 和未读的消息
 		var sql = 'SELECT wechat.headimgurl, wechat.nickname, (SELECT COUNT(*) FROM `order` WHERE  `order`.master = ' + master_id + ' AND `order`.status = 0) AS mcount, (SELECT COUNT(*) FROM `news` WHERE  news.`user` = ' + user_id + ' AND news.readed = 0) AS ncount,(SELECT COUNT(*) FROM `order` WHERE `user` = ' + user_id + ' AND readed = 0) AS ordercount FROM `wechat` WHERE id = ' + chat_id;
-		Query(sql, function(err, rows, filed) {
-			if (err) {
-				console.log(err);
-				return;
-			}
+		Query.call(res, sql, function(err, rows, filed) {
 			res.json({
 				status: 1,
 				data: {
@@ -34,12 +30,10 @@ module.exports = function(app) {
 	app.get('/center/checknews', function(req, res, next) {
 		var user_id = req.session['user'];
 		var sql = 'SELECT * FROM news WHERE user = ' + user_id + ' ORDER BY create_time DESC LIMIT ' + req.query.page + ',' + req.query.count;
-		Query(sql, function(err, rows, filed) {
-			if (err) return;
+		Query.call(res, sql, function(err, rows, filed) {
 			var data = rows;
 			var clearSql = 'UPDATE news SET readed = 1 WHERE user = ' + user_id;
-			Query(clearSql, function(err, rows, filed) {
-				if (err) return;
+			Query.call(res, clearSql, function(err, rows, filed) {
 				res.json({
 					status: 1,
 					data: {
@@ -53,8 +47,7 @@ module.exports = function(app) {
 	app.post('/center/suggestion', function(req, res, next) {
 		var user_id = req.session['user'];
 		var sql = 'INSERT INTO suggestion (user, connection, content) VALUES(' + user_id + ',"' + req.body.connection + '", "' + req.body.content + '")';
-		Query(sql, function(err, rows, filed) {
-			if (err) return;
+		Query.call(res, sql, function(err, rows, filed) {
 			res.json({
 				status: 1,
 				data: 'success'
@@ -64,11 +57,7 @@ module.exports = function(app) {
 	//关于我们
 	app.get('/center/aboutus', function(req, res, next) {
 		var sql = "SELECT * FROM aboutus LEFT JOIN `version` ON `aboutus`.version = `version`.id";
-		Query(sql, function(err, rows, filed) {
-			if (err) {
-				console.log(err);
-				return;
-			}
+		Query.call(res, sql, function(err, rows, filed) {
 			rows[0].create_time = rows[0].create_time.toISOString().replace(/T/, ' ').replace(/\..+/, '');
 			res.json({
 				status: 1,
@@ -79,11 +68,7 @@ module.exports = function(app) {
 	//版本说明
 	app.get('/center/version', function(req, res, next) {
 		var sql = "SELECT * FROM version";
-		Query(sql, function(err, rows, filed) {
-			if (err) {
-				console.log(err);
-				return;
-			}
+		Query.call(res, sql, function(err, rows, filed) {
 			res.json({
 				status: 1,
 				data: {versionList: rows}
@@ -94,11 +79,7 @@ module.exports = function(app) {
 	app.get('/center/myinfo', function(req, res, next) {
 		var user_id = req.session['user'];
 		var sql = 'SELECT * FROM `socialinfo` WHERE user = ' + user_id;
-		Query(sql, function(err, rows, filed) {
-			if (err) {
-				console.log(err);
-				return;
-			}
+		Query.call(res, sql, function(err, rows, filed) {
 			//已经填写过交友信息
 			var returnInfo = {
 				status: 1,
@@ -120,18 +101,10 @@ module.exports = function(app) {
 	app.get('/center/myorder', function(req, res, next) {
 		var user_id = req.session['user'];
 		var sql = 'SELECT `master`.id AS master_id, `master`.name, `order`.* FROM `order` LEFT JOIN `master` ON (order.master = master.id) WHERE order.user = ' + user_id + ' ORDER BY `order`.bookup_time DESC';
-		Query(sql, function(err, rows, filed) {
-			if (err) {
-				console.log(err);
-				return;
-			}
+		Query.call(res, sql, function(err, rows, filed) {
 			var data = rows;
 			var clearSql = 'UPDATE `order` SET readed = 1 WHERE user = ' + user_id;
-			Query(clearSql, function(err, rows, filed) {
-				if (err) {
-					console.log(err);
-					return;
-				}
+			Query.call(res, clearSql, function(err, rows, filed) {
 				res.json({
 					status: 1,
 					data: {
@@ -145,11 +118,7 @@ module.exports = function(app) {
 	app.get('/center/hassignin', function(req, res, next) {
 		var user_id = req.session['user'];
 		var sql = 'SELECT count(*) as num FROM signin WHERE user = ' + user_id;
-		Query(sql, function(err, rows, filed) {
-			if (err) {
-				console.log(err);
-				return;
-			}
+		Query.call(res, sql, function(err, rows, filed) {
 			res.json({
 				status: 1,
 				data: {
@@ -162,11 +131,7 @@ module.exports = function(app) {
 	app.get('/center/signin', function(req, res, next) {
 		var user_id = req.session['user'];
 		var sql = 'UPDATE signin SET num = num + 1 WHERE user = ' + user_id;
-		Query(sql, function(err, rows, filed) {
-			if (err) {
-				console.log(err);
-				return;
-			}
+		Query.call(res, sql, function(err, rows, filed) {
 			res.json({
 				status: 1,
 				data: {
@@ -183,19 +148,15 @@ module.exports = function(app) {
 		var sender = req.query.sender;
 		var id = req.query.id;
 		var sql = 'UPDATE `relactionship` SET status = 1 WHERE user = ' + user_id + ' AND sender = ' + sender;
-		Query(sql, function(err, rows, filed) {
-			if (err) {
-				console.log(err);
-				return;
-			}
+		Query.call(res, sql, function(err, rows, filed) {
 			//重置消息状态
-			updateNewsStatus({
+			updateNewsStatus(res, {
 				id: id,
 				handle: 'update',
 				status: 1
 			});
 			//发送回执消息
-			updateNewsStatus({
+			updateNewsStatus(res, {
 				user: sender,
 				type: 1,
 				sender: user_id,
@@ -215,11 +176,7 @@ module.exports = function(app) {
 	app.get('/center/checkout', function(req, res, next) {
 		var id = req.query.id;
 		var sql = 'UPDATE `news` SET status = 1 WHERE id = ' + id;
-		Query(sql, function(err, rows, filed) {
-			if (err) {
-				console.log(err);
-				return;
-			}
+		Query.call(res, sql, function(err, rows, filed) {
 			res.json({
 				status: 1,
 				data: {
@@ -233,11 +190,7 @@ module.exports = function(app) {
 		// var user_id = req.session['user'];
 		var id = req.query.id;
 		var sql = 'UPDATE news SET status = 1 WHERE type = 1 AND user = ' + id;
-		Query(sql, function(err, rows, filed) {
-			if (err) {
-				console.log(err);
-				return;
-			}
+		Query.call(res, sql, function(err, rows, filed) {
 			res.json({
 				status: 1,
 				data: {
@@ -286,11 +239,7 @@ module.exports = function(app) {
 			var body = fields;
 			//加载一次数据判断是修改还是插入
 			var loadDataSql = 'SELECT * FROM master WHERE user = ' + user_id;
-			Query(loadDataSql, function(err, rows, filed) {
-				if (err) {
-					console.log(err);
-					return;
-				}
+			Query.call(res, loadDataSql, function(err, rows, filed) {
 				//插入数据
 				if (rows[0] === undefined) {
 					var filedName = ['user', 'head_img'];
@@ -302,14 +251,14 @@ module.exports = function(app) {
 						}
 					}
 					var sql = 'INSERT INTO master (' + filedName.join(',') + ') VALUES(' + valueName.join(',') + ')';
-					Query(sql, function(err, rows, filed) {
+					Query.call(res, sql, function(err, rows, filed) {
 						if (err) {
 							console.log(err);
 							return;
 						}
 						//更新用户的类别身份
 						var sql = 'UPDATE `user` SET identification = 2, phone = "'+ fields['phone'] +'"" WHERE id = ' + user_id;
-						Query(sql, function() {
+						Query.call(res, sql, function() {
 							req.session['user_type'] = 2;
 						});
 						res.json({
@@ -329,11 +278,7 @@ module.exports = function(app) {
 
 					}
 					var sql = 'UPDATE `master` SET ' + filesName.join(',') + ' WHERE user = ' + user_id;
-					Query(sql, function(err, rows, filed) {
-						if (err) {
-							console.log(err);
-							return;
-						}
+					Query.call(res, sql, function(err, rows, filed) {
 						res.json({
 							status: 1,
 							data: {
@@ -351,11 +296,7 @@ module.exports = function(app) {
 		// var user_id = req.session['user'];
 		var master_id = req.session['master_id'];
 		var sql = 'SELECT `user`.id AS user_id, `user`.phone, `user`.name, `user`.sex, `user`.adress, `order`.* FROM `user` LEFT JOIN `order` ON `order`.user = `user`.id WHERE `order`.master = ' + master_id + ' ORDER BY `order`.bookup_time DESC';
-		Query(sql, function(err, rows, filed) {
-			if (err) {
-				console.log(err);
-				return;
-			}
+		Query.call(res, sql, function(err, rows, filed) {
 			res.json({
 				status: 1,
 				data: {
@@ -373,17 +314,13 @@ module.exports = function(app) {
 		//下单人
 		var userOrder = req.query.userid;
 		var sql = 'UPDATE `order` SET status = ' + way + ' WHERE id = ' + order_id;
-		Query(sql, function(err, rows, filed) {
-			if (err) {
-				console.log(err);
-				return;
-			}
+		Query.call(res, sql, function(err, rows, filed) {
 			var content = '师傅已经处理了您的订单啦!';
 			if(way == 4) {
 				content = '订单遭到拒绝:' + refuseReason; 
 			}
 			//给下单人发消息
-			updateNewsStatus({
+			updateNewsStatus(res, {
 				user: userOrder,
 				type: 2,
 				sender: user_id,
@@ -403,12 +340,8 @@ module.exports = function(app) {
 	app.post('/center/submitComment', function(req, res, next) {
 		var user_id = req.session['user'];
 		var sql = 'UPDATE `order` SET review = "' + req.body.content + '", star = ' + req.body.star + ', review_time = "' + now() + '", status = 3 WHERE `order`.id = ' + req.body.orderId;
-		Query(sql, function(err) {
-			if (err) {
-				console.log(err);
-				return;
-			}
-			updateNewsStatus({
+		Query.call(res, sql, function(err) {
+			updateNewsStatus(res, {
 				user: req.body.user,
 				type: 0,
 				sender: user_id,
@@ -429,11 +362,7 @@ module.exports = function(app) {
 	app.get('/navigate/index', function(req, res, next) {
 		var user_id = req.session['user'];
 		var sql = 'SELECT * FROM `function`';
-		Query(sql, function(err, rows) {
-			if (err) {
-				console.log(err);
-				return;
-			}
+		Query.call(res, sql, function(err, rows) {
 			res.json({
 				status: 1,
 				data: {
@@ -446,11 +375,7 @@ module.exports = function(app) {
 	app.get('/center/deletemakefriendsInfo', function(req, res, next) {
 		var id = req.query.id;
 		var deleteSql = 'DELETE FROM `socialinfo` WHERE id =' + id;
-		Query(deleteSql, function(err, rows) {
-			if (err) {
-				console.log(err);
-				return;
-			}
+		Query.call(res, deleteSql, function(err, rows) {
 			res.json({
 				status: 1,
 				data: {
@@ -463,11 +388,7 @@ module.exports = function(app) {
 	app.get('/center/checkIdentity', function(req, res, next) {
 		var user_id = req.session['user'];
 		var sql = 'SELECT * FROM `master` WHERE user = ' + user_id;
-		Query(sql, function(err, rows) {
-			if (err) {
-				console.log(err);
-				return;
-			}
+		Query.call(res, sql, function(err, rows) {
 			var result = rows[0];
 			if (!result) {
 				result = 0;
@@ -485,7 +406,7 @@ module.exports = function(app) {
 
 
 //处理消息状态
-function updateNewsStatus(option) {
+function updateNewsStatus(res, option) {
 	var filedName = [];
 	var value = [];
 	var sql = '';
@@ -499,12 +420,7 @@ function updateNewsStatus(option) {
 	} else if (option.handle == 'update') {
 		sql = 'UPDATE `news` SET status = ' + option.status + ' WHERE id = ' + option.id;
 	}
-	Query(sql, function(err) {
-		if (err) {
-			console.log(err);
-			return;
-		}
-	});
+	Query.call(res, sql, function(err) {});
 }
 //获取当前时间
 function now() {

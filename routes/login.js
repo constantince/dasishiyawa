@@ -9,12 +9,15 @@ module.exports = function(app) {
 	//进入公众号后 开始session回话
 	app.get('/login', function(req, res, next) {
 		var sql = 'SELECT wechat.nickname, wechat.headimgurl, wechat.id as wechat_id, user.* FROM wechat LEFT JOIN USER ON user.id = wechat.user WHERE wechat.openid = "' + req.query.openid + '"';
-		Query(sql, function(err, rows, filed) {
-			if (err) {
-				console.log(err);
+		Query.call(res, sql, function(err, rows, filed) {
+			var result = rows[0];
+			if (!result) {
+				res.json({
+					status: 0,
+					data: 'undefined'
+				});
 				return;
 			}
-			var result = rows[0];
 			req.session['user'] = result.id;
 			req.session['user_type'] = result.identification;
 			req.session['name'] = result.nickname;
@@ -23,7 +26,7 @@ module.exports = function(app) {
 			req.session['master_id'] = 0;
 			var masterSql = 'SELECT * FROM master WHERE user = ' + result.id;
 			if (result.identification == 2) {
-				Query(masterSql, function(err, rows, filed) {
+				Query.call(res, masterSql, function(err, rows, filed) {
 					if (err) {
 						console.log(err);
 						return;
@@ -49,7 +52,7 @@ module.exports = function(app) {
 				});
 			}
 			return;
-		})
+		});
 	});
 	//验证用户身份
 	app.get('/login/verify', function(req, res, next) {
@@ -65,7 +68,7 @@ module.exports = function(app) {
 		var phone = req.query.phone;
 		var user_id = req.session['user'];
 		var checkSql = 'SELECT * FROM `user` WHERE id = ' + user_id;
-		Query(checkSql, function(err, rows, filed) {
+		Query.call(res, checkSql, function(err, rows, filed) {
 			if (err) {
 				console.log(err);
 				return;
@@ -73,7 +76,7 @@ module.exports = function(app) {
 			//只有是非认证用户的情况下才需要更新身份
 			if (!!rows.length && rows[0].identification == 2) {
 				var sql = 'UPDATE `user` SET identification = 1, phone = "' + phone + '" WHERE id = ' + user_id;
-				Query(sql, function(err, rows, filed) {
+				Query.call(res, sql, function(err, rows, filed) {
 					if (err) {
 						console.log(err);
 						return;

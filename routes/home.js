@@ -4,11 +4,7 @@ module.exports = function(app) {
 		//如果中间件为最后一个执行，next可以不需要执行
 		//主页查询接口
 		app.get('/home/index', function(req, res, next) {
-			Query('SELECT * FROM master LIMIT ' + req.query.page + ', ' + req.query.count, function(err, rows, filed) {
-				if (err) {
-					console.log(err);
-					return;
-				}
+			Query.call(res, 'SELECT * FROM master LIMIT ' + req.query.page + ', ' + req.query.count, function(err, rows, filed) {
 				res.json({
 					status: 1,
 					data: {
@@ -22,27 +18,15 @@ module.exports = function(app) {
 		app.get('/home/masterinfo', function(req, res, next) {
 			var user_id = req.session['user'];
 			var master = req.query.master;
-			Query('SELECT `skill`.skill_name, `master`.* FROM `master` LEFT JOIN `skill` ON `master`.skill_id = `skill`.id WHERE master.`id` = ' + master, function(err, rows, filed) {
-				if (err) {
-					console.log(err);
-					return;
-				}
+			Query.call(res, 'SELECT `skill`.skill_name, `master`.* FROM `master` LEFT JOIN `skill` ON `master`.skill_id = `skill`.id WHERE master.`id` = ' + master, function(err, rows, filed) {
 				//个人信息
 				var infomation = rows[0];
 				//判断是不是自己喊自己
 				var clickable = user_id == infomation.user ? false: true;
-				Query('SELECT * FROM `comment` WHERE `master` = ' + master + ' LIMIT 3', function(err, rows, filed) {
-					if (err) {
-						console.log(err);
-						return;
-					}
+				Query.call(res, 'SELECT * FROM `comment` WHERE `master` = ' + master + ' LIMIT 3', function(err, rows, filed) {
 					//个人信息
 					var judeList = rows;
-					Query('SELECT * FROM `order` WHERE `master` = ' + master + ' ORDER BY id DESC LIMIT 3', function(err, rows, filed) {
-						if (err) {
-							console.log(err);
-							return;
-						}
+					Query.call(res, 'SELECT * FROM `order` WHERE `master` = ' + master + ' ORDER BY id DESC LIMIT 3', function(err, rows, filed) {
 						//个人信息
 						var orderList = rows;
 						res.json({
@@ -62,11 +46,7 @@ module.exports = function(app) {
 		//填写信息
 		app.get('/home/fillorder', function(req, res, next) {
 			var user_id = req.session['user'];
-			Query('SELECT * FROM user WHERE id = ' + user_id, function(err, rows, filed) {
-				if (err) {
-					console.log(err);
-					return;
-				}
+			Query.call(res, 'SELECT * FROM user WHERE id = ' + user_id, function(err, rows, filed) {
 				res.json({
 					status: 1,
 					data: {
@@ -88,15 +68,11 @@ module.exports = function(app) {
 				nameArr.push(i);
 				valueArr.push('"' + result[i] + '"');
 			}
-			Query('INSERT INTO `order` ('+ nameArr.join(',') +') VALUES ('+ valueArr.join(',') +')', function(err, rows, filed) {
-				if (err) {
-					console.log(err);
-					return;
-				}
+			Query.call(res, 'INSERT INTO `order` ('+ nameArr.join(',') +') VALUES ('+ valueArr.join(',') +')', function(err, rows, filed) {
 				var sql = 'UPDATE `user` SET adress = "' + adress + '" WHERE id = ' + user_id;
 				//插入更新用户的地址
 				if(adress) {
-					Query(sql);
+					Query.call(res, sql);
 				}
 				res.json({
 					status: 1,

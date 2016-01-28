@@ -61,21 +61,42 @@ module.exports = function(app) {
 		});
 	});
 	//设置手机，注册正式会员
-	app.get('/login/setphone', function(req, res, next){
+	app.get('/login/setphone', function(req, res, next) {
 		var phone = req.query.phone;
 		var user_id = req.session['user'];
-		var sql = 'UPDATE `user` SET identification = 1, phone = "'+phone+'" WHERE id = ' + user_id;
-		Query(sql, function(err, rows, filed){
+		var checkSql = 'SELECT * FROM `user` WHERE id = ' + user_id;
+		Query(checkSql, function(err, rows, filed) {
 			if (err) {
 				console.log(err);
 				return;
 			}
-			req.session['user_type'] = 1;
-			res.json({
-				status: 1,
-				data: {go: 'ok'}
-			});
+			//只有是非认证用户的情况下才需要更新身份
+			if (!!rows.length && rows[0].identification == 2) {
+				var sql = 'UPDATE `user` SET identification = 1, phone = "' + phone + '" WHERE id = ' + user_id;
+				Query(sql, function(err, rows, filed) {
+					if (err) {
+						console.log(err);
+						return;
+					}
+					req.session['user_type'] = 1;
+					res.json({
+						status: 1,
+						data: {
+							go: 'ok'
+						}
+					});
+				});
+			} else {
+				res.json({
+					status: 1,
+					data: {
+						go: 'ok'
+					}
+				});
+
+			}
 		});
+
 	});
 }
 

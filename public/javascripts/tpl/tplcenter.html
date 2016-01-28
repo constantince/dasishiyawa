@@ -165,6 +165,7 @@
 						</ul>
 						<%}%>
 						<button class="mui-btn mui-btn-primary mui-btn-block mybtn J-editor">修改</button>
+						<button data-id="<%=info.id%>" class="mui-btn mui-btn-danger mui-btn-block mybtn J-delete">删除</button>
 					<div class="mui-scrollbar mui-scrollbar-vertical"><div class="mui-scrollbar-indicator"></div></div></div>
 				</div>
 			</div>
@@ -194,11 +195,14 @@
 				case 3:
 					text = '已评价';
 					break;
+				case 4:
+					text = '已拒绝';
+					break;
 			}
 
 		%>
 			<li class="mui-table-view-cell  mui-collapse">
-				<a class="mui-navigate-right"><%=tempList.name%>（<%=PB.formateTime(tempList.end_time) || PB.formateTime(tempList.bookup_time)%></a>
+				<a class="mui-navigate-right"><%=tempList.name%><%=PB.formateTime(tempList.end_time) || PB.formateTime(tempList.bookup_time)%></a>
 				<div class="mui-collapse-content">
 					<div class="infoBox">
 						<p><em>订单号：</em><em><%=tempList.id%></em></p>
@@ -209,24 +213,26 @@
 						<%if(tempList.end_time){%><p><em>完成时间：</em><em><%=PB.formateTime(tempList.end_time)%></em></p><%}%>
 						<%if(tempList.review){%><p><em>评价：</em><em><%=tempList.review%></em></p><%}%>
 					</div>
-					<%if(tempList.status == 2){%>
-						<form class="mui-input-group infoForm">
-							<div class="mui-input-row">
-								<label>打分</label>
-								<select>
-									<option>1</option>
-									<option>2</option>
-									<option>3</option>
-									<option>4</option>
-									<option>5</option>
-								</select>
-							</div>
-							<div class="mui-input-row">
-								<label>评价</label>
-								<input type="text" class="mui-input-clear judeContent" placeholder="请输入您的评价100字以内" data-input-clear="3"><span class="mui-icon mui-icon-clear mui-hidden"></span>
-							</div>
+					<%if(tempList.status > 1){%>
+						<%if(tempList.status == 2){%>
+							<form class="mui-input-group infoForm">
+								<div class="mui-input-row">
+									<label>打分</label>
+									<select>
+										<option>1</option>
+										<option>2</option>
+										<option>3</option>
+										<option>4</option>
+										<option>5</option>
+									</select>
+								</div>
+								<div class="mui-input-row">
+									<label>评价</label>
+									<input type="text" class="mui-input-clear judeContent" placeholder="请输入您的评价100字以内" data-input-clear="3"><span class="mui-icon mui-icon-clear mui-hidden"></span>
+								</div>
+							<%}%>
 							<div class="mui-button-row" data-orderid=<%=tempList.id%> data-i=<%=i%> data-user=<%=tempList.user%>>
-								<button class="mui-btn mui-btn-primary J-submit" type="button" onclick="return false;">确认</button>&nbsp;&nbsp;
+								<%if(tempList.status == 2){%><button class="mui-btn mui-btn-primary J-submit" type="button" onclick="return false;">确认</button>&nbsp;&nbsp;<%}%>
 								<button class="mui-btn mui-btn-primary J-callagain" type="button" onclick="return false;">再喊一次</button>
 							</div>
 						</form>
@@ -481,7 +487,7 @@
 		<li class="content">
 			<div class="box">
 				<header class="name"><span>订单<%=order.id%></span><a type="button" href="tel:<%=order.phone%>" class="J-content mui-btn mui-btn-success" onclick="return false;">拨打电话</a></header>
-		        <p class="name"><em>下单人:<%=order.nick%> 先生</em><em>电话：<%=order.phone%></em></p>
+		        <p class="name"><em>下单人:<%=order.name%> </em><em>电话：<%=order.phone%></em></p>
 		        <p><em>设备名称：<%=order.kind || '' %><%=order.apparatus%></em><em>设备年限：<%=order.used_year%>年</em>
 		        <p>上门地址：<%=order.adress%></p>
 		        <p>问题描述：<%=order.problem%></p>

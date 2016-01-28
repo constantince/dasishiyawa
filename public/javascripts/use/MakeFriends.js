@@ -54,7 +54,7 @@ define(['base', 'core/underscore'], function(_PRO_, _) {
 						tar = tar.hasClass('list') ? tar : tar.parents('.list').eq(0);
 						var i = tar.data('i');
 						var json = this.model.toJSON().list[i];
-						router.myNavigate('MakeFriends', 'Personel/'+json.id, function(){
+						router.myNavigate('MakeFriends', 'Personel/'+json.user, function(){
 							//this.addDataToModel(json);
 						});
 					},
@@ -97,7 +97,7 @@ define(['base', 'core/underscore'], function(_PRO_, _) {
 						return alert('不可以给自己打招呼！');
 					}
 					// var id = this.model.toJSON().list.id;
-					var user_id = this.model.toJSON().list.id;
+					var user_id = this.model.toJSON().list.user;
 					PDW.ajax({
 						url: '/makefriends/sayHello?user=' + user_id,
 						success: function(r) {
@@ -117,7 +117,7 @@ define(['base', 'core/underscore'], function(_PRO_, _) {
 					if(tar.hasClass('cannotclick')) {
 						return alert('不可以给自己点赞！');
 					}
-					var id = this.model.toJSON().list.id;
+					var id = this.model.toJSON().list.user;
 					PDW.ajax({
 						url: '/makefriends/likeIt?user='+id,
 						success: function(r) {

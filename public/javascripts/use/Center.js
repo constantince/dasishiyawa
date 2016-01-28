@@ -25,8 +25,7 @@ define(['base'], function(_PRO_) {
 		view: {
 			pageEvent: {
 				//查看个人详细信息
-				'tap .J-tobeMaster->tobeMaster': function(e) {
-				},
+				'tap .J-tobeMaster->tobeMaster': function(e) {},
 				// //信息消息通知
 				'tap .J-infomation->toPage': function(e) {
 
@@ -73,6 +72,26 @@ define(['base'], function(_PRO_) {
 					router.myNavigate('MakeFriends', 'PublishPerson', function() {
 
 					});
+				},
+				//删除交友信息
+				'tap .J-delete->delete': function(e) {
+					var id = $(e.target).data('id');
+					if(confirm('确认删除您的交友资料吗？')) {
+						PDW.ajax({
+							url: '/center/deletemakefriendsInfo?id=' + id,
+							success: function(r) {
+								if(r.data.go == 'ok') {
+									PB.toast({
+										message: '删除成功！',
+										type: 'success'
+									});
+									router.myNavigate('Center', 'Center', function() {
+
+									});
+								}
+							}
+						})
+					}
 				}
 			}
 		}
@@ -112,8 +131,7 @@ define(['base'], function(_PRO_) {
 						orderId: orderId,
 						star: star,
 						user: user,
-						content: content,
-						submitTime: PB.now()
+						content: content
 					}
 					PDW.ajax({
 						url: '/center/submitComment',
@@ -272,7 +290,7 @@ define(['base'], function(_PRO_) {
 					var module = tar.data('module');
 					var route = tar.data('route');
 					var status = tar.data('status');
-					if(status == 0) {
+					if (status == 0) {
 						PB.toast({
 							message: '即将开通',
 							type: 'unconnectable'
@@ -445,27 +463,35 @@ define(['base'], function(_PRO_) {
 					var orderId = tar.data('orderid');
 					var userId = tar.data('user');
 					var handleWay = tar.data('way');
+					var refuseReason = '';
 					if (handleWay == 4) {
-						var txt = prompt('请填写您的拒绝原因');
-						if (txt === null) {
-							return;
+						var refuseReason = prompt('请填写您的拒绝原因');
+						if (refuseReason === null) {
+							refuseReason == '';
 						}
 					}
 					PDW.ajax({
-						url: '/center/handleorder?userid=' + userId + '&orderid=' + orderId + '&action=' + handleWay,
+						url: '/center/handleorder?userid=' + userId + '&orderid=' + orderId + '&action=' + handleWay + '&refusereason=' + refuseReason,
 						success: function(e) {
 							if (e.data.go == 'ok') {
 								//接受订单
 								if (handleWay == 1) {
-									tar.addClass('accomplish').html('结束订单');
+									tar.addClass('accomplish').html('完成订单');
+									tar.next().remove();
 									PB.toast({
-											message: '接单成功！',
-											type: 'success',
-											delay: 2500
-										})
-										//拒绝订单
+										message: '接单成功！',
+										type: 'success',
+										delay: 2500
+									})
+									//拒绝订单
 								} else if (handleWay == 4) {
 									tar.addClass('untaptable').html('已拒绝');
+									tar.prev().remove();
+									PB.toast({
+										message: '已拒绝！',
+										type: 'unconnectable',
+										delay: 2500
+									})
 								} else if (handleWay == 2) {
 									PB.toast({
 										message: '完成订单！',

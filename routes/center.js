@@ -33,7 +33,7 @@ module.exports = function(app) {
 	//查看个人消息
 	app.get('/center/checknews', function(req, res, next) {
 		var user_id = req.session['user'];
-		var sql = 'SELECT * FROM news WHERE user = ' + user_id + ' ORDER BY id DESC LIMIT ' + req.query.page + ',' + req.query.count;
+		var sql = 'SELECT * FROM news WHERE user = ' + user_id + ' ORDER BY create_time DESC LIMIT ' + req.query.page + ',' + req.query.count;
 		Query(sql, function(err, rows, filed) {
 			if (err) return;
 			var data = rows;
@@ -93,7 +93,7 @@ module.exports = function(app) {
 	//我的交友信息
 	app.get('/center/myinfo', function(req, res, next) {
 		var user_id = req.session['user'];
-		var sql = 'SELECT * FROM user WHERE id = ' + user_id;
+		var sql = 'SELECT * FROM `socialinfo` WHERE user = ' + user_id;
 		Query(sql, function(err, rows, filed) {
 			if (err) {
 				console.log(err);
@@ -108,8 +108,8 @@ module.exports = function(app) {
 				},
 				hasInfo: 0
 			};
-			//通过师傅填写了微信号判断用户是否有交友信息
-			if (rows[0].chat) {
+			//判断用户是否有交友信息
+			if (!!rows.length) {
 				returnInfo.data.info = rows[0];
 				returnInfo.data.hasInfo = 1;
 			}
@@ -119,7 +119,7 @@ module.exports = function(app) {
 	//我的订单
 	app.get('/center/myorder', function(req, res, next) {
 		var user_id = req.session['user'];
-		var sql = 'SELECT `master`.id AS master_id, `master`.name, `order`.* FROM `order` LEFT JOIN `master` ON (order.master = master.id) WHERE order.user = ' + user_id + ' ORDER BY `order`.id DESC';
+		var sql = 'SELECT `master`.id AS master_id, `master`.name, `order`.* FROM `order` LEFT JOIN `master` ON (order.master = master.id) WHERE order.user = ' + user_id + ' ORDER BY `order`.bookup_time DESC';
 		Query(sql, function(err, rows, filed) {
 			if (err) {
 				console.log(err);
@@ -211,6 +211,7 @@ module.exports = function(app) {
 			});
 		});
 	});
+	//查看发消息人
 	app.get('/center/checkout', function(req, res, next) {
 		var id = req.query.id;
 		var sql = 'UPDATE `news` SET status = 1 WHERE id = ' + id;
@@ -283,22 +284,6 @@ module.exports = function(app) {
 			}
 			
 			var body = fields;
-			//var newPath = files.show_img.path.replace(/\\/gi, '/');
-			// fs.renameSync(files.show_img.path, "./publish/upload/images/master/hkd.png"); 
-			//var newPath = "./publish/upload/images/master/123." + extName;
-			// var readStream = fs.createReadStream(files.show_img.path)
-			// var writeStream = fs.createWriteStream(newPath);
-			// readStream.pipe(writeStream);
-			// readStream.on('end', function(){
-			// 	fs.unlinkSync(files.show_img.path);
-			// });
-			//
-			// util.pipe(readStream, writeStream, function() {
-			//     fs.unlinkSync(files.show_img.path);
-			// });
-
-			//window
-			//fs.renameSync(files.show_img.path, newPath);
 			//加载一次数据判断是修改还是插入
 			var loadDataSql = 'SELECT * FROM master WHERE user = ' + user_id;
 			Query(loadDataSql, function(err, rows, filed) {
@@ -323,7 +308,7 @@ module.exports = function(app) {
 							return;
 						}
 						//更新用户的类别身份
-						var sql = 'UPDATE `user` SET identification = 2 WHERE id = ' + user_id;
+						var sql = 'UPDATE `user` SET identification = 2, phone = "'+ fields['phone'] +'"" WHERE id = ' + user_id;
 						Query(sql, function() {
 							req.session['user_type'] = 2;
 						});
@@ -361,11 +346,11 @@ module.exports = function(app) {
 
 		});
 	});
-	//接订单
+	//接收到订单
 	app.get('/center/takeorder', function(req, res, next) {
 		// var user_id = req.session['user'];
 		var master_id = req.session['master_id'];
-		var sql = 'SELECT `user`.id AS user_id, `user`.phone, `user`.nick, `user`.sex, `user`.adress, `order`.* FROM `user` LEFT JOIN `order` ON `order`.user = `user`.id WHERE `order`.master = ' + master_id + ' ORDER BY `order`.id DESC';
+		var sql = 'SELECT `user`.id AS user_id, `user`.phone, `user`.name, `user`.sex, `user`.adress, `order`.* FROM `user` LEFT JOIN `order` ON `order`.user = `user`.id WHERE `order`.master = ' + master_id + ' ORDER BY `order`.bookup_time DESC';
 		Query(sql, function(err, rows, filed) {
 			if (err) {
 				console.log(err);
@@ -384,6 +369,7 @@ module.exports = function(app) {
 		var user_id = req.session['user'];
 		var order_id = req.query.orderid;
 		var way = req.query.action;
+		var refuseReason = req.query.refusereason;
 		//下单人
 		var userOrder = req.query.userid;
 		var sql = 'UPDATE `order` SET status = ' + way + ' WHERE id = ' + order_id;
@@ -392,7 +378,10 @@ module.exports = function(app) {
 				console.log(err);
 				return;
 			}
-
+			var content = '师傅已经处理了您的订单啦!';
+			if(way == 4) {
+				content = '订单遭到拒绝:' + refuseReason; 
+			}
 			//给下单人发消息
 			updateNewsStatus({
 				user: userOrder,
@@ -400,7 +389,7 @@ module.exports = function(app) {
 				sender: user_id,
 				status: 0,
 				handle: 'insert',
-				content: '师傅已经处理了您的订单啦!'
+				content: content
 			})
 			res.json({
 				status: 1,
@@ -410,11 +399,10 @@ module.exports = function(app) {
 			});
 		});
 	});
-
 	// 提交评论
 	app.post('/center/submitComment', function(req, res, next) {
 		var user_id = req.session['user'];
-		var sql = 'UPDATE `order` SET review = "' + req.body.content + '", star = ' + req.body.star + ', review_time = "' + req.body.submitTime + '", status = 3 WHERE `order`.id = ' + req.body.orderId;
+		var sql = 'UPDATE `order` SET review = "' + req.body.content + '", star = ' + req.body.star + ', review_time = "' + now() + '", status = 3 WHERE `order`.id = ' + req.body.orderId;
 		Query(sql, function(err) {
 			if (err) {
 				console.log(err);
@@ -450,6 +438,23 @@ module.exports = function(app) {
 				status: 1,
 				data: {
 					functionList: rows
+				}
+			});
+		});
+	});
+	// 删除交友资料
+	app.get('/center/deletemakefriendsInfo', function(req, res, next) {
+		var id = req.query.id;
+		var deleteSql = 'DELETE FROM `socialinfo` WHERE id =' + id;
+		Query(deleteSql, function(err, rows) {
+			if (err) {
+				console.log(err);
+				return;
+			}
+			res.json({
+				status: 1,
+				data: {
+					go: 'ok'
 				}
 			});
 		});
@@ -500,6 +505,24 @@ function updateNewsStatus(option) {
 			return;
 		}
 	});
+}
+//获取当前时间
+function now() {
+	function add0(e) {
+		if (e < 10) {
+			e = '0' + e;
+		}
+		return e;
+	}
+	var D = new Date();
+	var year = D.getFullYear();
+	var mouth = D.getMonth() + 1;
+	mouth = add0(mouth);
+	var day = add0(D.getDate());
+	var hour = add0(D.getHours());
+	var minute = add0(D.getMinutes());
+	var second = add0(D.getSeconds());
+	return year + '-' + mouth + '-' + day + ' ' + hour + ':' + minute + ':' + second;
 }
 //设置某个表的阅读状态
 // module.exports = router;

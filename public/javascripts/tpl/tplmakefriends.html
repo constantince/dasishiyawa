@@ -80,11 +80,11 @@
             <p class="<%=needShowEl(list.marriageable)%>"><em class="name">婚姻状态：</em><em class="value"><%=list.marriageable||'暂未填写'%></em></p>
             <p class="<%=needShowEl(list.hobby)%>"><em class="name">爱好：</em><em class="value"><%=list.hobby||'暂未填写'%></em></p>
             <p class="<%=needShowEl(list.profession)%>"><em class="name">职业：</em><em class="value"><%=list.profession||'暂未填写'%></em></p>
-            <p class=""><em class="name">微信号：</em><em class="value"><%if(list.need_hiddenwx == 1 || relaction != 1){%>***** TA设置为打招呼后显示<%}else{%><strong><%=list.chat%><%}%></strong></em></p>
+            <p class=""><em class="name">微信号：</em><em class="value"><%if(list.need_hiddenwx == 0 || relaction == 1){%><strong><%=list.chat%><%}else{%>***** TA设置为打招呼后显示<%}%></strong></em></p>
             <p class="<%=needShowEl(list.value)%>"><em class="name">交友宣言：</em><em class="value"><%=list.introduction||'暂未填写'%></em></p>
         </div>
         <footer>
-        <%if(relaction == 4){%>
+        <%if(needSayHelloButton){%>
             <button type="button" class="mui-btn mui-btn-primary mui-btn-block say-hello <%if(!clickable){%>cannotclick<%}%>">打个招呼</button>
         <%}%>
             <button type="button" class="mui-btn mui-btn-success mui-btn-block like-it <%if(!clickable){%>cannotclick<%}%>">给TA个赞</button>

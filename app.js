@@ -5,6 +5,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
+var request = require('request');
 //错误日志
 // var log4js = require('log4js');
 // log4js.configure({
@@ -48,8 +49,25 @@ app.use(session({
 // 未登录或者session失效
 app.use(function(req, res, next) {
   var user = req.session['user'];
-  if (!user && !/^\/login\?openid=.*$/.test(req.originalUrl)) {
-    console.log('please login first!');
+  console.log('start')
+  //未登录
+  console.log(req.originalUrl);
+  if (!user && !/\/login\/getpagetokenkey/.test(req.originalUrl)) {
+    // console.log('lllllllllllllllllllllllll');
+    var callbackUrl = encodeURIComponent('http://yoli.ngrok.natapp.cn/login/getpagetokenkey');
+    console.log(callbackUrl);
+    var openUrl = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx0d23b7549ecbbbcf&redirect_uri='+callbackUrl+'&response_type=code&scope=snsapi_userinfo#wechat_redirect';
+    // request(openUrl, function(error, response, body) {
+    //   console.log(body);
+    // });
+    // console.log('go wechat page');
+    // res.writeHead(302, {
+    //   'Location': openUrl
+    //     //add other headers here...
+    // });
+    // res.end();
+    res.redirect(openUrl);
+    return;
   }
   next();
 });

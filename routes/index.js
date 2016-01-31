@@ -12,9 +12,11 @@ var makefriends = require('./makefriends');
 var center = require('./center');
 // 登录中心
 var login = require('./login');
+//公共登录模块
+var Login = require('../common/login')
 module.exports = function(app) {
     /* GET home page. */
-    app.get('/page', function(req, res, next) {
+    app.get('/page',Login(function(req, res, next) {
       //输出文件静态html
       fs.readFile('./public/page_main.html', 'utf-8', function(err, data) {//读取内容
             if(err) throw err;
@@ -23,7 +25,7 @@ module.exports = function(app) {
             res.end();
         });
       // next();
-    });
+    }));
 
     home(app);
     makefriends(app);
@@ -31,16 +33,4 @@ module.exports = function(app) {
     login(app);
 
 }
-
-
-// router.get('/home', function(req, res, next){
-//   console.log('entre');
-//   console.log(sql);
-//  // res.json({h:'w'})
-//   sql.query('SELECT * FROM user where id = 1', function(err, rows, filed){
-//     res.json(rows);
-//     res.end();
-//   })
-  
-// });
 // module.exports = router;

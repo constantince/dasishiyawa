@@ -27,30 +27,27 @@ define(['base'], function(_PRO_) {
 				//查看个人详细信息
 				'tap .J-tobeMaster->tobeMaster': function(e) {},
 				// //信息消息通知
-				'tap .J-infomation->toPage': function(e) {
+				'tap .J-verifly->verifly': function(e) {
 
 				}
 			}
 		}
 	});
-	//签到领取红包
-	/*
-	_exprots.SignIn = PDW.createClass({
-		name: 'signIn',
-		title: '签到领红包',
-		route: 'SignIn',
+	//路由到认证界面去
+	_exprots.Verify = PDW.createClass({
+		name: 'verify',
+		title: '身份验证',
+		route: 'Verify',
 		nav: ['Top'],
-		// url: '/center/hassignin',
 		view: {
 			pageEvent: {
 				//填写交友信息
-				'tap .J-signIn->signIn': function(e) {
+				'tap .J-verify->verify': function(e) {
 					router.myNavigate('Login', 'Login');
 				}
 			}
 		}
 	});
-	*/
 	//查看个人信息
 	_exprots.MyInformation = PDW.createClass({
 		name: 'myInformation',

@@ -18,6 +18,7 @@
     border-top: 1px solid #d5d5d5;
     margin-top: 10px;
 }
+
 #home li div.leftimg {
     margin-right: 15px;
     height: 60px;
@@ -343,6 +344,9 @@
 }
 #center .nick .name {
     color: #000;
+}
+#center .mui-table-view-cell:active {
+    background-color: #d9d9d9;
 }
 #news li .mui-btn {
     margin: 0;

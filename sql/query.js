@@ -10,42 +10,47 @@ var connection = mysql.createConnection({
 });
 
 var Query = function(sql, callback) {
-		var _self = this;
-		connection.query(sql, function(err, rows, filed) {
-			var message;
-			var type;
-			if (err) {
-				_self.json({
-					status: 0,
-					data: {
-						errorMessage: 'SQL ERROR!'
-					}
-				});
-				message = err.message;
-				type = 0;
-				if (message) {
-					connection.query('INSERT INTO `errormessage` (type, message) VALUES (' + type + ', "' + message + '")', function() {});
-				}
+	//验证是否登录
+	var _self = this;
+	connection.query(sql, function(err, rows, filed) {
+		var message;
+		var type;
+		if (err) {
+			if (!_self.json) {
+				console.log(err);
 				return;
 			}
-			try {
-				callback.apply(this, [err, rows, filed]);
-			} catch (ex) {
-				message = ex.message;
-				type = 1;
-				_self.json({
-					status: 0,
-					data: {
-						errorMessage: 'PROGRAM ERROR!'
-					}
-				});
-
-				if (message) {
-					connection.query('INSERT INTO `errormessage` (type, message) VALUES (' + type + ', "' + message + '")', function() {});
+			_self.json({
+				status: 0,
+				data: {
+					errorMessage: 'SQL ERROR!'
 				}
+			});
+			message = err.message;
+			type = 0;
+			if (message) {
+				connection.query('INSERT INTO `errormessage` (type, message) VALUES (' + type + ', "' + message + '")', function() {});
 			}
+			return;
+		}
+		try {
+			callback.apply(_self || null, [err, rows, filed]);
+		} catch (ex) {
+			message = ex.message;
+			type = 1;
+			_self.json({
+				status: 0,
+				data: {
+					errorMessage: 'PROGRAM ERROR!'
+				}
+			});
 
-		});
-	}
+			if (message) {
+				connection.query('INSERT INTO `errormessage` (type, message) VALUES (' + type + ', "' + message + '")', function() {});
+			}
+		}
+
+	});
+}
 	//导出sql模块
 module.exports = Query;

@@ -3,6 +3,8 @@
  */
 //查询模板
 var Query = require('../sql/query');
+//公共登录模块
+var Login = require('../common/login')
 //引入文件查询
 var fs = require('fs');
 var util = require('util');
@@ -245,7 +247,7 @@ module.exports = function(app) {
 					var filedName = ['user', 'head_img'];
 					var valueName = ['"' + user_id + '", "' + newPath + '"'];
 					for (var i in body) {
-						if (typeof body[i] !== 'object') {
+						if (typeof fields[i] !== 'object' && fields[i] !== '' && fields[i] !== 'undefined') {
 							filedName.push(i);
 							valueName.push('"' + body[i] + '"');
 						}

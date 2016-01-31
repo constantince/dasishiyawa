@@ -6,19 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var request = require('request');
-//错误日志
-// var log4js = require('log4js');
-// log4js.configure({
-//   appenders: [
-//     { type: "console" }
-//   ],
-//   replaceConsole: true
-// });
-// var logger = log4js.getLogger();
-// logger.setLevel('INFO');
 var routes = require('./routes/index');
-// var home = require('./routes/home');
-
 
 var app = express();
 
@@ -28,7 +16,7 @@ app.set('view engine', 'jade');
 //print error message to file
 // app.use(log4js.connectLogger(logger, {level:log4js.levels.INFO, format:':method :url'}));
 // uncomment after placing your favicon in /public
-//app.use(favicon(__dirname + '/public/favicon.ico'));
+// app.use(favicon(__dirname + '/public/favicon.ico'));
 // app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
@@ -46,33 +34,7 @@ app.use(session({
   resave: false,
   saveUninitialized: true
 }));
-// 未登录或者session失效
-app.use(function(req, res, next) {
-  var user = req.session['user'];
-  console.log('start')
-  //未登录
-  console.log(req.originalUrl);
-  if (!user && !/\/login\/getpagetokenkey/.test(req.originalUrl)) {
-    // console.log('lllllllllllllllllllllllll');
-    var callbackUrl = encodeURIComponent('http://yoli.ngrok.natapp.cn/login/getpagetokenkey');
-    console.log(callbackUrl);
-    var openUrl = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx0d23b7549ecbbbcf&redirect_uri='+callbackUrl+'&response_type=code&scope=snsapi_userinfo#wechat_redirect';
-    // request(openUrl, function(error, response, body) {
-    //   console.log(body);
-    // });
-    // console.log('go wechat page');
-    // res.writeHead(302, {
-    //   'Location': openUrl
-    //     //add other headers here...
-    // });
-    // res.end();
-    res.redirect(openUrl);
-    return;
-  }
-  next();
-});
 routes(app);
-
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');

@@ -9,28 +9,7 @@ require.config({
 		config: 'base/Config'
 	}
 });
-/*
-var HASH = (function(root){
-	var hash = root.location.hash.replace(/^#\/?/gi, '');
-	if(hash.indexOf('?')> -1 ) {
-		hash = hash.split('?')[0];
-	}
-	var cig = {
-		//注意采用小写原则匹配
-		A: ['a'],
-	}
-	if(hash.indexOf('/')) {
-		hash = hash.split('/')[0].toLocaleLowerCase();
-	}
-	for(var i in cig) {
-		if(cig[i].indexOf(hash) >-1 ) hash = i;
-	} 
-	return hash != '' ? hash: 'A';
-})(window, undefined)
-*/
 
-
-//require(function(base, page) {
 (function(root){
 	require(['config'], function(C){
 		// console.log(C)
@@ -45,8 +24,11 @@ var HASH = (function(root){
 		for(var i in config) {
 			if(config[i].indexOf(hash) >-1 ) hash = i;
 		} 
-		hash != '' ? hash: 'A';
-
+		//设置默认 hash值
+		if(hash == '') {
+			hash = 'Center';
+			window.location.hash = hash;
+		}
 		require(['use/'+hash], function(){
 			Backbone.history.start();
 		});

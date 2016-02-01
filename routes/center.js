@@ -211,11 +211,7 @@ module.exports = function(app) {
 		var user_id = req.session['user'];
 		form.parse(req, function(err, fields, files) {
 			if (err) {
-				res.locals.error = err;
-				res.render(index, {
-					title: TITLE
-				});
-				return;
+				console.log('somethiing go');
 			}
 			var sexImage = fields.sex == 0 ? 'master_man.png' : 'master_feminine.png'
 			newPath = './images/head_default/' + sexImage;
@@ -259,15 +255,15 @@ module.exports = function(app) {
 							return;
 						}
 						//更新用户的类别身份
-						var sql = 'UPDATE `user` SET identification = 2, phone = "'+ fields['phone'] +'"" WHERE id = ' + user_id;
+						var sql = 'UPDATE `user` SET identification = 2, phone = "'+ fields['phone'] +'" WHERE id = ' + user_id;
 						Query.call(res, sql, function() {
 							req.session['user_type'] = 2;
-						});
-						res.json({
-							status: 1,
-							data: {
-								go: 'ok'
-							}
+							res.json({
+								status: 1,
+								data: {
+									go: 'ok'
+								}
+							});
 						});
 					});
 					//修改数据

@@ -1,13 +1,9 @@
 //引入数据库模块
 var mysql = require('mysql');
+var config = require('../common/json');
+var dbconfig = config('db');
 //建立数据库连接
-var connection = mysql.createConnection({
-	host: 'localhost',
-	user: 'root',
-	password: '123456',
-	port: '3306',
-	database: 'dasishiyawa'
-});
+var connection = mysql.createConnection(dbconfig);
 
 var Query = function(sql, callback) {
 	//验证是否登录
@@ -20,18 +16,19 @@ var Query = function(sql, callback) {
 				console.log(err);
 				return;
 			}
-			_self.json({
-				status: 0,
-				data: {
-					errorMessage: 'SQL ERROR!'
-				}
-			});
 			message = err.message;
 			type = 0;
 			if (message) {
 				connection.query('INSERT INTO `errormessage` (type, message) VALUES (' + type + ', "' + message + '")', function() {});
 			}
 			return;
+			_self.json({
+				status: 0,
+				data: {
+					errorMessage: 'SQL ERROR!'
+				}
+			});
+
 		}
 		try {
 			callback.apply(_self || null, [err, rows, filed]);

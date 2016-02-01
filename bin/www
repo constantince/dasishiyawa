@@ -7,12 +7,13 @@
 var app = require('../app');
 var debug = require('debug')('dasishiyawa:server');
 var http = require('http');
+var config = require('../common/json');
 
 /**
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '80');
+var port = normalizePort(config('app').port || '80');
 app.set('port', port);
 
 /**

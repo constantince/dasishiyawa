@@ -203,8 +203,8 @@ define(['base', 'core/underscore'], function(_PRO_, _) {
 							{value: img, rules: [{veriflyType: 'img', errorMessgag: '图片不符合要求, 2M以下的png或者jpg图片'}]},
 							{value: birthPlace, rules: [{veriflyType: 'maxLength:20', errorMessgag: '出生地：20个字符以内'}]},
 							{value: livePlace, rules: [{veriflyType: 'maxLength:20', errorMessgag: '居住地：20个字符以内'}]},
-							{value: tall, rules: [{veriflyType: 'tall', errorMessgag: '请填写有效三位数字，单位cm'}]},
-							{value: weight, rules: [{veriflyType: 'weight', errorMessgag: '请填写有效两位数字，单位kg'}]},
+							{value: tall, rules: [{veriflyType: 'tall', errorMessgag: '身高请填写有效三位数字，单位cm'}]},
+							{value: weight, rules: [{veriflyType: 'weight', errorMessgag: '体重请填写有效两位数字，单位kg'}]},
 							{value: question, rules: [{veriflyType: 'maxLength:30', errorMessgag: '交友宣言：30个字符以内'}]},
 						]);
 					if(message!==undefined) {

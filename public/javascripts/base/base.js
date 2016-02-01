@@ -311,14 +311,14 @@ define(['config', 'core/underscore', 'core/backbone'],
 					var tempComplete = o.complete;
 					o.complete = function(r) {
 						tempComplete !== UDF && tempComplete.call(null, r);
-						o.modal === undefined && _createCssLoding('hide')
+						o.modal === undefined && PB.toast({message: 'loading...'}, 'hide');
 					}
 					$.ajax($.extend({
 							url: '',
 							type: 'GET',
 							dataType: 'json',
 							beforeSend: function() {
-								o.modal === undefined && _createCssLoding('show')
+								o.modal === undefined && PB.toast({message: 'loading...', delay: 80000}, 'show');
 							},
 							error: function(XMLHttpRequest, textStatus, errorThrown) {
 								PB.tip({
@@ -364,15 +364,7 @@ define(['config', 'core/underscore', 'core/backbone'],
 					return hash
 				},
 				_createCssLoding = function(c) {
-					if ($('#cssloading').length == 0) {
-						var html = '<div id="cssloading"><div class="spinner"><div class="rect1"></div><div class="rect2"></div><div class="rect3"></div><div class="rect4"></div><div class="rect5"></div></div><div class="Loadbackground"></div></div>';
-						$('body').append(html)
-					}
-					if (c == 'hide') {
-						$('#cssloading').hide()
-					} else {
-						$('#cssloading').show()
-					}
+
 				},
 				//界面加载的顺序，从左到右？从右到左？
 				_orderChange = function(n, p) {
@@ -606,7 +598,7 @@ define(['config', 'core/underscore', 'core/backbone'],
 					},
 					//照片大小
 					img: function(img) {
-						if (img && img.size / 1024 / 1024 > 2 && !(/\.jpg|\.png/.test(img.name))) {
+						if (img && img.size / 1024 > 1000 && !(/\.jpg|\.png/.test(img.name))) {
 							return false;
 						}
 					}
@@ -828,7 +820,7 @@ define(['config', 'core/underscore', 'core/backbone'],
 				var w = width / 2 - 40;
 				var h = height / 2 - 60;
 				var htmlstring = '<div class="am-toast-text J-toast" style="top:' + h + 'px; left:' + w + 'px;">' +
-					'<span class="am-icon" am-mode="' + defaults.type + '"></span><em>' + defaults.message + '</em>' +
+				'<div class="am-toast-text-background"></div><span class="am-icon" am-mode="' + defaults.type + '"></span><em>' + defaults.message + '</em>' +
 					'</div>';
 				if ($('.J-toast').length) {
 					var el = $('.J-toast').removeClass('g-d-n');

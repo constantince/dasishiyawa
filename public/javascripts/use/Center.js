@@ -377,7 +377,7 @@ define(['base'], function(_PRO_) {
 						value: img,
 						rules: [{
 							veriflyType: 'img',
-							errorMessgag: '图片不符合要求, 2M以下的png或者jpg图片'
+							errorMessgag: '空间有限, 请选择1M以下的png或者jpg图片'
 						}]
 					}, {
 						value: interduce,
@@ -416,7 +416,7 @@ define(['base'], function(_PRO_) {
 					fd.append('area', area);
 					fd.append('adress', adress);
 					fd.append('phone', phone);
-					$.ajax({
+					PDW.ajax({
 						url: "/center/register",
 						type: "POST",
 						data: fd,

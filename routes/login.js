@@ -7,10 +7,14 @@ var Query = require('../sql/query');
 var request = require('request');
 // console.log('hello');
 var OAuth = require('wechat-oauth');
-var client = new OAuth('wx0d23b7549ecbbbcf', 'f9fc3893223a2ff694e76d0df8228731');
+//引入配置文件
+var config = require('../common/json');
+var wxconfig = config('wechat');
+var client = new OAuth(wxconfig.appId, wxconfig.appSecret);
 module.exports = function(app) {
-	//登录用户
+	//网页登录用户
 	app.get('/login', function(req, res, next) {
+		var openid = req.query.openid;
 		var sql = 'SELECT wechat.nickname, wechat.headimgurl, wechat.id as wechat_id, user.* FROM wechat LEFT JOIN USER ON user.id = wechat.user WHERE wechat.openid = "' + openid + '"';
 		Query.call(res, sql, function(err, rows, filed) {
 			var result = rows[0];
@@ -28,9 +32,6 @@ module.exports = function(app) {
 			req.session['open_id'] = openid;
 			req.session['master_id'] = 0;
 			var masterSql = 'SELECT * FROM master WHERE user = ' + result.id;
-			//插入数据成功！路由到指定的界面
-			res.redirect('/page/login?_user=' + result.id);
-			
 			if (result.identification == 2) {
 				Query.call(res, masterSql, function(err, rows, filed) {
 					if (err) {
@@ -182,6 +183,17 @@ function setSession(openid, res, req) {
 		req.session['chat'] = result.wechat_id;
 		req.session['open_id'] = openid;
 		req.session['master_id'] = 0;
+		//如果是师傅的话
+		if (result.identification == 2) {
+			var masterSql = 'SELECT * FROM master WHERE user = ' + result.id;
+			Query.call(res, masterSql, function(err, rows, filed) {
+				if (err) {
+					console.log(err);
+					return;
+				}
+				req.session['master_id'] = rows[0].id;
+			});
+		}
 		res.redirect('/page?openid=' + openid);
 	});
 

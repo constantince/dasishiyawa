@@ -1,16 +1,14 @@
+var config = require('../common/json');
 var OAuth = require('wechat-oauth');
-var client = new OAuth('wx0d23b7549ecbbbcf', 'f9fc3893223a2ff694e76d0df8228731');
-
 //引入数据库模块
 function Login(fn) {
-	return function() {
-		var req = arguments[0];
-		var res = arguments[1];
-		var next = arguments[2];
+	return function(req, res, next) {
 		var user = req.session['user'] || req.query._user;
-		//未登录的情况或者登录失效
-		if (user === undefined) {
-			var url = client.getAuthorizeURL('http://yoli.ngrok.natapp.cn/login/getpagetokenkey', 'snsapi_userinfo');
+		//未登录的情况或者登录失效 网页调试无需走微信通道
+		if (user === undefined && !config('app').webDebug) {
+			var wxconfig = config('wechat');
+			var client = new OAuth(wxconfig.appId, wxconfig.appSecret);
+			var url = client.getAuthorizeURL(config('app').url + wxconfig.callbackUrl, 'snsapi_userinfo');
 			res.redirect(url)
 			return;
 		}

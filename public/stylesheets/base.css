@@ -199,6 +199,7 @@ body .am-toast-text em{
 }
 body .am-toast-text .am-icon[am-mode~="loading"] {
 	animation: rotate linear 1.85s infinite;
+	-webkit-animation: rotate linear 1.85s infinite;
     background: url(../images/loading.png) -80px 0px/160px 35px no-repeat;
 }
 body .am-toast-text .am-icon[am-mode~="success"] {
@@ -209,6 +210,15 @@ body .am-toast-text .am-icon[am-mode~="faile"] {
 }
 body .am-toast-text .am-icon[am-mode~="unconnectable"] {
     background: url(../images/loading.png) -120px 0px/160px 35px no-repeat;
+}
+body .am-toast-text-background {
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+    opacity: 0.7;
+    position: fixed;
+    top: 0;
+    left: 0;
 }
 body .am-toast-text {
 	display: inline-block;
@@ -224,6 +234,7 @@ body .am-toast-text {
     position: fixed;
     opacity: .8;
     text-align: center;
+    z-index: 100001;
 }
 button.untaptable {
     background-color: #e5e5e5;

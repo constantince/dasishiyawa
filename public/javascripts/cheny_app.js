@@ -1,4 +1,4 @@
-var IP = '172.16.0.189';
+//var IP = '172.16.0.189';
 // var IP = '192.168.1.102';
 // var IP = '192.168.31.101';
 require.config({
@@ -19,7 +19,7 @@ require.config({
 		}
 		var config = C.PAGERULES;
 		if(hash.indexOf('/')) {
-			hash = hash.split('/')[0].toLocaleLowerCase();
+			hash = hash.split('/')[0];
 		}
 		for(var i in config) {
 			if(config[i].indexOf(hash) >-1 ) hash = i;

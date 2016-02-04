@@ -202,7 +202,7 @@ define(['config', 'core/underscore', 'core/backbone'],
 									return
 								}
 								PDW.ajax({
-									url: 'javascripts/tpl/tpl' + _loadHtml(n) + '.html?version=0.1',
+									url: 'javascripts/tpl/tpl' + _loadHtml(n) + '.html?version=' + (+new Date()),
 									async: false,
 									headers: {
 										Accept: 'text/html'
@@ -361,7 +361,7 @@ define(['config', 'core/underscore', 'core/backbone'],
 					for (var i in config) {
 						if (config[i].indexOf(hash) > -1) hash = i
 					}
-					return hash
+					return hash.toLocaleLowerCase();
 				},
 				_createCssLoding = function(c) {
 

@@ -1,5 +1,6 @@
 var config = require('../common/json');
 var OAuth = require('wechat-oauth');
+var request = require('request');
 //引入数据库模块
 function Login(fn) {
 	return function(req, res, next) {
@@ -9,7 +10,7 @@ function Login(fn) {
 			var wxconfig = config('wechat');
 			var client = new OAuth(wxconfig.appId, wxconfig.appSecret);
 			var url = client.getAuthorizeURL(config('app').url + wxconfig.callbackUrl, 'snsapi_userinfo');
-			res.redirect(url)
+			res.redirect(url);
 			return;
 		}
 		fn.call(null, req, res, next);

@@ -8,6 +8,8 @@ var app = require('../app');
 var debug = require('debug')('dasishiyawa:server');
 var http = require('http');
 var config = require('../common/json');
+var Query = require('../sql/query');
+var request = require('request');
 
 /**
  * Get port from environment and store in Express.
@@ -15,13 +17,11 @@ var config = require('../common/json');
 
 var port = normalizePort(config('app').port || '80');
 app.set('port', port);
-
 /**
  * Create HTTP server.
  */
 
 var server = http.createServer(app);
-
 /**
  * Listen on provided port, on all network interfaces.
  */
@@ -33,6 +33,17 @@ server.on('listening', onListening);
 /**
  * Normalize a port into a number, string, or false.
  */
+
+/*启动时 定时获取刷新微信的token 并且存入数据库*/
+(function() {
+  request(config('wechat').refreshUrl, function(err, res, body) {
+    body = JSON.parse(body);
+    var accessSql = 'INSERT INTO `access_token` (token) VALUES ("' + body.access_token + '")';
+    Query.call(res, accessSql, function() {
+      setTimeout(arguments.callee, config('wechat').refreshTime * 1000);
+    });
+  });
+})();
 
 function normalizePort(val) {
   var port = parseInt(val, 10);
@@ -59,9 +70,7 @@ function onError(error) {
     throw error;
   }
 
-  var bind = typeof port === 'string'
-    ? 'Pipe ' + port
-    : 'Port ' + port;
+  var bind = typeof port === 'string' ? 'Pipe ' + port : 'Port ' + port;
 
   // handle specific listen errors with friendly messages
   switch (error.code) {
@@ -84,8 +93,6 @@ function onError(error) {
 
 function onListening() {
   var addr = server.address();
-  var bind = typeof addr === 'string'
-    ? 'pipe ' + addr
-    : 'port ' + addr.port;
+  var bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
   debug('Listening on ' + bind);
 }

@@ -4,20 +4,24 @@
 //查询模板
 var Query = require('../sql/query');
 //映入请求模块
-var request = require('request');
-// console.log('hello');
+var fs = require('fs');
 var OAuth = require('wechat-oauth');
 //引入配置文件
 var config = require('../common/json');
-var wxconfig = config('wechat');
-var client = new OAuth(wxconfig.appId, wxconfig.appSecret);
+var appConfig = config('app');
+var wxConfig = config('wechat');
+var XMLJS = require('xml2js')
+var parser = new XMLJS.Parser();
+var builder = new XMLJS.Builder(); 
+var client = new OAuth(wxConfig.appId, wxConfig.appSecret);
 module.exports = function(app) {
 	//网页登录用户
 	app.get('/login', function(req, res, next) {
 		var openid = req.query.openid;
-		var sql = 'SELECT wechat.nickname, wechat.headimgurl, wechat.id as wechat_id, user.* FROM wechat LEFT JOIN USER ON user.id = wechat.user WHERE wechat.openid = "' + openid + '"';
+		var sql = 'SELECT wechat.nickname, wechat.headimgurl, wechat.id as wechat_id, user.* FROM wechat LEFT JOIN `user` ON user.id = wechat.user WHERE wechat.openid = "' + openid + '"';
 		Query.call(res, sql, function(err, rows, filed) {
 			var result = rows[0];
+			req.session['user'] = 53;
 			if (!result) {
 				res.json({
 					status: 0,
@@ -26,38 +30,12 @@ module.exports = function(app) {
 				return;
 			}
 			req.session['user'] = result.id;
+			req.session['user'] = 53;
 			req.session['user_type'] = result.identification;
 			req.session['name'] = result.nickname;
 			req.session['chat'] = result.wechat_id;
 			req.session['open_id'] = openid;
 			req.session['master_id'] = 0;
-			var masterSql = 'SELECT * FROM master WHERE user = ' + result.id;
-			if (result.identification == 2) {
-				Query.call(res, masterSql, function(err, rows, filed) {
-					if (err) {
-						console.log(err);
-						return;
-					}
-					req.session['master_id'] = rows[0].id;
-					res.json({
-						status: 1,
-						data: {
-							nick: result.nickname,
-							sex: result.sex,
-							header: result.headimgurl
-						}
-					});
-				});
-			} else {
-				res.json({
-					status: 1,
-					data: {
-						nick: result.nickname,
-						sex: result.sex,
-						header: result.headimgurl
-					}
-				});
-			}
 		});
 	})
 	//验证用户身份
@@ -107,35 +85,59 @@ module.exports = function(app) {
 		});
 	});
 	//获取微信的 access_token
-	app.get('/login/gettoken', function(req, res, next) {
-		console.log('gettoken');
-		var signature = req.query.signature; //微信加密签名signature结合了开发者填写的token参数和请求中的timestamp参数、nonce参数。
-		var timestamp = req.query.timestamp; //时间戳
-		var nonce = req.query.nonce; //随机数
-		var echostr = req.query.echostr; //随机字符串
-		res.end(echostr);
+	app.post('/login/gettoken', function(req, res, next) {
+	    var query = req.query;  
+	    var signature = query.signature;  
+	    var echostr = query.echostr;  
+	    var timestamp = query['timestamp'];  
+	    var nonce = query.nonce;  
+	    var oriArray = new Array();  
+	    oriArray[0] = nonce;  
+	    oriArray[1] = timestamp;  
+	    oriArray[2] = appConfig.token;//这里填写你的token  
+	    oriArray.sort();  
+	    var original = oriArray[0]+oriArray[1]+oriArray[2];  
+	    var scyptoString = sha1(original); 
+	    if (signature == scyptoString) {  
+			req.on("data", function(data) {
+				//将xml解析
+				parser.parseString(data.toString(), function(err, result) {
+					var body = result.xml;
+					var messageType = body.MsgType[0];
+					//用户点击菜单响应时间
+					if(messageType === 'event') {
+						// var openid = body.FromUserName[0];
+						var eventName = body.Event[0];
+						(EventFunction[eventName]||function(){})(body, req, res);
+					//自动回复消息
+					}else if(messageType === 'text') {
+						EventFunction.responseNews(body, res);
+					}else {
+						res.send(echostr);
+					}
+				});
+			});
+		} else {  
+	        res.send("Bad Token!");  
+	    }
+		
 	});
 	//获取微信返回的网页TOKEN
 	app.get('/login/getpagetokenkey', function(req, res, next) {
 		var code = req.query.code; //微信返回的值，作为下一步的票券
 		//获取票券
 		client.getAccessToken(code, function(err, result) {
-			var accessToken = result.data.access_token;
 			var openid = result.data.openid;
 			//查询数据库有没有该用户
 			var sql = 'SELECT * FROM `wechat` WHERE openid= "' + openid + '"';
 			Query.call(res, sql, function(err, rows, filed) {
-				if (!rows.length) {
-					client.getUser(openid, function(err, result) {
-						//掺入数据 更新session
-						getUserInfo.call(res, result, req);
-					});
-				} else {
-					//更新session
-					setSession(openid, res, req)
+				if(rows.length) {
+					setSession(openid, res, req);
 				}
+				
 			});
 		});
+	return;
 	});
 }
 	//获取用户的信息 并且插入数据
@@ -167,7 +169,7 @@ function getUserInfo(body, req) {
 }
 //进入公众号后 开始session回话
 function setSession(openid, res, req) {
-	var sql = 'SELECT wechat.nickname, wechat.headimgurl, wechat.id as wechat_id, user.* FROM wechat LEFT JOIN USER ON user.id = wechat.user WHERE wechat.openid = "' + openid + '"';
+	var sql = 'SELECT wechat.nickname, wechat.headimgurl, wechat.id as wechat_id, user.* FROM wechat LEFT JOIN `user` ON user.id = wechat.user WHERE wechat.openid = "' + openid + '"';
 	Query.call(res, sql, function(err, rows, filed) {
 		var result = rows[0];
 		if (!result) {
@@ -192,10 +194,64 @@ function setSession(openid, res, req) {
 					return;
 				}
 				req.session['master_id'] = rows[0].id;
+
 			});
 		}
-		res.redirect('/page?openid=' + openid);
+		res.redirect('/page');
 	});
-
 };
-// module.exports = router;
+var crypto = require('crypto');
+function sha1(str) {  
+    var md5sum = crypto.createHash('sha1');  
+    md5sum.update(str);  
+    str = md5sum.digest('hex');  
+    return str;  
+} 
+//微信客户端各类回调用接口
+var EventFunction = {
+		subscribe: function(result, req, res) {
+			var openid = result.FromUserName[0];
+			var sql = 'SELECT * FROM `wechat` WHERE openid= "' + openid + '"';
+				Query.call(res, sql, function(err, rows, filed) {
+					//第一次进入的用户
+					if (!rows.length) {
+						 Query.call(res, 'SELECT * FROM `access_token` ORDER BY create_time DESC LIMIT 1', function(err, rows, filed) {
+							client.myFunUserInfo(rows[0].token, openid, function(err, body){
+								getUserInfo.call(res, body.data, req);
+							})
+						});
+					} else {
+						setSession(openid, res, req);
+					}
+				});
+			var xml  = {xml: {
+				ToUserName: openid,
+				FromUserName: result.ToUserName,
+				CreateTime: 123456587,
+				MsgType: 'text',
+				Content: '感谢关注服务萍乡，新用户请查看个人中心->不完全指南。'
+			}};
+			xml = builder.buildObject(xml);
+			res.send(xml);
+		},
+		//注销
+		unsubscribe: function(openid, req, res) {
+
+		},
+		//自动回复
+		responseNews: function(body, res) {
+			var xml  = {xml: {
+				ToUserName: body.FromUserName,
+				FromUserName: body.ToUserName,
+				CreateTime: 123,
+				MsgType: 'text',
+				Content: '编辑@+您想说的话，我们可以收到'
+			}};
+			var reciviMessage = body.Content[0]
+			if(/^\@.*/.test(reciviMessage)) {
+				xml.xml.Content = '已经收到您的建议，会及时处理！'
+			}
+			xml = builder.buildObject(xml);
+			res.send(xml);
+		}
+}

@@ -3,6 +3,7 @@ var mysql = require('mysql');
 var config = require('../common/json');
 var dbconfig = config('db');
 //建立数据库连接
+// console.log(JSON.stringify(dbconfig));
 var connection = mysql.createConnection(dbconfig);
 
 var Query = function(sql, callback) {
@@ -13,7 +14,7 @@ var Query = function(sql, callback) {
 		var type;
 		if (err) {
 			if (!_self.json) {
-				console.log(err);
+				console.log(err.message);
 				return;
 			}
 			message = err.message;
@@ -22,26 +23,12 @@ var Query = function(sql, callback) {
 				connection.query('INSERT INTO `errormessage` (type, message) VALUES (' + type + ', "' + message + '")', function() {});
 			}
 			return;
-			_self.json({
-				status: 0,
-				data: {
-					errorMessage: 'SQL ERROR!'
-				}
-			});
-
 		}
 		try {
 			callback.apply(_self || null, [err, rows, filed]);
 		} catch (ex) {
 			message = ex.message;
 			type = 1;
-			_self.json({
-				status: 0,
-				data: {
-					errorMessage: 'PROGRAM ERROR!'
-				}
-			});
-
 			if (message) {
 				connection.query('INSERT INTO `errormessage` (type, message) VALUES (' + type + ', "' + message + '")', function() {});
 			}

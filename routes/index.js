@@ -18,6 +18,7 @@ module.exports = function(app) {
     /* GET home page. */
     app.get('/page',Login(function(req, res, next) {
       //输出文件静态html
+      req.session['user'] = 53;
       fs.readFile('./public/page_main.html', 'utf-8', function(err, data) {//读取内容
             if(err) throw err;
             res.writeHead(200, {"Content-Type":"text/html"});
@@ -26,11 +27,11 @@ module.exports = function(app) {
         });
       // next();
     }));
-
+    login(app);
     home(app);
     makefriends(app);
     center(app);
-    login(app);
+    
 
 }
 // module.exports = router;

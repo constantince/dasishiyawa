@@ -1,10 +1,10 @@
-<!-- 广场主界面 -->
+﻿<!-- 广场主界面 -->
 <script type="text/template" id="tplmakeFriends">
     <ul class="my-css-cbox">
         <%for(var i=0; i<list.length; i++){%>
         <li class="list" data-i=<%=i%>>
             <a class="imgbox">
-                <img class="mui-media-object" src="<%=list[i].show_img%>">
+                <img class="mui-media-object" src="<%=list[i].min_show_img%>">
                 <div class="content">
                     <div class="box1">
                         <span class="mui-ellipsis"><em>昵称：</em><%=list[i].nick%></span>
@@ -59,7 +59,7 @@
 <!-- 个人信息 -->
 <script type="text/template" id="tplpersonel">
 <!-- 通过有无微信好 判断时候填写交友信息 -->
-<%if(list.chat){%>
+<%if(hasResult == 1){%>
 <%
     function needShowEl(value) {
         return value ? '': 'g-d-n';

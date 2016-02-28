@@ -42,7 +42,7 @@ define(['base'], function(_PRO_) {
 		view: {
 			pageEvent: {
 				//填写交友信息
-				'tap .J-verify->verify': function(e) {
+				'touchend .J-verify->verify': function(e) {
 					router.myNavigate('Login', 'Login');
 				}
 			}
@@ -166,7 +166,7 @@ define(['base'], function(_PRO_) {
 		title: '我的消息',
 		route: 'News',
 		nav: ['Top'],
-		url: '/center/checknews?page=0&count=15',
+		url: '/center/checknews?page=0&count=100',
 		view: {
 			pageEvent: {
 				//查看向我打招呼的人
@@ -241,6 +241,7 @@ define(['base'], function(_PRO_) {
 					PDW.ajax({
 						type: 'POST',
 						url: '/center/suggestion',
+						modal: false,
 						data: {
 							connection: contact,
 							content: question
@@ -248,8 +249,13 @@ define(['base'], function(_PRO_) {
 						success: function(r) {
 							PB.toast({
 								message: '提交成功！',
-								type: 'success'
+								type: 'success',
+								delay: 100000,
+								callback: function() {
+									history.go(-1);
+								}
 							});
+							
 						}
 					})
 				}
@@ -288,10 +294,10 @@ define(['base'], function(_PRO_) {
 					var route = tar.data('route');
 					var status = tar.data('status');
 					if (status == 0) {
-						PB.toast({
-							message: '即将开通',
-							type: 'unconnectable'
-						})
+						PB.tip({
+							tipTxt: '联系我们，一起来建设公众号吧！',
+							delay: 3500
+						});
 						return;
 					}
 					router.myNavigate(module, route);

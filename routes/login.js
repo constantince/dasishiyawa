@@ -21,7 +21,6 @@ module.exports = function(app) {
 		var sql = 'SELECT wechat.nickname, wechat.headimgurl, wechat.id as wechat_id, user.* FROM wechat LEFT JOIN `user` ON user.id = wechat.user WHERE wechat.openid = "' + openid + '"';
 		Query.call(res, sql, function(err, rows, filed) {
 			var result = rows[0];
-			req.session['user'] = 53;
 			if (!result) {
 				res.json({
 					status: 0,
@@ -30,12 +29,17 @@ module.exports = function(app) {
 				return;
 			}
 			req.session['user'] = result.id;
-			req.session['user'] = 53;
 			req.session['user_type'] = result.identification;
 			req.session['name'] = result.nickname;
 			req.session['chat'] = result.wechat_id;
 			req.session['open_id'] = openid;
 			req.session['master_id'] = 0;
+			res.json({
+				status: 0,
+				data : {
+					go: 'success'
+				}
+			})
 		});
 	})
 	//验证用户身份
@@ -52,14 +56,16 @@ module.exports = function(app) {
 		var phone = req.query.phone;
 		var user_id = req.session['user'];
 		var checkSql = 'SELECT * FROM `user` WHERE id = ' + user_id;
+		console.log(checkSql);
 		Query.call(res, checkSql, function(err, rows, filed) {
 			if (err) {
 				console.log(err);
 				return;
 			}
 			//只有是非认证用户的情况下才需要更新身份
-			if (!!rows.length && rows[0].identification == 2) {
+			if (!!rows.length && rows[0].identification == 0) {
 				var sql = 'UPDATE `user` SET identification = 1, phone = "' + phone + '" WHERE id = ' + user_id;
+				console.log(sql);
 				Query.call(res, sql, function(err, rows, filed) {
 					if (err) {
 						console.log(err);
@@ -98,7 +104,7 @@ module.exports = function(app) {
 	    oriArray.sort();  
 	    var original = oriArray[0]+oriArray[1]+oriArray[2];  
 	    var scyptoString = sha1(original); 
-	    if (signature == scyptoString) {  
+	    if (signature == scyptoString) { 
 			req.on("data", function(data) {
 				//将xml解析
 				parser.parseString(data.toString(), function(err, result) {
@@ -162,7 +168,7 @@ function getUserInfo(body, req) {
 			//发出一条系统消息
 			var insertMessageSql = 'INSERT INTO `news` (user, content) VALUES (' + id + ', "欢迎您关注公众号，新用户请阅读版本指南。")';
 			Query.call(_self, insertMessageSql);
-			setSession(body.openid, _self, req);
+			//setSession(body.openid, _self, req);
 		});
 	});
 
@@ -194,10 +200,12 @@ function setSession(openid, res, req) {
 					return;
 				}
 				req.session['master_id'] = rows[0].id;
-
+				res.redirect('/page');
 			});
+		}else{
+			res.redirect('/page');
 		}
-		res.redirect('/page');
+		
 	});
 };
 var crypto = require('crypto');
@@ -236,6 +244,9 @@ var EventFunction = {
 		},
 		//注销
 		unsubscribe: function(openid, req, res) {
+
+		},
+		VIEW: function() {
 
 		},
 		//自动回复

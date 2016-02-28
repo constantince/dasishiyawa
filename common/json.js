@@ -3,7 +3,7 @@ var JSON = {
 	app: {
 		url: 'http://yoli.ngrok.natapp.cn',//服务器地址
 		prot: '80',//监听端口
-		webDebug: false,//是否开启网页调试
+		webDebug: true,//是否开启网页调试
 		token: 'yolimie'
 
 	},

@@ -227,7 +227,7 @@ define(['base', 'core/underscore'], function(_PRO_, _) {
 					fd.append('socialaccount', contact);
 					fd.append('marriageable', marriageable);
 					fd.append('introduction', question);
-					$.ajax({
+					PDW.ajax({
 						url: "/makefriends/publish",
 						type: "POST",
 						data: fd,
@@ -235,64 +235,11 @@ define(['base', 'core/underscore'], function(_PRO_, _) {
 						contentType: false, // 告诉zepto不要去设置Content-Type请求头
 						success: function(r) {
 							if(r.data.go == 'ok') {
-								PB.toast({
-									message:'注册成功！',
-									type: 'success'
-								});
 								history.go(-1);
 							}
 						}
 
 					});
-
-
-					// var json = this.model.toJSON();
-					// var fatherEl = this.$el.find('.machine');
-					// //设备信息已经表单提交内容
-					// var machineName = fatherEl.find('.machineName').val(),
-					// 	machineYear = fatherEl.find('.machineYear').val(),
-					// 	machinePlate = fatherEl.find('.machinePlate').val(),
-					// 	adress = fatherEl.find('.adress').val() || json.myInformation.adress,
-					// 	date = fatherEl.find('.date').val(),
-					// 	time = fatherEl.find('.time').val(),
-					// 	content = $('#discriptionTextarea')[0].value;
-					// //设备名称校验
-					// if(!machineName) {
-					// 	return alert('请填写设备名称');
-					// }
-					// //地址校验
-					// if(!adress) {
-					// 	return alert('请填联系地址');
-					// }
-
-					// PDW.ajax({
-					// 	url: 'http://'+IP+':8800/?way=fillOrder',
-					// 	type: 'POST',
-					// 	data: {
-					// 		machineName: machineName,
-					// 		machineYear: machineYear,
-					// 		adress: adress,
-					// 		dateTime: date + time,
-					// 		content: content
-					// 	},
-					// 	success: function(e) {
-					// 		router.myNavigate('Home','SubmitSuccess');
-					// 	}
-					// })
-					// router.myNavigate('Home', 'SubmitSuccess', function(){
-					// 	this.addDataToModel({
-					// 		masterName: json.masterInformation.masterName,
-					// 		masterTel: json.masterInformation.masterTel,
-					// 		machineName: machineName,
-					// 		machinePlate: machinePlate,
-					// 		machineYear: machineYear,
-					// 		content: content || '无',
-					// 		orderNum: 007,
-					// 		orderDate: '2015-09-04 15:16:17',
-					// 		adress: adress
-
-					// 	});
-					// });
 				},
 				'change .img->change': function(e) {
 					var tar = $(e.target);

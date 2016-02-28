@@ -7,6 +7,8 @@ var Query = require('../sql/query');
 var Login = require('../common/login')
 //引入文件查询
 var fs = require('fs');
+//缩略图
+var gm = require('gm').subClass({imageMagick: true});
 var util = require('util');
 var formidable = require("formidable");
 module.exports = function(app) {
@@ -205,7 +207,7 @@ module.exports = function(app) {
 	app.post('/center/register', function(req, res, next) {
 		var form = new formidable.IncomingForm();
 		form.encoding = 'utf-8'; //设置编辑
-		form.uploadDir = './publish/upload/images/master'; //设置上传目录
+		form.uploadDir = './public/publish/upload/images/master'; //设置上传目录
 		form.keepExtensions = true; //保留后缀
 		form.maxFieldsSize = 2 * 1024 * 1024; //文件大小
 		var user_id = req.session['user'];
@@ -231,8 +233,12 @@ module.exports = function(app) {
 						extName = 'png';
 						break;
 				}
-				console.log(files.show_img.path);
-				newPath = './' + files.show_img.path.replace(/public\\/, '').replace(/\\/gi, '/');
+				var oldPath = './' + files.show_img.path;
+				var newPath = oldPath.replace(/public\//gi, '');
+				//压缩图片
+				gm(oldPath).resize(100, 100).write(oldPath, function (err) {
+					if(err) console.log(err);
+				});
 			}
 			
 			var body = fields;
@@ -292,7 +298,6 @@ module.exports = function(app) {
 	});
 	//接收到订单
 	app.get('/center/takeorder', function(req, res, next) {
-		// var user_id = req.session['user'];
 		var master_id = req.session['master_id'];
 		var sql = 'SELECT `user`.id AS user_id, `user`.phone, `user`.name, `user`.sex, `user`.adress, `order`.* FROM `user` LEFT JOIN `order` ON `order`.user = `user`.id WHERE `order`.master = ' + master_id + ' ORDER BY `order`.bookup_time DESC';
 		Query.call(res, sql, function(err, rows, filed) {

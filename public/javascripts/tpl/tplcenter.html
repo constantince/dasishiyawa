@@ -90,7 +90,7 @@
 							<li class="mui-table-view-cell">
 								<a class="mui-navigate-right">
 									<span class="head">
-										<img class="head-img mui-action-preview" src="<%=info.show_img%>">
+										<img class="head-img mui-action-preview" src="<%=info.min_show_img%>">
 									</span>
 								</a>
 							</li>
@@ -299,13 +299,15 @@
 </script>
 <!-- 关于我们 -->
 <script type="text/template" id="tplaboutUs">
+	<div class="mui-content">
 	<div class="mui-content-padded">
 		<p>
-			介绍说明
+			<%=discription%>
 		</p>
 		<p>
-			2015-25-26 11:22:33
+			<%=create_time%>
 		</p>
+	</div>
 	</div>
 </script>
 <!-- 版本说明 -->

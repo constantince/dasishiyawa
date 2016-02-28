@@ -311,14 +311,14 @@ define(['config', 'core/underscore', 'core/backbone'],
 					var tempComplete = o.complete;
 					o.complete = function(r) {
 						tempComplete !== UDF && tempComplete.call(null, r);
-						o.modal === undefined && PB.toast({message: 'loading...'}, 'hide');
+						o.modal === undefined && PB.toast({message: 'loading...', status: 'end'});
 					}
 					$.ajax($.extend({
 							url: '',
 							type: 'GET',
 							dataType: 'json',
 							beforeSend: function() {
-								o.modal === undefined && PB.toast({message: 'loading...', delay: 80000}, 'show');
+								o.modal === undefined && PB.toast({message: 'loading...', delay: 10000});
 							},
 							error: function(XMLHttpRequest, textStatus, errorThrown) {
 								PB.tip({
@@ -794,40 +794,41 @@ define(['config', 'core/underscore', 'core/backbone'],
 					return string.replace(/T/, ' ').replace(/[A-Z]|\.\d*/gi, '');
 				}
 				//插件，toast提示
-			exports.toast = function(opt, show) {
+			exports.toast = function(opt) {
 				//强行停止加载toast
-				if (show === 'hide') {
+				if (opt.status === 'end') {
 					clearTimeout(exports.publicVar['toast-meter']);
-					$('.J-toast').addClass('g-d-n');
+					$('.J-loadingoutsidebox').addClass('g-d-n');
 					exports.publicVar['toast-key'] = undefined;
-					return;
 				}
-				//防止重复点击
-				if (exports.publicVar['toast-key'] !== undefined) {
-					return;
-				}
-				exports.publicVar['toast-key'] = 1;
 				var defaults = $.extend({
 					message: 'loading',
-					delay: 2000, //
+					delay: 100, //
 					type: 'loading', //loading, success, faile, unconnectable;
 					callback: function() {
 
 					}
 				}, opt);
+				if(exports.publicVar['toast-key'] !== undefined) {
+					return;
+				}
+				exports.publicVar['toast-key'] = 1;
 				var height = $(window).height();
 				var width = $(window).width();
 				var w = width / 2 - 40;
 				var h = height / 2 - 60;
-				var htmlstring = '<div class="am-toast-text J-toast" style="top:' + h + 'px; left:' + w + 'px;">' +
-				'<div class="am-toast-text-background"></div><span class="am-icon" am-mode="' + defaults.type + '"></span><em>' + defaults.message + '</em>' +
-					'</div>';
-				if ($('.J-toast').length) {
-					var el = $('.J-toast').removeClass('g-d-n');
+				var htmlstring = '<div class="J-loadingoutsidebox"><div class="am-toast-text-background"></div><div class="am-toast-text J-toast" style="top:' + h + 'px; left:' + w + 'px;">' +
+				'<span class="am-icon" am-mode="' + defaults.type + '"></span><em>' + defaults.message + '</em>' +
+				'</div></div>';
+				if ($('.J-loadingoutsidebox').length) {
+					var el = $('.J-loadingoutsidebox').removeClass('g-d-n');
+					el.find('.am-icon').attr('am-mode', defaults.type).next().html(defaults.message);
 				} else {
-					var el = $('body').append(htmlstring).find('.J-toast');
+					var el = $('body').append(htmlstring).find('.J-loadingoutsidebox');
 				}
 				exports.publicVar['toast-meter'] = setTimeout(function() {
+					clearTimeout(exports.publicVar['toast-meter']);
+					exports.publicVar['toast-meter'] = null;
 					exports.publicVar['toast-key'] = undefined;
 					el.addClass('g-d-n');
 					defaults.callback();

@@ -25,10 +25,10 @@ define(['base'], function(_PRO_) {
 					var route = tar.data('route');
 					var status = tar.data('status');
 					if(status == 0) {
-						PB.toast({
-							message: '即将开通',
-							type: 'unconnectable'
-						})
+						PB.tip({
+							tipTxt: '联系我们，一起来建设公众号吧！',
+							delay: 3500
+						});
 						return;
 					}
 					router.myNavigate(module, route);

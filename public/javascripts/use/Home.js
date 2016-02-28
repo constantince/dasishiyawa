@@ -19,6 +19,18 @@ define(['base'], function(_PRO_) {
 		//界面的异步加载数据地址
 		url: '/home/index?count=15&page=0',
 		navInfo: {
+			List: [{
+				Module: 'Home',
+				Route: 'Home',
+				Name: '维修',
+				icon: 'gear'
+			},
+			{
+				Module: 'Center',
+				Route: 'Center',
+				Name: '我的',
+				icon: 'contact'
+			}],
 			active: 'Home'
 		},
 		//该界面需要显示出来的导航

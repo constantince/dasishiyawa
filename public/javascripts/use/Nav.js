@@ -39,7 +39,7 @@ define(['base'], function(_PRO_) {
 		//界面默认的数据
 		model: {
 			defaults: {
-				List:[{Module:'Home', Route:'Home', Name:'首页', icon:'home'}, {Module:'Center', Route:'Center', Name:'我的', icon:'contact' }],
+				List:[{Module:'Center', Route:'Center', Name:'我的', icon:'contact' }],
 				active: 'Home',
 				defaultPage: 0
 			}

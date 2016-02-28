@@ -257,6 +257,7 @@
     width: 100%;
     display: block;
     text-align: right;
+    font-size: 14px;
 }
 #news .newsUl .hello {
     text-align: right;
@@ -273,6 +274,11 @@
 }
 #login > div {
     height: 100%;
+}
+#login .mui-btn-block {
+    padding: 5px;
+    margin: 24px auto;
+    width: 90%;
 }
 #register .code, #login .code {
     width: 80px;
@@ -531,6 +537,11 @@
 #verify p {
     padding: 20px;
 }
+#verify .mui-btn-block {
+    padding: 5px;
+    width: 80%;
+    margin: 0 auto;
+}
 #takeOrder li {
     padding: 5px 15px;
     background: #fff;
@@ -590,4 +601,8 @@
 #version p.end {
     text-align: right;
     margin-top: 50px;
+}
+#aboutUs .mark {
+    color: red;
+    font-size: 16px;
 }

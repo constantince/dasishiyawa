@@ -9,6 +9,7 @@ var connection = mysql.createConnection(dbconfig);
 var Query = function(sql, callback) {
 	//验证是否登录
 	var _self = this;
+	callback = callback || function() {};
 	connection.query(sql, function(err, rows, filed) {
 		var message;
 		var type;

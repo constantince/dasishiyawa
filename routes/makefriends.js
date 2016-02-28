@@ -5,9 +5,11 @@
 var Query = require('../sql/query');
 //引入文件查询
 var fs = require('fs');
-//
+//缩略图
+var gm = require('gm').subClass({
+	imageMagick: true
+});
 var formidable = require("formidable");
-// console.log('hello');
 module.exports = function(app) {
 		//如果中间件为最后一个执行，next可以不需要执行
 		//主页查询接口
@@ -79,7 +81,8 @@ module.exports = function(app) {
 					return;
 				}
 				var sexImage = fields.sex == 0 ? 'user_man.png' : 'user_feminine.png'
-				newPath = './images/head_default/' + sexImage;
+				var newPath = './images/head_default/' + sexImage;
+				var newMinPath = './images/head_default/' + sexImage;
 				if (files.show_img !== undefined) {
 					var extName = ''; //后缀名
 					switch (files.show_img.type) {
@@ -96,15 +99,24 @@ module.exports = function(app) {
 							extName = 'png';
 							break;
 					}
-					newPath = './' + files.show_img.path.replace(/public\\/, '').replace(/\\/gi, '/');
+
+					var oldPath = './' + files.show_img.path; //值为：./public/publish/upload/images/user 可以操作
+					var minPath = './public/publish/upload/images/min-user/min_user_' + user_id + '.png'; //可以操作
+					//压缩图片
+					gm(oldPath).resize(100, 100).write(minPath, function(err) {
+						if (err) console.log(err);
+					});
+					newPath = oldPath.replace(/public\//gi, ''); //值为./publish/upload/images/user 可以存入
+					newMinPath = minPath.replace(/public\//gi, ''); //指为./publish/upload/images/min-user 可以存入
+
 				}
 				//查询数据让后判断是修改还是增加交友信息
 				var selectSql = 'SELECT * FROM `socialinfo` WHERE user = ' + user_id;
 				Query.call(res, selectSql, function(err, rows, filed) {
 					//没查到数据，插入信息
 					if (!rows.length) {
-						var filesName = ['show_img', 'user'];
-						var valueName = ['"' + newPath + '"', user_id];
+						var filesName = ['show_img', 'min_show_img', 'user'];
+						var valueName = ['"' + newPath + '"', '"' + newMinPath + '"', user_id];
 						for (var i in fields) {
 							if (typeof fields[i] !== 'object' && fields[i] !== '' && fields[i] !== 'undefined') {
 								filesName.push(i);
@@ -114,7 +126,7 @@ module.exports = function(app) {
 						}
 						var sql = 'INSERT INTO `socialinfo` (' + filesName.join(',') + ') VALUES(' + valueName.join(',') + ')';
 					} else {
-						var filesName = ['show_img="' + newPath + '"'];
+						var filesName = ['show_img="' + newPath + '", min_show_img="' + newMinPath + '"'];
 						for (var i in fields) {
 							if (typeof fields[i] !== 'object' && fields[i] !== '' && fields[i] !== 'undefined') {
 								filesName.push(i + '="' + fields[i] + '"');
@@ -123,7 +135,6 @@ module.exports = function(app) {
 						}
 						var sql = 'UPDATE `socialinfo` SET ' + filesName.join(',') + ' WHERE user = ' + user_id;
 					}
-
 					Query.call(res, sql, function(err, rows, filed) {
 						res.json({
 							status: 1,
@@ -158,34 +169,47 @@ module.exports = function(app) {
 					//用户之间的关系，0 带处理 1好友 2拒绝 4未建立关系
 					var rela = 4;
 					var needSayHelloButton = true;
-					//开通了功能
-					if (result.need_hiddenwx == 1) {
-						//有打招呼的记录
-						if (!!rows.length) {
-							rela = rows[0].status;
-							needSayHelloButton = rows[0].status !== undefined ? false : true;
+					//有交友的资料
+					if (result !== undefined) {
+						//开通了功能
+						if (result.need_hiddenwx == 1) {
+							//有打招呼的记录
+							if (!!rows.length) {
+								rela = rows[0].status;
+								needSayHelloButton = rows[0].status !== undefined ? false : true;
+							}
+						} else {
+							needSayHelloButton = false;
 						}
+						res.json({
+							status: 1,
+							data: {
+								relaction: rela,
+								needSayHelloButton: needSayHelloButton,
+								list: result,
+								clickable: clickable,
+								hasResult: 1
+							}
+						});
 					} else {
-						needSayHelloButton = false;
+						var selectWAndSSql = 'SELECT * FROM wechat WHERE user = ' + req.query.personel;
+						Query.call(res, selectWAndSSql, function(err, rows, filed) {
+							res.json({
+								status: 1,
+								data: {
+									list: rows[0],
+									hasResult: 0
+								}
+							});
+						});
 					}
-
-
-					res.json({
-						status: 1,
-						data: {
-							relaction: rela,
-							needSayHelloButton: needSayHelloButton,
-							list: result,
-							clickable: clickable
-						}
-					});
 				});
 
 			})
 		});
 	}
-//处理消息状态
-function updateNewsStatus(option) {
+	//处理消息状态
+function updateNewsStatus(res, option) {
 	var filedName = [];
 	var value = [];
 	var sql = '';

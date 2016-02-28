@@ -120,6 +120,7 @@ div.amap-sug-result {
 	-webkit-transform: scale(1);
 	transform: scale(1);
 	-webkit-transition: all 0.3s;
+	color: #fff;
 }
 
 /*解决N行文本溢出打点显示的问题，暂只支持webkit内核*/
@@ -220,6 +221,7 @@ body .am-toast-text-background {
     position: fixed;
     top: 0;
     left: 0;
+    z-index: 90000;
 }
 body .am-toast-text {
 	display: inline-block;
